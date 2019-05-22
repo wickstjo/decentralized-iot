@@ -12,7 +12,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "push": "bash push.sh",
+    "push": "bash scripts/push.sh",
+    "truffle": "bash scripts/truffle.sh",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
