@@ -16,13 +16,14 @@ function init({ host, blockchain }) {
         web3 = new Web3(new Web3.providers.HttpProvider('http://' + host + ':' + blockchain));
     }
 
-    // FISH OUT THE SMART CONTRACT ADDRESS
+    // FISH OUT THE SC ADDRESS
     const address = Object.keys(networks).pop().address;
 
-    // BIND SMART CONTRACT & RETURN WEB3 VAR
-    web3.eth.Contract(abi, address);
-
-    return web3;
+    // RETURN SC & WEB3 REFERENCES
+    return {
+        contract: web3.eth.Contract(abi, address),
+        web3: web3
+    }
 }
 
 function accounts({ web3 }) {

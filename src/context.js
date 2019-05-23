@@ -2,6 +2,7 @@ import React, { createContext, useReducer } from "react";
 
 // INITIAL STATE
 const init_state = {
+   contract: null,
    web3: null
 };
 
@@ -9,10 +10,12 @@ const init_state = {
 function reducer(state, action) {
    switch (action.type) {
 
-      case 'web3': {
+      // BLOCKCHAIN REFERENCES
+      case 'blockchain': {
          return {
             ...state,
-            web3: action.payload
+            contract: action.payload.contract,
+            web3: action.payload.web3,
          }
       }
 
@@ -27,14 +30,14 @@ function reducer(state, action) {
 const Context = createContext();
 
 // CONTEXT PROVIDER
-function Provider(props) {
+function Provider({ children }) {
 
    // ATTACH THE REDUCER
    const [state, dispatch] = useReducer(reducer, init_state);
 
    return (
       <Context.Provider value={{ state, dispatch }}>
-         { props.children }
+         { children }
       </Context.Provider>
    );
 }

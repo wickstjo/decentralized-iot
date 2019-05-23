@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Context } from "../context";
 import { accounts as fetch_accounts } from '../funcs/blockchain';
 
@@ -7,15 +7,18 @@ function Content() {
    // ROUTE CONTEXT
    const { state } = useContext(Context);
 
-   useEffect(() => {
-      if (state.web3 != null) {
-         fetch_accounts(state).then(accounts => {
-            console.log(accounts);
-        })
-      }
-   }, [state.web3])
+   // LOAD CONTENT AFTER INIT
+   if (state.web3 !== null) { 
 
-   return <div>Content</div>
+      // CHECK AVAILABLE ACCOUNTS
+      fetch_accounts(state).then(accounts => {
+         console.log(accounts);
+      })
+
+      return <div>Connection Established</div>
+   
+   // OTHERWISE, SHOW LOADING SCREEN
+   } else { return <div>Loading</div> }
 }
 
 export default Content;
