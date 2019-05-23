@@ -2,27 +2,17 @@ import React, { createContext, useReducer } from "react";
 
 // INITIAL STATE
 const init_state = {
-   block: 0,
-   route: []
+   web3: null
 };
 
 // CONTEXT REDUCER
 function reducer(state, action) {
    switch (action.type) {
 
-      // INCREMENT
-      case 'increment': {
+      case 'web3': {
          return {
             ...state,
-            block: state.block + 1
-         }
-      }
-      
-      // RESET
-      case 'reset': {
-         return {
-            ...state,
-            block: action.payload
+            web3: action.payload
          }
       }
 

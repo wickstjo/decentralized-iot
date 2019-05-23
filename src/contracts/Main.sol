@@ -5,7 +5,7 @@ contract Main {
     // WHITELIST
     mapping (address => User) public whitelist;
 
-    // DECLARE MASTER
+    // DECLARE master
     address public master = 0xFffC9F737D80E9031F8b1B01D7FAF59Ce45def3B;
 
     // USER OBJECT
@@ -19,7 +19,7 @@ contract Main {
     // ADD MEMBER
     function add(string memory _name, string memory _permission, address _owner) public {
 
-        // MAKE SURE CALLER ADDRESS IS MASTER
+        // MAKE SURE CALLER ADDRESS IS master
         if (msg.sender == master) {
 
             // CHECK THAT ENTRY DOESNT ALREADY EXIST IN MAP
@@ -36,7 +36,7 @@ contract Main {
     // CHANGE PERMISSION OF EXISTING USER
     function change(address _owner, string memory _permission) public {
 
-        // MAKE SURE CALLER ADDRESS IS MASTER
+        // MAKE SURE CALLER ADDRESS IS master
         if (msg.sender == master) {
 
             // MAKE SURE THAT ENTRY EXISTS

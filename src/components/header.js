@@ -1,14 +1,9 @@
-import React, { useContext } from 'react';
-import { Context } from "../context";
+import React from 'react';
 
-function Header() {
-
-   // STATE CONTEXT
-   const { state } = useContext(Context);
-
-   return (
-      <div>{ state.block }</div>
-   );
-}
+function Header() { return (
+   <div>
+      Header
+   </div>
+)}
 
 export default Header;

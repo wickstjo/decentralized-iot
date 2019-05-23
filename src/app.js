@@ -1,16 +1,17 @@
 import React from 'react';
 import { Provider } from "./context";
 
-import Header from './components/header.js';
-import Buttons from  './components/buttons.js';
-import Init from  './init.js';
 import './interface/css/general.css';
+
+import Header from './components/header.js';
+import Content from  './components/content.js';
+import Init from  './init.js';
 
 function App() { return (
    <Provider>
       <Init />
       <Header />
-      <Buttons />
+      <Content />
    </Provider>
 )}
 
