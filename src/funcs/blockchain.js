@@ -1,9 +1,10 @@
 import Web3 from 'web3';
-import { networks, abi } from '../compiled/Main.json'
+import { networks, abi } from '../compiled/Main.json';
 
 // DOCS
 // https://web3js.readthedocs.io/en/1.0/web3-eth.html
 
+// INITIALIZE SC & WEB3
 function init({ host, blockchain }) {
 
     // PLACEHOLDER
@@ -26,13 +27,56 @@ function init({ host, blockchain }) {
     }
 }
 
+// FETCH ALL AVAILABLE USERS
 function accounts({ web3 }) {
     return web3.eth.getAccounts().then(accounts => {
         return new Set(accounts);
-    });
+
+   // ON FAILURE, RETURN NULL
+   }).catch(() => { return null; });
+}
+
+// FETCH SMART CONTRACT MASTER
+function master({ contract }) {
+   return contract.master().then(response => {
+      return response;
+
+   // ON FAILURE, RETURN NULL
+   }).catch(() => { return null; });
+}
+
+// ADD USER
+function add({ contract, name, permission, address }) {
+   return contract.add(name, permission, address).then(response => {
+      return response;
+
+   // ON FAILURE, RETURN NULL
+   }).catch(() => { return null; });
+}
+
+// FETCH USER DETAILS
+function details({ contract, user }) {
+   return contract.users(user).then(response => {
+      return response;
+
+   // ON FAILURE, RETURN NULL
+   }).catch(() => { return null; });
+}
+
+// MODIFY USER DETAILS
+function modify({ contract, address, permission }) {
+   return contract.modify(address, permission).then(response => {
+      return response;
+
+   // ON FAILURE, RETURN NULL
+   }).catch(() => { return null; });
 }
 
 export {
     init,
-    accounts
+    accounts,
+    details,
+    master,
+    add,
+    modify
 }
