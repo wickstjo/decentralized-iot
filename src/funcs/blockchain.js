@@ -1,82 +1,51 @@
 import Web3 from 'web3';
-import { networks, abi } from '../compiled/Main.json';
-
-// DOCS
-// https://web3js.readthedocs.io/en/1.0/web3-eth.html
+import { networks, abi } from '../contracts/Main.json';
 
 // INITIALIZE SC & WEB3
 function init({ host, blockchain }) {
 
-    // PLACEHOLDER
-    let web3 = null;
+   // ESTABLISH WEB3 CONNECTION
+   let web3 = new Web3(Web3.givenProvider || 'http://' + host + ':' + blockchain, null, {});
 
-    // ESTABLISH WEB3 CONNECTION
-    if (typeof Web3 === undefined) {
-        web3 = new Web3(Web3.currentProvider);
-    } else {
-        web3 = new Web3(new Web3.providers.HttpProvider('http://' + host + ':' + blockchain));
-    }
+   // FETCH SMART CONTRACT ADDRESS
+   const name = Object.keys(networks).pop();
+   const address = networks[name].address;
 
-    // FISH OUT THE SC ADDRESS
-    const address = Object.keys(networks).pop().address;
-
-    // RETURN SC & WEB3 REFERENCES
-    return {
-        contract: web3.eth.Contract(abi, address),
-        web3: web3
-    }
+   // RETURN WEB3 & SMART CONTRACT REFERENCES
+   return {
+      contract: web3.eth.Contract(abi, address),
+      web3: web3
+   }
 }
 
 // FETCH ALL AVAILABLE USERS
-function accounts({ web3 }) {
-    return web3.eth.getAccounts().then(accounts => {
-        return new Set(accounts);
+function accounts (web3) {
+   return web3.eth.getAccounts();
+}
 
-   // ON FAILURE, RETURN NULL
-   }).catch(() => { return null; });
+// METAMASK LOGIN
+function connect(web3) {
+   web3.givenProvider.enable().then(() => {
+      console.log('Login success!');
+   }).catch(() => {
+      console.log('Login rejected!');
+   });
 }
 
 // FETCH SMART CONTRACT MASTER
-function master({ contract }) {
-   return contract.master().then(response => {
-      return response;
-
-   // ON FAILURE, RETURN NULL
-   }).catch(() => { return null; });
+function my_func (contract) {
+   return contract.methods.getMessage.call();
 }
 
-// ADD USER
-function add({ contract, name, permission, address }) {
-   return contract.add(name, permission, address).then(response => {
-      return response;
-
-   // ON FAILURE, RETURN NULL
-   }).catch(() => { return null; });
-}
-
-// FETCH USER DETAILS
-function details({ contract, user }) {
-   return contract.users(user).then(response => {
-      return response;
-
-   // ON FAILURE, RETURN NULL
-   }).catch(() => { return null; });
-}
-
-// MODIFY USER DETAILS
-function modify({ contract, address, permission }) {
-   return contract.modify(address, permission).then(response => {
-      return response;
-
-   // ON FAILURE, RETURN NULL
-   }).catch(() => { return null; });
+// FETCH SMART CONTRACT MASTER
+function my_var (contract) {
+   return contract.methods.foobar.call();
 }
 
 export {
-    init,
-    accounts,
-    details,
-    master,
-    add,
-    modify
+   init,
+   accounts,
+   connect,
+   my_func,
+   my_var,
 }

@@ -1,18 +1,28 @@
 import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from "./context";
 
-import './interface/css/general.css';
+import './interface/css/general.scss';
 
-import Header from './components/header.js';
-import Content from  './components/content.js';
-import Init from  './init.js';
+import Init from  './init';
+import Menu from './components/menu';
+
+import Home from  './pages/home';
+import Administrate from  './pages/administrate';
+import Error from  './pages/error';
 
 function App() { return (
-   <Provider>
-      <Init />
-      <Header />
-      <Content />
-   </Provider>
+   <BrowserRouter>
+      <Provider>
+         <Init />
+         <Menu />
+         <Switch>
+            <Route exact path="/" component={ Home } />
+            <Route path="/administrate" component={ Administrate } />
+            <Route component={ Error } />
+         </Switch>
+      </Provider>
+   </BrowserRouter>
 )}
 
 export default App;

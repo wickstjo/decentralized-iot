@@ -3,7 +3,8 @@ import React, { createContext, useReducer } from "react";
 // INITIAL STATE
 const init_state = {
    contract: null,
-   web3: null
+   web3: null,
+   connected: false
 };
 
 // CONTEXT REDUCER
@@ -16,6 +17,7 @@ function reducer(state, action) {
             ...state,
             contract: action.payload.contract,
             web3: action.payload.web3,
+            connected: true
          }
       }
 

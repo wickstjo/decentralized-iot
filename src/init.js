@@ -22,7 +22,6 @@ function Init() {
          type: 'blockchain',
          payload: init_blockchain(settings)
       })
-
    }, [])
 
    return null;

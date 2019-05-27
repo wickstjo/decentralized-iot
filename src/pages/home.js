@@ -1,14 +1,16 @@
 import React, { useContext } from 'react';
 import { Context } from "../context";
 
-function Content() {
+function Home() {
 
    // ROUTE CONTEXT
-   const { state, dispatch } = useContext(Context);
+   const { state } = useContext(Context);
 
-   return (
-      <div>Administrate Users</div>
-   )
+   if (state.connected) {
+      return <div>Connected</div>
+
+   // OTHERWISE, SHOW LOADING
+   } else { return <div>Loading...</div> }
 }
 
-export default Content;
+export default Home;
