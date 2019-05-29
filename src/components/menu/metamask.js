@@ -1,24 +1,39 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Context } from '../../context';
 import { connect } from '../../funcs/blockchain';
 
 function Connect() {
 
-   // ROUTE CONTEXT
+   // GLOBAL STATE
    const { state } = useContext(Context);
+
+   // LOCAL STATE
+   const [local, set_local] = useState({
+      authed: false
+   })
+
+   useEffect(() => {
+      if (state.connection.user !== undefined) {
+         set_local({
+            ...local,
+            authed: true
+         })
+      } else {
+         set_local({
+            ...local,
+            authed: false
+         })
+      }
+   }, [state.connection.user])
 
    const metamask_login = () => {
       connect(state.web3)
    }
 
-   // if (state.web3 !== null && state.web3.givenProvider.selectedAddress === undefined) {
-   //    console.log(state.web3.givenProvider.selectedAddress)
-   // }
-
-   if (state.web3 !== null && state.web3.givenProvider.selectedAddress === undefined) {
-      return <div className={ 'item' } onClick={ metamask_login }>Connect Metamask</div>
+   if (local.authed) {
+      return <div className={ 'item' }>Connected</div>;
    } else {
-      return null;
+      return <div className={ 'item' } onClick={ metamask_login }>Connect with Metamask</div>
    }
 }
 

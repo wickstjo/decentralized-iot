@@ -25,7 +25,7 @@ function Administrate() {
       })
    }
 
-   if (state.connected) {
+   if (state.web3 !== null) {
       return (
          <div id={ 'innerbody' }>
             <Item

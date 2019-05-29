@@ -1,12 +1,5 @@
 import React, { createContext, useReducer } from "react";
 
-// INITIAL STATE
-const init_state = {
-   contract: null,
-   web3: null,
-   connected: false
-};
-
 // CONTEXT REDUCER
 function reducer(state, action) {
    switch (action.type) {
@@ -16,8 +9,15 @@ function reducer(state, action) {
          return {
             ...state,
             contract: action.payload.contract,
-            web3: action.payload.web3,
-            connected: true
+            web3: action.payload.web3
+         }
+      }
+
+      // PROXY DETAILS
+      case 'proxy': {
+         return {
+            ...state,
+            connection: action.payload
          }
       }
 
@@ -35,7 +35,14 @@ const Context = createContext();
 function Provider({ children }) {
 
    // ATTACH THE REDUCER
-   const [state, dispatch] = useReducer(reducer, init_state);
+   const [state, dispatch] = useReducer(reducer, {
+      contract: undefined,
+      web3: undefined,
+      connection: {
+         network: undefined,
+         user: undefined
+      }
+   });
 
    return (
       <Context.Provider value={{ state, dispatch }}>
