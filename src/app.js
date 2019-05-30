@@ -1,33 +1,53 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider, Context } from "./context";
 
 import './interface/css/general.scss';
 
-import Init from './init';
-import Metamask from './metamask';
+import Proxy from './proxy';
 import Menu from './components/menu';
 import Home from './pages/home';
 import Administrate from './pages/administrate';
 import Error from './pages/error';
 
-function App() { return (
-   <BrowserRouter>
-      <Provider>
-         <Init />
-         <Content />
-      </Provider>
-   </BrowserRouter>
-)}
+import { init } from './funcs/blockchain';
 
-function Content() {
+function App() {
+
+   // SETTIGNS
+   const settings = {
+      host: '127.0.0.1',
+      blockchain: 8545,
+      ipfs: 5001
+   }
+   
+   return (
+      <BrowserRouter>
+         <Provider>
+            <Content blockchain={ init(settings) } />
+         </Provider>
+      </BrowserRouter>
+   )
+}
+
+// RENDER CONTENT CONDITIONALLY
+function Content({ blockchain }) {
 
    // GLOBAL STATE
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
+   // UPDATE STATE
+   useEffect(() => {
+      dispatch({
+         type: 'blockchain',
+         payload: blockchain
+      })
+   }, [])
+
+   // RENDER NORMAL CONTENT AFTER CONNECTING
    if (state.proxy !== undefined) {
       return <>
-         <Metamask />
+         <Proxy />
          <Menu />
          <Switch>
             <Route exact path="/" component={ Home } />
@@ -36,7 +56,7 @@ function Content() {
          </Switch>
       </>
 
-   // OTHERWISE, RETURN NULL
+   // OTHERWISE, SHOW LOADING SCREEN
    } else { return <div>Establishing Connection...</div> };
 }
 

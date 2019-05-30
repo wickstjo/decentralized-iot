@@ -24,15 +24,6 @@ function accounts (web3) {
    return web3.eth.getAccounts();
 }
 
-// METAMASK LOGIN
-function connect({ web3 }) {
-   web3.givenProvider.enable().then(() => {
-      console.log('Login success!');
-   }).catch(() => {
-      console.log('Login rejected!');
-   });
-}
-
 // FETCH SMART CONTRACT MASTER
 function my_func (contract) {
    return contract.methods.getMessage.call();
@@ -46,7 +37,6 @@ function my_var (contract) {
 export {
    init,
    accounts,
-   connect,
    my_func,
    my_var,
 }
