@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Connect from './menu/metamask';
+import Connect from './menu/connect';
 
 function Menu() { return (
    <div id={ 'menu' }>

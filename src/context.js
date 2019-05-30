@@ -18,7 +18,10 @@ function reducer(state, action) {
       case 'network': {
          return {
             ...state,
-            network: action.payload
+            metamask: {
+               ...state.metamask,
+               network: action.payload
+            }
          }
       }
 
@@ -26,7 +29,10 @@ function reducer(state, action) {
       case 'user': {
          return {
             ...state,
-            user: action.payload
+            metamask: {
+               ...state.metamask,
+               user: action.payload
+            }
          }
       }
 
@@ -47,9 +53,10 @@ function Provider({ children }) {
    const [state, dispatch] = useReducer(reducer, {
       contract: undefined,
       web3: undefined,
-      proxy: undefined,
-      network: undefined,
-      user: undefined
+      metamask: {
+         network: undefined,
+         user: undefined
+      }
    });
 
    return (

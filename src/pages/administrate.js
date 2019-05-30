@@ -25,26 +25,22 @@ function Administrate() {
       })
    }
 
-   if (state.web3 !== null) {
-      return (
-         <div id={ 'innerbody' }>
-            <Item
-               header={ 'Call Function' }
-               func={ call_func }
-            />
-            <Item
-               header={ 'Call Variable' }
-               func={ call_var }
-            />
-            <Item
-               header={ 'Call Metamask Accounts' }
-               func={ call_accounts }
-            />
-         </div>
-      )
-
-   // OTHERWISE, SHOW LOADING
-   } else { return <div>Loading...</div> }
+   return (
+      <div id={ 'innerbody' }>
+         <Item
+            header={ 'Call Function' }
+            func={ call_func }
+         />
+         <Item
+            header={ 'Call Variable' }
+            func={ call_var }
+         />
+         <Item
+            header={ 'Call Metamask Accounts' }
+            func={ call_accounts }
+         />
+      </div>
+   )
 }
 
 function Item({ header, func }) { return (
