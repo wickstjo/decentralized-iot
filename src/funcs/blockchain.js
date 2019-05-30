@@ -11,10 +11,14 @@ function init({ host, blockchain }) {
    const name = Object.keys(networks).pop();
    const address = networks[name].address;
 
+   // TURN OFF AUTO RELOAD ON ETH NETWORK CHANGE
+   web3.givenProvider.autoRefreshOnNetworkChange = false;
+
    // RETURN WEB3 & SMART CONTRACT REFERENCES
    return {
       contract: web3.eth.Contract(abi, address),
-      web3: web3
+      web3: web3,
+      proxy: web3.givenProvider
    }
 }
 

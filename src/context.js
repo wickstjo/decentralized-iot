@@ -9,15 +9,24 @@ function reducer(state, action) {
          return {
             ...state,
             contract: action.payload.contract,
-            web3: action.payload.web3
+            web3: action.payload.web3,
+            proxy: action.payload.proxy
          }
       }
 
-      // PROXY DETAILS
-      case 'proxy': {
+      // PROXY NETWORK
+      case 'network': {
          return {
             ...state,
-            connection: action.payload
+            network: action.payload
+         }
+      }
+
+      // PROXY USER
+      case 'user': {
+         return {
+            ...state,
+            user: action.payload
          }
       }
 
@@ -38,10 +47,9 @@ function Provider({ children }) {
    const [state, dispatch] = useReducer(reducer, {
       contract: undefined,
       web3: undefined,
-      connection: {
-         network: undefined,
-         user: undefined
-      }
+      proxy: undefined,
+      network: undefined,
+      user: undefined
    });
 
    return (

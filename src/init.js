@@ -24,20 +24,53 @@ function Init() {
       })
    }, [])
 
-   // PROXY DETAILS
-   useEffect(() => {
-      if (state.web3 !== undefined && state.web3._currentProvider.connection !== undefined) {
+
+   // !!! DUPLICATES AFTER EACH EVENT
+
+   if (state.proxy !== undefined) {
+      state.proxy.on('accountsChanged', accounts => {
+
+         // LOG CHANGE
+         console.log('account changed!')
+
+         // UPDATE STATE
          dispatch({
-            type: 'proxy',
-            payload: {
-               network: state.web3._currentProvider.connection.networkVersion,
-               user: state.web3._currentProvider.connection.selectedAddress
-            }
+            type: 'user',
+            payload: accounts[0]
          })
-      }
-   }, [state.web3])
+      })
+      state.proxy.on('networkChanged', network => {
+
+         // LOG CHANGE
+         console.log('network changed!')
+
+         // UPDATE STATE
+         dispatch({
+            type: 'network',
+            payload: network_name(network)
+         })
+      })
+   }
 
    return null;
+}
+
+// ETHEREUM NETWORKS
+function network_name(id) {
+   switch (id) {
+      case '1': {
+         return 'main';
+      }
+      case '3': {
+         return 'ropsten';
+      }
+      case '4': {
+         return 'rinkeby';
+      }
+      default: {
+         return 'development';
+      }
+   }
 }
 
 export default Init;
