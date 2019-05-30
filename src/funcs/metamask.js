@@ -10,9 +10,7 @@ function network({ proxy }) {
 
 // METAMASK LOGIN
 function login({ proxy }) {
-   proxy.enable().then(() => {
-      console.log('Login success!');
-   })
+   return proxy.enable();
 }
 
 // ETHEREUM NETWORKS

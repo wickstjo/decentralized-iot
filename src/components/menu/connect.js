@@ -10,11 +10,13 @@ function Connect() {
 
    // METAMASK LOGIN
    const metamask_login = () => {
-      login(state)
+      login(state).then(() => {
+         console.log('Metamask login called!')
+      })
    }
 
    // IF METAMASK IS INSTALLED
-   if (state.web3._currentProvider.host === 'metamask') {
+   if (state.host === 'metamask') {
 
       if (state.metamask.user !== undefined) {
          return <Item header={ shorten(state.metamask.user) + ' @ ' + state.metamask.network } />

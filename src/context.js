@@ -10,7 +10,8 @@ function reducer(state, action) {
             ...state,
             contract: action.payload.contract,
             web3: action.payload.web3,
-            proxy: action.payload.proxy
+            proxy: action.payload.proxy,
+            host: action.payload.host
          }
       }
 
@@ -53,6 +54,8 @@ function Provider({ children }) {
    const [state, dispatch] = useReducer(reducer, {
       contract: undefined,
       web3: undefined,
+      proxy: undefined,
+      host: undefined,
       metamask: {
          network: undefined,
          user: undefined

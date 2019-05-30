@@ -7,20 +7,36 @@ function Administrate() {
    // ROUTE CONTEXT
    const { state } = useContext(Context);
 
+   // CALL FUNCTION
    const call_func = () => {
-      my_func(state.contract).then(response => {
-         console.log(response)
-      });
+
+      // IF ON THE CORRECT NETWORK
+      if (state.metamask.network === 'development') {
+
+         my_func(state).then(response => {
+            console.log(response)
+         });
+
+      // OTHERWISE, LOG ERROR
+      } else { console.log('wrong network') }
    }
 
+   // FETCH VARIABLE
    const call_var = () => {
-      my_var(state.contract).then(response => {
-         console.log(response)
-      });
+
+      // IF ON THE CORRECT NETWORK
+      if (state.metamask.network === 'development') {
+
+         my_var(state).then(response => {
+            console.log(response)
+         });
+      
+      // OTHERWISE, LOG ERROR
+      } else { console.log('wrong network') }
    }
 
    const call_accounts = () => {
-      accounts(state.web3).then(response => {
+      accounts(state).then(response => {
          console.log(response);
       })
    }
