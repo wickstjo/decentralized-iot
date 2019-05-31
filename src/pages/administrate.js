@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Context } from '../context';
-import { my_func, my_var } from '../funcs/blockchain';
+import { add, everyone, person } from '../funcs/blockchain';
 
 function Administrate() {
 
@@ -19,33 +19,37 @@ function Administrate() {
       } else { console.log('wrong network') }
    }
 
-   // CALL FUNCTION
-   const call_func = () => {
-      check(() => {
-         my_func(state).then(response => {
-            console.log(response)
-         })
+   const add_person = () => {
+      add(state, 'foobar').then(response => {
+         console.log(response)
       })
    }
 
-   // FETCH VARIABLE
-   const call_var = () => {
-      check(() => {
-         my_var(state).then(response => {
-            console.log(response)
-         })
+   const fetch_person = () => {
+      person(state.contract, 0).then(response => {
+         console.log(response)
+      })
+   }
+
+   const fetch_everyone = () => {
+      everyone(state).then(response => {
+         console.log(response)
       })
    }
 
    return (
       <div id={ 'innerbody' }>
          <Item
-            header={ 'Call Function' }
-            func={ call_func }
+            header={ 'Add Person' }
+            func={ add_person }
          />
          <Item
-            header={ 'Call Variable' }
-            func={ call_var }
+            header={ 'Fetch Person' }
+            func={ fetch_person }
+         />
+         <Item
+            header={ 'Fetch Everyone' }
+            func={ fetch_everyone }
          />
       </div>
    )

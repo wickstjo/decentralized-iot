@@ -1,11 +1,22 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract Main {
 
-    string message = "this is a function";
-    string public foobar = "this is a variable";
+    string[] public people;
 
-    function getMessage() public view returns(string memory) {
-        return message;
+    // ADD PERSON
+    function add(string memory person) public {
+        people.push(person);
+    }
+
+    // FETCH PERSON
+    function person(uint id) public view returns(string memory) {
+        return people[id];
+    }
+
+    // FETCH EVERYONE
+    function everyone() public view returns(string[] memory) {
+        return people;
     }
 }

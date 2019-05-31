@@ -20,18 +20,26 @@ function init({ host, blockchain }) {
    }
 }
 
-// FETCH SMART CONTRACT MASTER
-function my_func({ contract }) {
-   return contract.methods.getMessage.call();
+// ADD PERSON
+function add(state, value) {
+   return state.contract.methods.add(value).send({
+      from: state.metamask.user
+   });
 }
 
-// FETCH SMART CONTRACT MASTER
-function my_var({ contract }) {
-   return contract.methods.foobar.call();
+// FETCH PERSON
+function person(contract, id) {
+   return contract.methods.person(id).call();
+}
+
+// FETCH EVERYONE
+function everyone({ contract }) {
+   return contract.methods.everyone.call();
 }
 
 export {
    init,
-   my_func,
-   my_var,
+   add,
+   everyone,
+   person
 }
