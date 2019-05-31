@@ -1,43 +1,39 @@
 import React, { useContext } from 'react';
 import { Context } from '../context';
-import { my_func, my_var, accounts } from '../funcs/blockchain';
+import { my_func, my_var } from '../funcs/blockchain';
 
 function Administrate() {
 
-   // ROUTE CONTEXT
+   // GLOBAL STATE
    const { state } = useContext(Context);
+
+   // DEPLOYED SMART CONTRACT NETWORK
+   const network = 'DEV';
+
+   // CHECK USER NETWORK BEFORE EXECUTING FUNC
+   const check = (callback) => {
+      if (state.metamask.network === network) {
+         callback();
+
+      // IF IT DOESNT MATCH, LOG ERROR
+      } else { console.log('wrong network') }
+   }
 
    // CALL FUNCTION
    const call_func = () => {
-
-      // IF ON THE CORRECT NETWORK
-      if (state.metamask.network === 'development') {
-
+      check(() => {
          my_func(state).then(response => {
             console.log(response)
-         });
-
-      // OTHERWISE, LOG ERROR
-      } else { console.log('wrong network') }
+         })
+      })
    }
 
    // FETCH VARIABLE
    const call_var = () => {
-
-      // IF ON THE CORRECT NETWORK
-      if (state.metamask.network === 'development') {
-
+      check(() => {
          my_var(state).then(response => {
             console.log(response)
-         });
-      
-      // OTHERWISE, LOG ERROR
-      } else { console.log('wrong network') }
-   }
-
-   const call_accounts = () => {
-      accounts(state).then(response => {
-         console.log(response);
+         })
       })
    }
 
@@ -50,10 +46,6 @@ function Administrate() {
          <Item
             header={ 'Call Variable' }
             func={ call_var }
-         />
-         <Item
-            header={ 'Call Metamask Accounts' }
-            func={ call_accounts }
          />
       </div>
    )

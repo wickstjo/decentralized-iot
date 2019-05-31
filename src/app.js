@@ -46,15 +46,17 @@ function Content({ blockchain }) {
 
    // RENDER NORMAL CONTENT AFTER CONNECTING
    if (state.proxy !== undefined) {
-      return <>
-         <Proxy />
-         <Menu />
-         <Switch>
-            <Route exact path="/" component={ Home } />
-            <Route path="/administrate" component={ Administrate } />
-            <Route component={ Error } />
-         </Switch>
-      </>
+      return (
+         <>
+            <Proxy />
+            <Menu />
+            <Switch>
+               <Route exact path="/" component={ Home } />
+               <Route path="/administrate" component={ Administrate } />
+               <Route component={ Error } />
+            </Switch>
+         </>
+      )
 
    // OTHERWISE, SHOW LOADING SCREEN
    } else { return <div>Establishing Connection...</div> };

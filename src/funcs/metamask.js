@@ -17,16 +17,16 @@ function login({ proxy }) {
 function networks(id) {
    switch (id) {
       case '1': {
-         return 'main';
+         return 'MAIN';
       }
       case '3': {
-         return 'ropsten';
+         return 'ROPSTEN';
       }
       case '4': {
-         return 'rinkeby';
+         return 'RINKEBY';
       }
       default: {
-         return 'development';
+         return 'DEV';
       }
    }
 }
