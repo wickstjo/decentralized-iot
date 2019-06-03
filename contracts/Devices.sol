@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-contract Users {
+contract Devices {
 
    // MAP OF USER OWNED DEVICES
    mapping (address => Device[]) devices;
