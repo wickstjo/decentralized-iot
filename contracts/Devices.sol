@@ -31,7 +31,7 @@ contract Devices {
    }
 
    // FETCH ALL USER OWNED DEVICES
-   function specific(address _owner) public view returns(Device[] memory) {
+   function all(address _owner) public view returns(Device[] memory) {
       return devices[_owner];
    }
 }

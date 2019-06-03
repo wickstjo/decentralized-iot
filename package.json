@@ -13,12 +13,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "push": "bash scripts/push.sh",
-    "truffle": "bash scripts/truffle.sh",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "truffle": "bash scripts/truffle.sh"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -29,7 +25,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {
-    "gh-pages": "^2.0.1"
-  }
+  "devDependencies": {}
 }

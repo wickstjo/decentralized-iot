@@ -6,6 +6,8 @@ contract Users {
    // MAP OF USERS
    mapping (address => User) users;
 
+   string public foob = 'testing';
+
    // USER STRUCT
    struct User {
       string name;

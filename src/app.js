@@ -12,26 +12,16 @@ import Error from './pages/error';
 
 import { init } from './funcs/blockchain';
 
-function App() {
-
-   // SETTIGNS
-   const settings = {
-      host: '127.0.0.1',
-      blockchain: 8545,
-      ipfs: 5001
-   }
-   
-   return (
-      <BrowserRouter>
-         <Provider>
-            <Content blockchain={ init(settings) } />
-         </Provider>
-      </BrowserRouter>
-   )
-}
+function App() { return (
+   <BrowserRouter>
+      <Provider>
+         <Content />
+      </Provider>
+   </BrowserRouter>
+)}
 
 // RENDER CONTENT CONDITIONALLY
-function Content({ blockchain }) {
+function Content() {
 
    // GLOBAL STATE
    const { state, dispatch } = useContext(Context);
@@ -40,7 +30,7 @@ function Content({ blockchain }) {
    useEffect(() => {
       dispatch({
          type: 'blockchain',
-         payload: blockchain
+         payload: init()
       })
    }, [])
 
