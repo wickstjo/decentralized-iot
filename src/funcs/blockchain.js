@@ -1,5 +1,6 @@
 import Web3 from 'web3';
-import { connection, latest, contracts } from '../settings.json';
+import { connection } from '../resources/settings.json';
+import { abi, main, users } from '../resources/latest.json';
 
 // INITIALIZE SC & WEB3
 function init() {
@@ -9,7 +10,7 @@ function init() {
 
    // RETURN REFERENCES
    return {
-      contract: web3.eth.Contract(latest.abi, latest.address),
+      contract: web3.eth.Contract(abi, main),
       web3: web3,
       proxy: web3.givenProvider,
       host: web3._currentProvider.host
@@ -18,7 +19,7 @@ function init() {
 
 // CROSS CONTRACT CALL
 function temp({ contract }) {
-   return contract.methods.foobar(contracts.users).call();
+   return contract.methods.foobar(users).call();
 }
 
 export {

@@ -1,33 +1,41 @@
 const fs = require("fs");
 
-// READ CURRENT SETTINGS
-fs.readFile("src/settings.json", "utf-8", (err, data) => {
+// READ CONTRACTS
+fs.readFile("build/contracts/Main.json", "utf-8", (err, main) => {
+   fs.readFile("build/contracts/Users.json", "utf-8", (err, users) => {
+      fs.readFile("build/contracts/Devices.json", "utf-8", (err, devices) => {
 
-   // SAVE IT
-   const settings = JSON.parse(data);
+         // PROCESS FILE CONTENTS
+         main = process(main);
+         users = process(users);
+         devices = process(devices);
 
-   // READ THE RECENTLY COMPILED CONTRACT
-   fs.readFile("build/contracts/Main.json", "utf-8", (err, data) => {
+         // CONSTRUCT & STRINGIFY NEW REFS
+         const refs = JSON.stringify({
+            abi: main.abi,
+            main: main.address,
+            users: users.address,
+            devices: devices.address
+         });
 
-      // SAVE IT
-      const build = JSON.parse(data);
-
-      // FETCH ADDRESS
-      const name = Object.keys(build.networks).pop();
-
-      // OVERWRITE OLD SETTINGS ABI & ADDRESS
-      settings.latest = {
-         abi: build.abi,
-         address: build.networks[name].address
-      }
-
-      // CONVERT SETTINGS OBJECT BACK TO A STRING
-      const stringified =  JSON.stringify(settings);
-
-      // OVERWRITE OLD SETTINGS
-      fs.writeFile("src/settings.json", stringified, (err) => {
-         if (err) console.log(err);
-         console.log("Rewrote settings object!");
+         // REWRITE SETTINGS FILE
+         fs.writeFile("src/resources/latest.json", refs, (err) => {
+            if (err) console.log(err);
+            console.log("Rewrote settings object!");
+         });
       });
    });
 });
+
+// FETCH ADDRESS
+function process(contents) {
+   
+   // CONVERT TEXT TO OBJECT
+   const build = JSON.parse(contents);
+
+   // RETURN ADDRESS & ABI
+   return {
+      address: Object.keys(build.networks).pop(),
+      abi: build.abi
+   };
+}
