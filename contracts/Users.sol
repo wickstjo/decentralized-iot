@@ -14,7 +14,10 @@ contract Users {
    }
 
    // ADD/UPDATE USER
-   function set(address _owner, string memory _name) public {
+   function set(
+      address _owner,
+      string memory _name
+   ) public {
 
       // PUSH NEW USER OBJECT TO ARRAY
       users[_owner] = User({

@@ -13,7 +13,11 @@ contract Devices {
    }
 
    // ADD/UPDATE DEVICE
-   function add(address _owner, string memory _name, string memory _id) public {
+   function add(
+      address _owner,
+      string memory _name,
+      string memory _id
+   ) public {
       devices[_owner].push(Device({
          name: _name,
          id: _id
@@ -21,12 +25,18 @@ contract Devices {
    }
 
    // DELETE DEVICE
-   function remove(address _owner, uint id) public {
+   function remove(
+      address _owner,
+      uint id
+   ) public {
       delete devices[_owner][id];
    }
 
    // FETCH SPECIFIC DEVICE
-   function specific(address _owner, uint id) public view returns(Device memory) {
+   function specific(
+      address _owner,
+      uint id
+   ) public view returns(Device memory) {
       return devices[_owner][id];
    }
 
