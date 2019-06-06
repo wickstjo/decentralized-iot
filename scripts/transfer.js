@@ -1,31 +1,56 @@
 const fs = require("fs");
 
-// READ CONTRACTS
-fs.readFile("build/contracts/Main.json", "utf-8", (err, main) => {
-   fs.readFile("build/contracts/Users.json", "utf-8", (err, users) => {
-      fs.readFile("build/contracts/Devices.json", "utf-8", (err, devices) => {
+// PLACEHOLDERS
+const response = {};
+const promises = [];
 
-         // PROCESS FILE CONTENTS
-         main = process(main);
-         users = process(users);
-         devices = process(devices);
+// SPECIFY FILES & RUN
+run([
+   'Devices',
+   'Licences',
+   'Tasks',
+   'Tokens',
+   'Users'
+]);
 
-         // CONSTRUCT & STRINGIFY NEW REFS
-         const refs = JSON.stringify({
-            abi: main.abi,
-            main: main.address,
-            users: users.address,
-            devices: devices.address
-         });
+// RUN THE TRANSFER
+function run(files) {
 
-         // REWRITE SETTINGS FILE
-         fs.writeFile("src/resources/latest.json", refs, (err) => {
-            if (err) console.log(err);
-            console.log("Rewrote settings object!");
-         });
+   // GENERATE & PUSH A PROMISE FOR EACH FILE
+   files.forEach(name => {
+      promises.push(promisify(name));
+   });
+
+   // AFTER ALL FILES HAVE BEEN READ & PROCESSED
+   Promise.all(promises).then(() => {
+      
+      // STRINGIFY THE FINISHED OBJECT
+      const stringified = JSON.stringify(response);
+
+      // THEN OVERWRITE THE REFS FILE
+      fs.writeFile("src/resources/latest.json", stringified, (err) => {
+
+         if (err) console.log(err);
+         console.log("REWROTE REFERENCES JSON SUCCESSFULLY!");
       });
    });
-});
+}
+
+// GENERATE FILE READING PROMISE
+function promisify(name) {
+   return new Promise((resolve, reject) => {
+
+      // READ THE COMPILED BYTE FILE
+      fs.readFile('build/contracts/' + name + '.json', "utf-8", (err, content) => {
+
+         // FETCH THE ABI & ADDRESS, THEN PUSH IT
+         response[name] = process(content);
+
+         // THEN RESOLVE
+         resolve()
+      });
+   })
+}
 
 // FETCH ADDRESS
 function process(contents) {
@@ -33,9 +58,12 @@ function process(contents) {
    // CONVERT TEXT TO OBJECT
    const build = JSON.parse(contents);
 
+   // FETCH NETWORK TIMESTAMP
+   const id = Object.keys(build.networks).pop();
+
    // RETURN ADDRESS & ABI
    return {
-      address: Object.keys(build.networks).pop(),
+      address: build.networks[id].address,
       abi: build.abi
    };
 }
