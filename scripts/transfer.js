@@ -44,7 +44,7 @@ function promisify(name) {
       fs.readFile('build/contracts/' + name + '.json', "utf-8", (err, content) => {
 
          // FETCH THE ABI & ADDRESS, THEN PUSH IT
-         response[name] = process(content);
+         response[name.toLowerCase()] = process(content);
 
          // THEN RESOLVE
          resolve()

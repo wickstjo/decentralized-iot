@@ -8,10 +8,10 @@ function reducer(state, action) {
       case 'blockchain': {
          return {
             ...state,
-            contract: action.payload.contract,
             web3: action.payload.web3,
             proxy: action.payload.proxy,
-            host: action.payload.host
+            host: action.payload.host,
+            contracts: action.payload.contracts
          }
       }
 
@@ -52,7 +52,7 @@ function Provider({ children }) {
 
    // ATTACH THE REDUCER
    const [state, dispatch] = useReducer(reducer, {
-      contract: undefined,
+      contracts: undefined,
       web3: undefined,
       proxy: undefined,
       host: undefined,

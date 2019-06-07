@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import { connection } from '../resources/settings.json';
-import { abi, main, users } from '../resources/latest.json';
+import references from '../resources/latest.json';
 
 // INITIALIZE SC & WEB3
 function init() {
@@ -10,19 +10,42 @@ function init() {
 
    // RETURN REFERENCES
    return {
-      contract: web3.eth.Contract(abi, main),
       web3: web3,
       proxy: web3.givenProvider,
-      host: web3._currentProvider.host
+      host: web3._currentProvider.host,
+      contracts: {
+         devices: contract(web3, 'devices'),
+         licences: contract(web3, 'licences'),
+         tasks: contract(web3, 'tasks'),
+         tokens: contract(web3, 'tokens'),
+         users: contract(web3, 'users')
+      }
    }
 }
 
-// CROSS CONTRACT CALL
-function temp({ contract }) {
-   return contract.methods.foobar(users).call();
+// FETCH CORRECT CONTRACT
+function contract(web3, type) {
+   return web3.eth.Contract(references[type].abi, references[type].address);
+}
+
+// FETCH DEVICES
+function fetch_devices({ contracts }) {
+   return contracts.devices.methods.fetch('foo').call();
 }
 
 export {
    init,
-   temp
+   fetch_devices
 }
+
+// // DEPLOYED SMART CONTRACT NETWORK
+// const network = 'DEV';
+
+// // CHECK USER NETWORK BEFORE EXECUTING FUNC
+// const check = (callback) => {
+//    if (state.metamask.network === network) {
+//       callback();
+
+//    // IF IT DOESNT MATCH, LOG ERROR
+//    } else { console.log('wrong network') }
+// }

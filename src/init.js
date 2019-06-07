@@ -1,13 +1,24 @@
 import { useEffect, useContext } from 'react';
 import { Context } from './context';
 import { user, network, networks } from './funcs/metamask';
+import { init } from './funcs/blockchain';
 
-function Proxy() {
+function Init() {
 
    // ROUTE CONTEXT
    const { state, dispatch } = useContext(Context);
 
    // ON LOAD
+   useEffect(() => {
+
+      // SET BLOCKCHAIN REFERENCES
+      dispatch({
+         type: 'blockchain',
+         payload: init()
+      })
+   }, [])
+
+   // WHEN THE PROXY CHANGES
    useEffect(() => {
 
       // IF METAMASK IS THE PROXY
@@ -54,9 +65,9 @@ function Proxy() {
             console.log('network changed!');
          })
       }
-   }, [])
+   }, [state.host])
 
    return null;
 }
 
-export default Proxy;
+export default Init;
