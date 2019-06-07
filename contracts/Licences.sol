@@ -73,12 +73,12 @@ contract Licences {
    }
 
    // FETCH USER LICENCE DATA
-   function fetch() public view returns(uint256) {
+   function fetch(address user) public view returns(uint256) {
 
       // MAKE SURE THE USER EXISTS
-      require(exists(msg.sender), 'user does not exist');
+      require(exists(user), 'user does not exist');
 
       // RETURN VALUE
-      return licences[msg.sender];
+      return licences[user];
    }
 }
