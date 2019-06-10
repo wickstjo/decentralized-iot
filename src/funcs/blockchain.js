@@ -25,7 +25,10 @@ function init() {
 
 // FETCH CORRECT CONTRACT
 function contract(web3, type) {
-   return web3.eth.Contract(references[type].abi, references[type].address);
+   return web3.eth.Contract(
+      references[type].abi,
+      references[type].address
+   );
 }
 
 // FETCH DEVICES

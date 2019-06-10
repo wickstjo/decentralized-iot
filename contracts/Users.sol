@@ -5,7 +5,7 @@ contract Users {
 
    // USER OBJECT
    struct User {
-      string nickname;
+      string name;
       uint reputation;
       uint256 joined;
       bool isset;
@@ -15,14 +15,14 @@ contract Users {
    mapping (address => User) users;
 
    // ADD USER
-   function add(string memory _nickname) public {
+   function add(string memory _name) public {
 
       // MAKE SURE THE USER DOESNT EXIST
       require(!exists(msg.sender), 'user already exists');
 
       // ADD ENTRY
       users[msg.sender] = User({
-         nickname: _nickname,
+         name: _name,
          reputation: 0,
          joined: block.timestamp,
          isset: true
