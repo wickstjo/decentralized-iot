@@ -10,7 +10,7 @@ contract Device {
    bool public status;
    bool public isset;
 
-   // CONSTRUCTOR
+   // WHEN CONTRACT IS FIRST BUILT
    constructor(string memory _name, address payable _owner) public {
 
       // SET REFERENCES

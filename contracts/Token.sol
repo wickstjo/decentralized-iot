@@ -1,8 +1,5 @@
 pragma solidity ^0.5.0;
 
-// https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20.sol
-
-// SAFEMATH LIBRARY
 library SafeMath {
 
    function add(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -44,7 +41,6 @@ library SafeMath {
    }
 }
 
-// ERC INTERFACE
 interface IERC20 {
    function totalSupply() external view returns (uint256);
    function balanceOf(address account) external view returns (uint256);
@@ -57,7 +53,6 @@ interface IERC20 {
    event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-// ERC CONTRACT
 contract Token is IERC20 {
 
    using SafeMath for uint256;

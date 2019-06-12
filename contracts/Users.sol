@@ -1,7 +1,28 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-contract Users {
+interface Assistant {
+
+   // CHECK IF USER EXISTS
+   modifier isUser(User user) {
+      require(user.isset(), 'user does not exists');
+      _;
+   }
+
+   // CHECK IF USER DOESNT EXIST
+   modifier isNotUser(User user) {
+      require(!user.isset(), 'user already exists');
+      _;
+   }
+
+   // CHECK THAT GIVEN AMOUNT IS NOT NEGATIVE
+   modifier notNegative(uint amount) {
+      require(amount >= 1, 'amount cannot be negative');
+      _;
+   }
+}
+
+contract Users is Assistant {
 
    // USER OBJECT
    struct User {
@@ -13,24 +34,6 @@ contract Users {
 
    // OWNER ADDRESS => USER OBJECT
    mapping (address => User) users;
-
-   // CHECK IF USER DOESNT EXIST
-   modifier isNotUser {
-      require(!exists(msg.sender), 'user already exists');
-      _;
-   }
-
-   // CHECK IF USER EXISTS
-   modifier isUser {
-      require(exists(msg.sender), 'user does not exists');
-      _;
-   }
-
-   // CHECK THAT GIVEN AMOUNT IS NOT NEGATIVE
-   modifier notNegative(uint amount) {
-      require(amount >= 1, 'amount cannot be negative');
-      _;
-   }
 
    // ADD ENTRY TO HASHMAP
    function add(string memory _name) public isNotUser {
@@ -48,12 +51,12 @@ contract Users {
    }
 
    // REWARD REPUTATION TO USER
-   function reward(address user, uint amount) public isUser notNegative(amount) {
+   function reward(address user, uint amount) public isUser(users[msg.sender]) notNegative(amount) {
       users[user].reputation += amount;
    }
 
    // FETCH USER DATA
-   function fetch(address user) public view isUser returns(User memory) {
+   function fetch(address user) public view isUser(users[msg.sender]) returns(User memory) {
       return users[user];
    }
 

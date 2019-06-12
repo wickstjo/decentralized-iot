@@ -1,13 +1,13 @@
-var Devices = artifacts.require("./contracts/Devices.sol");
-var Licences = artifacts.require("./contracts/Licences.sol");
-var Tasks = artifacts.require("./contracts/Tasks.sol");
-var Token = artifacts.require("./contracts/Token.sol");
-var Users = artifacts.require("./contracts/Users.sol");
+const contracts = [
+   'Devices',
+   'Licences',
+   'Tasks',
+   'Token',
+   'Users'
+]
 
-module.exports = function(deployer) {
-   deployer.deploy(Devices);
-   deployer.deploy(Licences);
-   deployer.deploy(Tasks);
-   deployer.deploy(Token);
-   deployer.deploy(Users);
-};
+module.exports = (deployer) => {
+   contracts.forEach(name => {
+      deployer.deploy(artifacts.require('./contracts/' + name + '.sol'))
+   })
+}
