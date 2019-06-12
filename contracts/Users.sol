@@ -11,16 +11,29 @@ contract Users {
       bool isset;
    }
 
-   // MAP OF USERS
+   // OWNER ADDRESS => USER OBJECT
    mapping (address => User) users;
 
-   // ADD USER
-   function add(string memory _name) public {
-
-      // MAKE SURE THE USER DOESNT EXIST
+   // CHECK IF USER DOESNT EXIST
+   modifier isNotUser {
       require(!exists(msg.sender), 'user already exists');
+      _;
+   }
 
-      // ADD ENTRY
+   // CHECK IF USER EXISTS
+   modifier isUser {
+      require(exists(msg.sender), 'user does not exists');
+      _;
+   }
+
+   // CHECK THAT GIVEN AMOUNT IS NOT NEGATIVE
+   modifier notNegative(uint amount) {
+      require(amount >= 1, 'amount cannot be negative');
+      _;
+   }
+
+   // ADD ENTRY TO HASHMAP
+   function add(string memory _name) public isNotUser {
       users[msg.sender] = User({
          name: _name,
          reputation: 0,
@@ -29,27 +42,19 @@ contract Users {
       });
    }
 
-   // REMOVE USER
-   function remove() public {
-
-      // MAKE SURE THE USER DOESNT EXIST
-      require(exists(msg.sender), 'user does not exists');
-
-      // DELETE ENTRY
+   // REMOVE ENTRY FROM HASHMAP
+   function remove() public isUser {
       delete users[msg.sender];
    }
 
    // REWARD REPUTATION TO USER
-   function reward(address user, uint amount) public {
-
-      // MAKE SURE THE USER DOESNT EXIST
-      require(exists(user), 'user does not exists');
-
-      // MAKE SURE AMOUNT ISNT NEGATIVE
-      require(amount >= 1, 'amount cannot be negative');
-
-      // INCREMENT REPUTATION
+   function reward(address user, uint amount) public isUser notNegative(amount) {
       users[user].reputation += amount;
+   }
+
+   // FETCH USER DATA
+   function fetch(address user) public view isUser returns(User memory) {
+      return users[user];
    }
 
    // CHECK IF USER EXISTS
@@ -64,15 +69,5 @@ contract Users {
       }
 
       return response;
-   }
-
-   // FETCH USER LICENCE DATA
-   function fetch(address user) public view returns(User memory) {
-
-      // MAKE SURE THE USER EXISTS
-      require(exists(user), 'user does not exist');
-
-      // RETURN VALUE
-      return users[user];
    }
 }

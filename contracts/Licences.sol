@@ -2,50 +2,53 @@ pragma solidity ^0.5.0;
 
 contract Licences {
 
-   // PRICE IN WEI
+   // PRICE (WEI) & DURATION (SECONDS)
    uint public price = 1000000;
-
-   // DURATION IN SECONDS
    uint public duration = 604800;
 
-   // MAP OF LICENCES, USER => EXPIRATION DATE
+   // OWNER ADDRESS => EXPIRATION TIMESTAMP
    mapping (address => uint256) licences;
 
-   // PURCHASE LICENCE
-   function add(uint amount) public payable {
-
-      // MAKE SURE PAYED FUNDS ARE WITHIN RANGE
+   // CHECK IF FUNDS ARE ENOUGH
+   modifier canAfford(uint amount) {
       require(msg.value >= amount * price, 'not enough funds');
+      _;
+   }
+
+   // CHECK IF SENDER IS A USER
+   modifier isUser {
+      require(exists(msg.sender), 'user does not exist');
+      _;
+   }
+
+   // PURCHASE LICENCE
+   function add(uint amount) public payable canAfford(amount) {
 
       // FIGURE OUT PURCHASED TIME
       uint time = amount * duration;
 
-      // IF USER HAS VALID LICENCE ALREADY
-      if (valid(msg.sender)) {
-
-         // ADD TO EXISTING VALUE
+      // IF SENDER ALREADY HAS A LICENCE, ADD TO TIME
+      if (hasLicence(msg.sender)) {
          licences[msg.sender] += time;
 
-      // OTHERWISE
+      // OTHERWISE, ADD TO CURRENT TIMESTAMP
       } else {
-
-         // ADD DURATION BASED ON BLOCK TIMESTAMP
          licences[msg.sender] = block.timestamp + time;
       }
    }
 
-   // REMOVE LICENCE
-   function remove() public {
-
-      // MAKE SURE THE USER EXISTS
-      require(exists(msg.sender), 'user does not exist');
-
-      // REMOVE ENTRY
+   // REMOVE LICENCE ENTRY
+   function remove() public isUser {
       delete licences[msg.sender];
    }
 
+   // FETCH USER LICENCE DATA
+   function fetch(address user) public view isUser returns(uint256) {
+      return licences[user];
+   }
+
    // CHECK IF USER EXISTS
-   function exists(address user) public view returns(bool) {
+   function exists(address user) internal view returns(bool) {
 
       // DEFAULT TO TRUE
       bool response = true;
@@ -58,8 +61,8 @@ contract Licences {
       return response;
    }
 
-   // CHECK FOR LICENCE VALIDITY
-   function valid(address user) public view returns(bool) {
+   // CHECK IS USER HAS A LICENCE
+   function hasLicence(address user) internal view returns(bool) {
 
       // DEFAULT TO FALSE
       bool response = false;
@@ -70,15 +73,5 @@ contract Licences {
       }
 
       return response;
-   }
-
-   // FETCH USER LICENCE DATA
-   function fetch(address user) public view returns(uint256) {
-
-      // MAKE SURE THE USER EXISTS
-      require(exists(user), 'user does not exist');
-
-      // RETURN VALUE
-      return licences[user];
    }
 }
