@@ -4,14 +4,14 @@ pragma experimental ABIEncoderV2;
 interface Assistant {
 
    // CHECK IF USER EXISTS
-   modifier isUser(User user) {
-      require(user.isset(), 'user does not exists');
+   modifier isUser(Users.User memory user) {
+      require(user.isset, 'user does not exists');
       _;
    }
 
    // CHECK IF USER DOESNT EXIST
-   modifier isNotUser(User user) {
-      require(!user.isset(), 'user already exists');
+   modifier isNotUser(Users.User memory user) {
+      require(!user.isset, 'user already exists');
       _;
    }
 
@@ -36,7 +36,7 @@ contract Users is Assistant {
    mapping (address => User) users;
 
    // ADD ENTRY TO HASHMAP
-   function add(string memory _name) public isNotUser {
+   function add(string memory _name) public isNotUser(users[msg.sender]) {
       users[msg.sender] = User({
          name: _name,
          reputation: 0,
@@ -46,31 +46,17 @@ contract Users is Assistant {
    }
 
    // REMOVE ENTRY FROM HASHMAP
-   function remove() public isUser {
+   function remove() public isUser(users[msg.sender]) {
       delete users[msg.sender];
    }
 
    // REWARD REPUTATION TO USER
-   function reward(address user, uint amount) public isUser(users[msg.sender]) notNegative(amount) {
+   function reward(address user, uint amount) public isUser(users[msg.sender]) isUser(users[user]) notNegative(amount) {
       users[user].reputation += amount;
    }
 
    // FETCH USER DATA
    function fetch(address user) public view isUser(users[msg.sender]) returns(User memory) {
       return users[user];
-   }
-
-   // CHECK IF USER EXISTS
-   function exists(address user) public view returns(bool) {
-
-      // DEFAULT TO FALSE
-      bool response = false;
-
-      // IF THE ADDRESS HAS BEEN DEFINED, SWAP TO TRUE
-      if (users[user].isset) {
-         response = true;
-      }
-
-      return response;
    }
 }
