@@ -3,44 +3,39 @@ pragma solidity ^0.5.0;
 // IMPORT DEVICE CONTRACT
 import { Device } from './Device.sol';
 
-interface Assistant {
+contract Devices {
 
-   // CHECK IF SENDER IS OWNER
-   modifier isOwner(Device device) {
-      require(msg.sender == device.owner(), 'you are not the owner');
-      _;
-   }
+    // HASHMAP OF DEVICES
+    mapping (string => Device) devices;
 
-   // CHECK IF DEVICE EXISTS
-   modifier isDevice(Device device) {
-      require(device.isset(), 'device does not exist');
-      _;
-   }
+    // FETCH DEVICE ENTRY
+    function fetch(string memory id) public view returns(Device) {
 
-   // CHECK IF DEVICE DOES NOT EXISTS
-   modifier isNotDevice(Device device) {
-      require(!device.isset(), 'device already exist');
-      _;
-   }
-}
+        // IF THE DEVICE EXISTS, RETURN DATA
+        require(devices[id].isset(), 'device does not exist');
+        return devices[id];
+    }
 
-contract Devices is Assistant {
+    // CREATE NEW DEVICE INSTANCE
+    function add(
+        string memory id,
+        string memory name,
+        address payable owner
+    ) public {
 
-   // HASHMAP OF DEVICES
-   mapping (string => Device) devices;
+        // IF THE ID DOES NOT EXIST, INSTANTIATE & PUSH NEW DEVICE
+        require(!devices[id].isset(), 'device already exist');
+        devices[id] = new Device(name, owner);
+    }
 
-   // FETCH DEVICE ENTRY
-   function fetch(string memory id) public view isOwner(devices[id]) returns(Device) {
-      return devices[id];
-   }
+    // REMOVE DEVICE ENTRY
+    function remove(string memory id) public {
 
-   // CREATE NEW DEVICE INSTANCE
-   function add(string memory id, string memory name, address payable owner) public isNotDevice(devices[id]) {
-      devices[id] = new Device(name, owner);
-   }
+        // CONDITIONS
+        require(devices[id].isset(), 'device already exist');
+        require(msg.sender == devices[id].owner(), 'you are not the owner');
 
-   // REMOVE DEVICE INSTANCE
-   function remove(string memory id) public isDevice(devices[id]) isOwner(devices[id]) {
-      delete devices[id];
-   }
+        // REMOVE ENTRY
+        delete devices[id];
+    }
 }

@@ -1,62 +1,59 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-interface Assistant {
+contract Users {
 
-   // CHECK IF USER EXISTS
-   modifier isUser(Users.User memory user) {
-      require(user.isset, 'user does not exists');
-      _;
-   }
+    // USER OBJECT
+    struct User {
+        string name;
+        uint reputation;
+        uint256 joined;
+        bool isset;
+    }
 
-   // CHECK IF USER DOESNT EXIST
-   modifier isNotUser(Users.User memory user) {
-      require(!user.isset, 'user already exists');
-      _;
-   }
+    // OWNER ADDRESS => USER OBJECT
+    mapping (address => User) users;
 
-   // CHECK THAT GIVEN AMOUNT IS NOT NEGATIVE
-   modifier notNegative(uint amount) {
-      require(amount >= 1, 'amount cannot be negative');
-      _;
-   }
-}
+    // ADD ENTRY TO HASHMAP
+    function add(string memory _name) public {
 
-contract Users is Assistant {
+        // CONDITIONS
+        require(users[msg.sender].isset != true, 'user already exists');
 
-   // USER OBJECT
-   struct User {
-      string name;
-      uint reputation;
-      uint256 joined;
-      bool isset;
-   }
+        // PUSH NEW USER
+        users[msg.sender] = User({
+            name: _name,
+            reputation: 0,
+            joined: block.timestamp,
+            isset: true
+        });
+    }
 
-   // OWNER ADDRESS => USER OBJECT
-   mapping (address => User) users;
+    // REMOVE ENTRY FROM HASHMAP
+    function remove() public {
 
-   // ADD ENTRY TO HASHMAP
-   function add(string memory _name) public isNotUser(users[msg.sender]) {
-      users[msg.sender] = User({
-         name: _name,
-         reputation: 0,
-         joined: block.timestamp,
-         isset: true
-      });
-   }
+        // IF THE USER EXISTS, REMOVE ENTRY
+        require(users[msg.sender].isset, 'user does not exist');
+        delete users[msg.sender];
+    }
 
-   // REMOVE ENTRY FROM HASHMAP
-   function remove() public isUser(users[msg.sender]) {
-      delete users[msg.sender];
-   }
+    // REWARD REPUTATION TO USER
+    function reward(address receiver, uint amount) public {
 
-   // REWARD REPUTATION TO USER
-   function reward(address user, uint amount) public isUser(users[msg.sender]) isUser(users[user]) notNegative(amount) {
-      users[user].reputation += amount;
-   }
+        // CONDITIONS
+        require(users[msg.sender].isset, 'sender does not exist');
+        require(users[receiver].isset, 'receiver does not exist');
+        require(amount >= 1, 'amount cannot be negative');
 
-   // FETCH USER DATA
-   function fetch(address user) public view isUser(users[msg.sender]) returns(User memory) {
-      return users[user];
-   }
+        // ADD REPUTATION TO RECEIVER
+        users[receiver].reputation += amount;
+    }
+
+    // FETCH USER DATA
+    function fetch(address user) public view returns(User memory) {
+
+        // IF THE USER EXISTS, RETURN DATA
+        require(users[msg.sender].isset, 'sender does not exist');
+        return users[user];
+    }
 }

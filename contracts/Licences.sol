@@ -1,58 +1,46 @@
 pragma solidity ^0.5.0;
 
-interface Assistant {
+contract Licences {
 
-   // CHECK IF FUNDS ARE ENOUGH
-   modifier canAfford(uint amount, uint price) {
-      require(msg.value >= amount * price, 'not enough funds');
-      _;
-   }
+    // PRICE (WEI) & DURATION (SECONDS)
+    uint public price = 1000000;
+    uint public duration = 604800;
 
-   // CHECK IF SENDER IS A USER
-   modifier isUser(mapping (address => uint256) memory licences) {
-      require(licences[msg.sender] != 0, 'user does not exists');
-      _;
-   }
+    // OWNER ADDRESS => EXPIRATION TIMESTAMP
+    mapping (address => uint256) licences;
 
-   // CHECK IF SENDER IS A not USER
-   modifier isNotUser(mapping (address => uint256) memory licences) {
-      require(licences[msg.sender] == 0, 'user already exists');
-      _;
-   }
-}
+    // PURCHASE LICENCE
+    function add(uint amount) public payable {
 
-contract Licences is Assistant {
+        // CONDITIONS
+        require(msg.value >= amount * price, 'not enough funds');
 
-   // PRICE (WEI) & DURATION (SECONDS)
-   uint public price = 1000000;
-   uint public duration = 604800;
+        // FIGURE OUT PURCHASED TIME
+        uint time = amount * duration;
 
-   // OWNER ADDRESS => EXPIRATION TIMESTAMP
-   mapping (address => uint256) licences;
+        // IF SENDER ALREADY HAS A LICENCE, ADD TO TIME
+        if (block.timestamp < licences[msg.sender]) {
+            licences[msg.sender] += time;
 
-   // PURCHASE LICENCE
-   function add(uint amount) public payable canAfford(amount, price) isNotUser(licences) {
+        // OTHERWISE, ADD TO CURRENT TIMESTAMP
+        } else {
+            licences[msg.sender] = block.timestamp + time;
+        }
+    }
 
-      // FIGURE OUT PURCHASED TIME
-      uint time = amount * duration;
+    // REMOVE LICENCE ENTRY
+    function remove() public {
 
-      // IF SENDER ALREADY HAS A LICENCE, ADD TO TIME
-      if (block.timestamp < licences[msg.sender]) {
-         licences[msg.sender] += time;
+        // IF THE USER EXISTS, REMOVE ENTRY
+        require(licences[msg.sender] != 0, 'user does not exists');
+        delete licences[msg.sender];
+    }
 
-      // OTHERWISE, ADD TO CURRENT TIMESTAMP
-      } else {
-         licences[msg.sender] = block.timestamp + time;
-      }
-   }
+    // FETCH USER LICENCE DATA
+    function fetch(address user) public view returns(uint256) {
 
-   // REMOVE LICENCE ENTRY
-   function remove() public isUser(licences) {
-      delete licences[msg.sender];
-   }
-
-   // FETCH USER LICENCE DATA
-   function fetch(address user) public view isUser(licences) returns(uint256) {
-      return licences[user];
-   }
+        // IF THE USER EXISTS, RETURN EXPIRATION DATE
+        require(licences[msg.sender] != 0, 'user does not exists');
+        return licences[user];
+    }
 }
