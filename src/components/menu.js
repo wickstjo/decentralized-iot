@@ -10,8 +10,8 @@ function Menu() { return (
          header={ 'Home' }
       />
       <Item
-         to={ '/administrate' }
-         header={ 'Administrate' }
+         to={ '/foo' }
+         header={ 'Foo' }
       />
       </div>
       <div>

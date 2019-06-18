@@ -2,7 +2,6 @@ const contracts = [
    'Devices',
    'Licences',
    'Tasks',
-   'Token',
    'Users'
 ]
 

@@ -17,7 +17,6 @@ function init() {
          devices: contract(web3, 'devices'),
          licences: contract(web3, 'licences'),
          tasks: contract(web3, 'tasks'),
-         token: contract(web3, 'token'),
          users: contract(web3, 'users')
       }
    }
@@ -31,24 +30,25 @@ function contract(web3, type) {
    );
 }
 
-// FETCH DEVICES
-function fetch_devices({ contracts }) {
-   return contracts.devices.methods.fetch('foo').call();
+// FETCH USER
+function fetch_user({ contracts, metamask, web3 }) {
+   return contracts.users.methods.fetch(metamask.user).call().then(response => {
+      return {
+         name: response.name,
+         reputation: web3.utils.hexToNumber(response.reputation),
+         joined: web3.utils.hexToNumber(response.joined),
+         isset: response.isset
+      }
+   });
+}
+
+// ADD USER
+function add_user({ contracts, metamask }, name) {
+   return contracts.users.methods.add(name).send({ from: metamask.user });
 }
 
 export {
    init,
-   fetch_devices
+   fetch_user,
+   add_user
 }
-
-// // DEPLOYED SMART CONTRACT NETWORK
-// const network = 'DEV';
-
-// // CHECK USER NETWORK BEFORE EXECUTING FUNC
-// const check = (callback) => {
-//    if (state.metamask.network === network) {
-//       callback();
-
-//    // IF IT DOESNT MATCH, LOG ERROR
-//    } else { console.log('wrong network') }
-// }

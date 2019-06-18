@@ -7,7 +7,6 @@ import './interface/css/general.scss';
 import Init from './init';
 import Menu from './components/menu';
 import Home from './pages/home';
-import Administrate from './pages/administrate';
 import Error from './pages/error';
 
 function App() { return (
@@ -17,7 +16,6 @@ function App() { return (
          <Menu />
          <Switch>
             <Route exact path="/" component={ Home } />
-            <Route path="/administrate" component={ Administrate } />
             <Route component={ Error } />
          </Switch>
       </Provider>

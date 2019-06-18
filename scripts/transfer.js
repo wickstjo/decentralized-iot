@@ -9,7 +9,6 @@ run([
    'Devices',
    'Licences',
    'Tasks',
-   'Token',
    'Users'
 ]);
 

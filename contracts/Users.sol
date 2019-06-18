@@ -12,7 +12,7 @@ contract Users {
     }
 
     // OWNER ADDRESS => USER OBJECT
-    mapping (address => User) users;
+    mapping (address => User) public users;
 
     // ADD ENTRY TO HASHMAP
     function add(string memory _name) public {
@@ -51,9 +51,6 @@ contract Users {
 
     // FETCH USER DATA
     function fetch(address user) public view returns(User memory) {
-
-        // IF THE USER EXISTS, RETURN DATA
-        require(users[msg.sender].isset, 'sender does not exist');
         return users[user];
     }
 }
