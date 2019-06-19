@@ -30,25 +30,6 @@ function contract(web3, type) {
    );
 }
 
-// FETCH USER
-function fetch_user({ contracts, metamask, web3 }) {
-   return contracts.users.methods.fetch(metamask.user).call().then(response => {
-      return {
-         name: response.name,
-         reputation: web3.utils.hexToNumber(response.reputation),
-         joined: web3.utils.hexToNumber(response.joined),
-         isset: response.isset
-      }
-   });
-}
-
-// ADD USER
-function add_user({ contracts, metamask }, name) {
-   return contracts.users.methods.add(name).send({ from: metamask.user });
-}
-
 export {
-   init,
-   fetch_user,
-   add_user
+   init
 }

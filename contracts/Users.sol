@@ -37,6 +37,11 @@ contract Users {
         delete users[msg.sender];
     }
 
+    // FETCH USER DATA
+    function fetch(address user) public view returns(User memory) {
+        return users[user];
+    }
+
     // REWARD REPUTATION TO USER
     function reward(address receiver, uint amount) public {
 
@@ -47,10 +52,5 @@ contract Users {
 
         // ADD REPUTATION TO RECEIVER
         users[receiver].reputation += amount;
-    }
-
-    // FETCH USER DATA
-    function fetch(address user) public view returns(User memory) {
-        return users[user];
     }
 }

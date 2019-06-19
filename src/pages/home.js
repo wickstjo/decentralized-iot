@@ -1,7 +1,11 @@
 import React, { useContext } from 'react';
 import { Context } from '../context';
 import { network } from '../resources/settings.json';
-import { fetch_user, add_user } from '../funcs/blockchain';
+import {
+   fetch as fetch_user,
+   add as add_user,
+   remove as remove_user
+} from '../funcs/contracts/users';
 
 function Home() {
 
@@ -10,7 +14,7 @@ function Home() {
 
    // FETCH USER
    const fetch = () => {
-      fetch_user(state).then(response => {
+      fetch_user(state, state.metamask.user).then(response => {
          console.log(response)
       })
    }
@@ -19,6 +23,13 @@ function Home() {
    const add = () => {
       add_user(state, 'foobar').then(() => {
          console.log('user added successfully');
+      })
+   }
+
+   // REMOVE USER
+   const remove = () => {
+      remove_user(state, state.metamask.user).then(() => {
+         console.log('user removed successfully');
       })
    }
 
@@ -33,6 +44,10 @@ function Home() {
          <Item
             header={ 'Add User' }
             func={ add }
+         />
+         <Item
+            header={ 'Remove User' }
+            func={ remove }
          />
       </div>
 
