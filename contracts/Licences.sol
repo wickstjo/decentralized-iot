@@ -38,9 +38,6 @@ contract Licences {
 
     // FETCH USER LICENCE DATA
     function fetch(address user) public view returns(uint256) {
-
-        // IF THE USER EXISTS, RETURN EXPIRATION DATE
-        require(licences[msg.sender] != 0, 'user does not exists');
         return licences[user];
     }
 }

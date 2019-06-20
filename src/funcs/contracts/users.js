@@ -19,7 +19,7 @@ function add({ contracts, metamask }, name) {
 
 // REMOVE USER
 function remove({ contracts, metamask }) {
-   return contracts.users.methods.remove(metamask.user).send({
+   return contracts.users.methods.remove().send({
       from: metamask.user
    });
 }
