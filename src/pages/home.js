@@ -4,6 +4,7 @@ import { network } from '../resources/settings.json';
 
 import Users from '../components/users';
 import Licences from '../components/licences';
+import Devices from '../components/devices';
 
 function Home() {
 
@@ -16,6 +17,7 @@ function Home() {
       <div id={ 'innerbody' }>
          <Users />
          <Licences />
+         <Devices />
       </div>
 
    // OTHERWISE, SHOW ERROR MESSAGE

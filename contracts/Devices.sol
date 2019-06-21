@@ -17,15 +17,11 @@ contract Devices {
     }
 
     // CREATE NEW DEVICE INSTANCE
-    function add(
-        string memory id,
-        string memory name,
-        address payable owner
-    ) public {
+    function add(string memory id, string memory name) public {
 
         // IF THE ID DOES NOT EXIST, INSTANTIATE & PUSH NEW DEVICE
         require(!devices[id].isset(), 'device already exist');
-        devices[id] = new Device(name, owner);
+        devices[id] = new Device(name, msg.sender);
     }
 
     // REMOVE DEVICE ENTRY

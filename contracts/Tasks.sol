@@ -6,7 +6,7 @@ import { Task } from './Task.sol';
 contract Tasks {
 
     // LIST OF OPEN TASKS
-    Task[] tasks;
+    Task[] public tasks;
 
     // ADD TASK ENTRY
     function add(
