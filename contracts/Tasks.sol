@@ -16,20 +16,24 @@ contract Tasks {
         string memory encryption
     ) public payable {
 
+        // CONDITIONS
+        //require(block.timestamp > expires, 'date has expired');
+        require(msg.value >= reward, 'reward does not match');
+
         // INSTANTIATE & PUSH NEW TASK
         tasks.push(
-            new Task(expires, reputation, reward, encryption)
+            new Task(expires, reputation, reward, encryption, msg.sender)
         );
     }
 
     // REMOVE TASK ENTRY
-    function remove(uint256 _task) public {
+    function remove(uint256 task) public {
 
         // MAKE SURE THE SENDER IS THE TASK SELLER
-        require(tasks[_task].seller() == msg.sender, 'you are not the seller');
+        require(tasks[task].buyer() == msg.sender, 'you are not the seller');
 
         // REMOVE ENTRY
-        delete tasks[_task];
+        delete tasks[task];
     }
 
     // FETCH ALL OPEN TASKS

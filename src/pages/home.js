@@ -5,6 +5,7 @@ import { network } from '../resources/settings.json';
 import Users from '../components/users';
 import Licences from '../components/licences';
 import Devices from '../components/devices';
+import Tasks from '../components/tasks';
 
 function Home() {
 
@@ -18,6 +19,7 @@ function Home() {
          <Users />
          <Licences />
          <Devices />
+         <Tasks />
       </div>
 
    // OTHERWISE, SHOW ERROR MESSAGE

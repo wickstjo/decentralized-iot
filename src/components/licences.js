@@ -31,7 +31,7 @@ function Home() {
                 header={ 'Fetch Licence' }
                 func={() => {
                     fetch(state, state.metamask.user).then(response => {
-                        console.log(response);
+                        console.log(response)
                     })
                 }}
             />

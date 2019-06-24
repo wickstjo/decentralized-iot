@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Context } from '../context';
-import { fetch, add, remove } from '../funcs/contracts/devices';
+import { fetch, add, remove, status, toggle } from '../funcs/contracts/devices';
 
 import Item from './item';
 
@@ -32,6 +32,22 @@ function Home() {
                func={() => {
                   remove(state, 'foo1234').then(() => {
                      console.log('device removed successfully');
+                  })
+               }}
+         />
+         <Item
+               header={ 'Fetch Status' }
+               func={() => {
+                  status(state, 'foo1234').then(response => {
+                     console.log(response);
+                  })
+               }}
+         />
+         <Item
+               header={ 'Toggle Status' }
+               func={() => {
+                  toggle(state, 'foo1234').then(() => {
+                     console.log('status toggled');
                   })
                }}
          />

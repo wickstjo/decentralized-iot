@@ -23,18 +23,18 @@ contract Device {
     }
 
     // TOGGLE CONTRACT STATUS
-    function toggle() public {
+    function toggle(address payable sender) public {
 
         // IF THE SENDER IS THE OWNER, TOGGLE STATUS
-        require(msg.sender == owner, 'you are not the owner');
+        require(sender == owner, 'you are not the owner');
         status = !status;
     }
 
     // DESTROY THE CONTRACT & SEND ETH BACK
-    function nuke() public {
+    function nuke(address payable sender) public {
 
          // IF THE SENDER IS THE OWNER, DESTROY CONTRACT
-        require(msg.sender == owner, 'you are not the owner');
+        require(sender == owner, 'you are not the owner');
         selfdestruct(owner);
     }
 }

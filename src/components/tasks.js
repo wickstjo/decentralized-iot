@@ -12,26 +12,32 @@ function Home() {
    return (
       <div>
          <Item
-               header={ 'Fetch Device' }
+               header={ 'All Tasks' }
                func={() => {
-                  fetch(state, 'foo1234').then(response => {
+                  fetch(state).then(response => {
                      console.log(response)
                   })
                }}
          />
          <Item
-               header={ 'Add Device' }
+               header={ 'Add Task' }
                func={() => {
-                  add(state, 'foo1234', 'apolloRPI').then(() => {
-                     console.log('device added successfully');
+
+                  const expiration = 1571977065;
+                  const reputation = 5;
+                  const reward = 1000000;
+                  const encryption = 'foo1234';
+
+                  add(state, expiration, reputation, reward, encryption).then(() => {
+                     console.log('task added successfully');
                   })
                }}
          />
          <Item
-               header={ 'Remove Device' }
+               header={ 'Remove Task' }
                func={() => {
-                  remove(state, 'foo1234').then(() => {
-                     console.log('device removed successfully');
+                  remove(state, 0).then(() => {
+                     console.log('task removed successfully');
                   })
                }}
          />

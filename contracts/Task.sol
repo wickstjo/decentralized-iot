@@ -25,14 +25,15 @@ contract Task {
         uint32 _expires,
         uint _reputation,
         uint _reward,
-        string memory _encryption
+        string memory _encryption,
+        address payable _buyer
     ) public payable {
 
         // CONDITIONS
-        require(msg.value >= _reward * 1000, 'insufficient funds given');
+        //require(msg.value >= _reward * 1000, 'insufficient funds given');
 
         // SET BUYER & STATUS VARS
-        buyer = msg.sender;
+        buyer = _buyer;
         locked = false;
         completed = false;
 
