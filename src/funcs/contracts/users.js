@@ -14,7 +14,7 @@ function fetch({ contracts, web3 }, user) {
 function add({ contracts, metamask }, name) {
    return contracts.users.methods.add(name).send({
       from: metamask.user
-   });
+   })
 }
 
 // REMOVE USER
@@ -24,8 +24,18 @@ function remove({ contracts, metamask }) {
    });
 }
 
+function actions({ contracts }) {
+   return contracts.users.events.Action().on('data', event => {
+
+      // DECONSTRUCT RESPONSE & LOG MESSAGE
+      const { source, sender } = event.returnValues;
+      console.log(sender + ' has ' + source + ' an account');
+   })
+}
+
 export {
    fetch,
    add,
-   remove
+   remove,
+   actions
 }

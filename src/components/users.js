@@ -1,13 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Context } from '../context';
-import { fetch, add, remove } from '../funcs/contracts/users';
+import { fetch, add, remove, actions } from '../funcs/contracts/users';
 
 import Item from './item';
 
-function Home() {
+function Users() {
 
-   // GLOBAL STATE
-   const { state } = useContext(Context);
+    // GLOBAL STATE
+    const { state } = useContext(Context);
+
+    useEffect(() => {
+        actions(state)
+    }, []);
 
     return (
         <div>
@@ -39,4 +43,4 @@ function Home() {
     )
 }
 
-export default Home;
+export default Users;

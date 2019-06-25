@@ -4,7 +4,7 @@ import { price, duration, fetch, add, remove } from '../funcs/contracts/licences
 
 import Item from './item';
 
-function Home() {
+function Licences() {
 
    // GLOBAL STATE
    const { state } = useContext(Context);
@@ -55,4 +55,4 @@ function Home() {
     )
 }
 
-export default Home;
+export default Licences;

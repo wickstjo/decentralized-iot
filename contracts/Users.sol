@@ -14,6 +14,17 @@ contract Users {
     // OWNER ADDRESS => USER OBJECT
     mapping (address => User) public users;
 
+    // EVENTS
+    event Action(
+        string source,
+        address sender
+    );
+
+    // FETCH USER DATA
+    function fetch(address user) public view returns(User memory) {
+        return users[user];
+    }
+
     // ADD ENTRY TO HASHMAP
     function add(string memory _name) public {
 
@@ -27,6 +38,9 @@ contract Users {
             joined: block.timestamp,
             isset: true
         });
+
+        // SEND EVENT
+        emit Action('added', msg.sender);
     }
 
     // REMOVE ENTRY FROM HASHMAP
@@ -35,11 +49,9 @@ contract Users {
         // IF THE USER EXISTS, REMOVE ENTRY
         require(users[msg.sender].isset, 'user does not exist');
         delete users[msg.sender];
-    }
 
-    // FETCH USER DATA
-    function fetch(address user) public view returns(User memory) {
-        return users[user];
+        // SEND EVENT
+        emit Action('removed', msg.sender);
     }
 
     // REWARD REPUTATION TO USER

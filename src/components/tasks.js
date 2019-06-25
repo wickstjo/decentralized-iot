@@ -4,7 +4,7 @@ import { fetch, add, remove } from '../funcs/contracts/tasks';
 
 import Item from './item';
 
-function Home() {
+function Tasks() {
 
    // GLOBAL STATE
    const { state } = useContext(Context);
@@ -45,4 +45,4 @@ function Home() {
    )
 }
 
-export default Home;
+export default Tasks;
