@@ -18,7 +18,7 @@ function Users() {
             <Item
                 header={ 'Fetch User' }
                 func={() => {
-                    fetch(state, state.metamask.user).then(response => {
+                    fetch(state, state.user).then(response => {
                         console.log(response)
                     })
                 }}

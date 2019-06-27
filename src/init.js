@@ -1,6 +1,6 @@
 import { useEffect, useContext } from 'react';
 import { Context } from './context';
-import { user, network, networks } from './funcs/metamask';
+import { network } from './funcs/metamask';
 import { init } from './funcs/blockchain';
 
 function Init() {
@@ -20,52 +20,64 @@ function Init() {
 
    // WHEN THE PROXY CHANGES
    useEffect(() => {
+      if (state.proxy !== null) {
 
-      // IF METAMASK IS THE PROXY
-      if (state.host === 'metamask') {
-         
          // SET METAMASK USER
          dispatch({
             type: 'user',
-            payload: user(state)
+            payload: state.proxy.selectedAddress
          })
-
+   
          // SET METAMASK NETWORK
          dispatch({
             type: 'network',
-            payload: network(state)
+            payload: network(state.proxy.networkVersion)
          })
-
+   
          // TURN OFF AUTO RELOAD ETH NETWORK CHANGE
          state.proxy.autoRefreshOnNetworkChange = false;
-         
-         // METAMASK USER EVENT
-         state.proxy.on('accountsChanged', accounts => {
+
+         // USER CHANGE LISTENER
+         state.proxy.on('accountsChanged', response => {
 
             // UPDATE STATE
             dispatch({
                type: 'user',
-               payload: accounts[0]
+               payload: response[0]
             })
          
             // LOG CHANGE
             console.log('user changed!');
          })
 
-         // METAMASK NETWORK CHANGE
-         state.proxy.on('networkChanged', network => {
+         // NETWORK CHANGE LISTENER
+         state.proxy.on('networkChanged', response => {
 
             // UPDATE STATE
             dispatch({
                type: 'network',
-               payload: networks(network)
+               payload: network(response)
             })
 
             // LOG CHANGE
             console.log('network changed!');
          })
+
+      } else {
+
+         // SET METAMASK USER
+         dispatch({
+            type: 'user',
+            payload: undefined
+         })
+   
+         // SET METAMASK NETWORK
+         dispatch({
+            type: 'network',
+            payload: undefined
+         })
       }
-   }, [state.host])
+   }, [state.proxy])
 
    return null;
 }

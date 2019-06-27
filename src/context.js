@@ -10,7 +10,6 @@ function reducer(state, action) {
             ...state,
             web3: action.payload.web3,
             proxy: action.payload.proxy,
-            host: action.payload.host,
             contracts: action.payload.contracts
          }
       }
@@ -19,10 +18,7 @@ function reducer(state, action) {
       case 'network': {
          return {
             ...state,
-            metamask: {
-               ...state.metamask,
-               network: action.payload
-            }
+            network: action.payload
          }
       }
 
@@ -30,10 +26,7 @@ function reducer(state, action) {
       case 'user': {
          return {
             ...state,
-            metamask: {
-               ...state.metamask,
-               user: action.payload
-            }
+            user: action.payload
          }
       }
 
@@ -54,12 +47,9 @@ function Provider({ children }) {
    const [state, dispatch] = useReducer(reducer, {
       contracts: undefined,
       web3: undefined,
-      proxy: undefined,
-      host: undefined,
-      metamask: {
-         network: undefined,
-         user: '0x1c6E24f1a0954A1C25D7e69b765b02217252b0c1'
-      }
+      proxy: null,
+      network: undefined,
+      user: undefined
    });
 
    return (

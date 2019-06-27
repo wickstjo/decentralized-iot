@@ -13,7 +13,7 @@ function Home() {
    const { state } = useContext(Context);
 
    // RENDER BUTTONS IF USER IS ON THE CORRECT NETWORK
-   if (state.metamask.network === network) { return (
+   if (state.network === network && state.user !== undefined) { return (
 
       <div id={ 'innerbody' }>
          <Users />
@@ -23,7 +23,7 @@ function Home() {
       </div>
 
    // OTHERWISE, SHOW ERROR MESSAGE
-   )} else { return <div>You are on the wrong network!</div> }
+   )} else { return <div>You need to login and be on the correct network!</div> }
 }
 
 export default Home;

@@ -16,12 +16,12 @@ function Connect() {
    }
 
    // IF METAMASK IS INSTALLED
-   if (state.host === 'metamask') {
+   if (state.proxy !== null) {
 
-      if (state.metamask.user !== undefined) {
-         return <Item header={ shorten(state.metamask.user) + ' @ ' + state.metamask.network } />
-      } else {
+      if (state.user === undefined) {
          return <Item header={ 'Connect with Metamask' } func={ metamask_login } />
+      } else {
+         return <Item header={ shorten(state.user) + ' @ ' + state.network } />
       }
 
    // OTHERWISE, RETURN NOTHING

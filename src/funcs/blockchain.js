@@ -6,13 +6,12 @@ import references from '../resources/latest.json';
 function init() {
 
    // ESTABLISH WEB3 CONNECTION
-   let web3 = new Web3(Web3.givenProvider || connection.type + '://' + connection.host + ':' + connection.port);
+   let web3 = new Web3(connection.type + '://' + connection.host + ':' + connection.port);
 
    // RETURN REFERENCES
    return {
       web3: web3,
       proxy: web3.givenProvider,
-      host: web3._currentProvider.host,
       contracts: {
          devices: contract(web3, 'devices'),
          licences: contract(web3, 'licences'),

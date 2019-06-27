@@ -11,16 +11,17 @@ function fetch({ contracts, web3 }, user) {
 }
 
 // ADD USER
-function add({ contracts, metamask }, name) {
+function add({ contracts, user }, name) {
    return contracts.users.methods.add(name).send({
-      from: metamask.user
+      from: user,
+      gas: 500000
    })
 }
 
 // REMOVE USER
-function remove({ contracts, metamask }) {
+function remove({ contracts, user }) {
    return contracts.users.methods.remove().send({
-      from: metamask.user
+      from: user
    });
 }
 
