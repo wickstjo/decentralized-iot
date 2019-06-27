@@ -58,7 +58,7 @@ function Provider({ children }) {
       host: undefined,
       metamask: {
          network: undefined,
-         user: undefined
+         user: '0x1c6E24f1a0954A1C25D7e69b765b02217252b0c1'
       }
    });
 

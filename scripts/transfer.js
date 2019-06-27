@@ -30,7 +30,14 @@ function run(files) {
       fs.writeFile("src/resources/latest.json", stringified, (err) => {
 
          if (err) console.log(err);
-         console.log("REWROTE REFERENCES JSON SUCCESSFULLY!");
+         console.log("REWROTE LATEST IN FRONTEND!");
+
+         // THEN OVERWRITE THE REFS FILE
+         fs.writeFile("../rpi-handler/references/latest.json", stringified, (err) => {
+
+            if (err) console.log(err);
+            console.log("REWROTE LATEST IN RPI HANDLER!");
+         });
       });
    });
 }
