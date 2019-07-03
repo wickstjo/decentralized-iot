@@ -29,7 +29,7 @@ contract Users {
     function add(string memory _name) public {
 
         // CONDITIONS
-        require(users[msg.sender].isset != true, 'user already exists');
+        require(users[msg.sender].isset == false, 'user already exists');
 
         // PUSH NEW USER
         users[msg.sender] = User({
@@ -47,7 +47,7 @@ contract Users {
     function remove() public {
 
         // IF THE USER EXISTS, REMOVE ENTRY
-        require(users[msg.sender].isset, 'user does not exist');
+        require(users[msg.sender].isset == true, 'user does not exist');
         delete users[msg.sender];
 
         // SEND EVENT

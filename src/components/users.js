@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Context } from '../context';
-import { fetch, add, remove, actions } from '../funcs/contracts/users';
-import { reason } from '../funcs/blockchain';
+import { fetch, add, remove } from '../funcs/contracts/users';
 
 import Item from './item';
 
@@ -9,11 +8,6 @@ function Users() {
 
     // GLOBAL STATE
     const { state } = useContext(Context);
-
-    // ADD & REMOVE EVENT LISTENERS
-    useEffect(() => {
-        //actions(state)
-    }, []);
 
     return (
         <div>
@@ -28,8 +22,8 @@ function Users() {
             <Item
                 header={ 'Add User' }
                 func={() => {
-                    add(state, 'foobar').then(() => {
-                        console.log('user added successfully');
+                    add(state, 'foobar').then(response => {
+                        console.log(response);
                     })
                 }}
             />

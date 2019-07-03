@@ -23,7 +23,7 @@ function init() {
 
 // FETCH CORRECT CONTRACT
 function contract(web3, type) {
-   return web3.eth.Contract(
+   return new web3.eth.Contract(
       references[type].abi,
       references[type].address
    );

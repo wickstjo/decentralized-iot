@@ -11,11 +11,14 @@ function fetch({ contracts, web3 }, user) {
 }
 
 // ADD USER
-// https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#id21
 function add({ contracts, user }, name) {
    return contracts.users.methods.add(name).send({
       from: user,
       gas: 500000
+   }).then(() => {
+      return 'user added successfully';
+   }).catch(error => {
+      return error.toString();
    })
 }
 
@@ -23,21 +26,24 @@ function add({ contracts, user }, name) {
 function remove({ contracts, user }) {
    return contracts.users.methods.remove().send({
       from: user
-   });
-}
-
-function actions({ contracts }) {
-   return contracts.users.events.Action().on('data', event => {
-
-      // DECONSTRUCT RESPONSE & LOG MESSAGE
-      const { source, sender } = event.returnValues;
-      console.log(sender + ' has ' + source + ' an account');
+   }).then(() => {
+      return 'user removed successfully';
+   }).catch(error => {
+      return error;
    })
 }
+
+// function actions({ contracts }) {
+//    return contracts.users.events.Action().on('data', event => {
+
+//       // DECONSTRUCT RESPONSE & LOG MESSAGE
+//       const { source, sender } = event.returnValues;
+//       console.log(sender + ' has ' + source + ' an account');
+//    })
+// }
 
 export {
    fetch,
    add,
-   remove,
-   actions
+   remove
 }
