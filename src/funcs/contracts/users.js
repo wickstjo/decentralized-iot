@@ -7,10 +7,11 @@ function fetch({ contracts, web3 }, user) {
          joined: web3.utils.hexToNumber(response.joined),
          isset: response.isset
       }
-   });
+   })
 }
 
 // ADD USER
+// https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#id21
 function add({ contracts, user }, name) {
    return contracts.users.methods.add(name).send({
       from: user,

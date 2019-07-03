@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Context } from '../context';
 import { fetch, add, remove, actions } from '../funcs/contracts/users';
+import { reason } from '../funcs/blockchain';
 
 import Item from './item';
 
@@ -9,8 +10,9 @@ function Users() {
     // GLOBAL STATE
     const { state } = useContext(Context);
 
+    // ADD & REMOVE EVENT LISTENERS
     useEffect(() => {
-        actions(state)
+        //actions(state)
     }, []);
 
     return (

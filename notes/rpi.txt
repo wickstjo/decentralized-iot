@@ -1,9 +1,0 @@
-[12:23] <gordonDrogon> I don't think you can change the one burned into the SoC, however you may be able to mask/thwart applications reading /proc/cpuinfo, etc. with a custom kernel or linker preloader ...
-[12:26] <wickstjo> gordonDrogon: /proc/cpuinfo fetches the serial number from the SoC? Is there a way to bypass that method and read is straight from the source?
-[12:29] <gordonDrogon> I don't know, but I'd start with the kernel sources.
-[12:30] <gordonDrogon> I suspect it's a mailbox interface to the VC side of things.
-[12:31] <gordonDrogon> https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
-[12:33] <wickstjo> thanks alot! I'm just an idiot coder so I'
-[12:34] <wickstjo> 'll have to consult someone who's good at hardware/kernel stuff
-[12:35] <gordonDrogon> so all you need to do now is find an example program that uses the mailbox interface to see how to use it and off you go. I've not done this - I just googled for that.
-[12:35] <wickstjo> the project is for research so there's room for flexibility on certain aspects

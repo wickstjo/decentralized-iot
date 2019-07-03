@@ -1,5 +1,5 @@
 {
-  "name": "react-proj",
+  "name": "decentralized-iot",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,7 +16,8 @@
     "build": "react-scripts build",
     "push": "bash scripts/push.sh",
     "ganache": "bash scripts/ganache.sh",
-    "truffle": "bash scripts/truffle.sh"
+    "truffle": "bash scripts/truffle.sh",
+    "ipfs": "bash scripts/ipfs.sh"
   },
   "eslintConfig": {
     "extends": "react-app"

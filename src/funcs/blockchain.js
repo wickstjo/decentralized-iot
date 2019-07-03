@@ -29,6 +29,21 @@ function contract(web3, type) {
    );
 }
 
+// FIND REASON TO CONTRACT
+function reason(error) {
+
+   // STRINGIFY ERROR
+   const stringify = error.toString()
+
+   // FIND START & END INDEX
+   const start = stringify.search('reason":"') + 9;
+   const end = stringify.search('"},"stack":"')
+
+   // RETURN REASON
+   return stringify.substring(start, end);
+}
+
 export {
-   init
+   init,
+   reason
 }
