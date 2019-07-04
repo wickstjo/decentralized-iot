@@ -1,3 +1,5 @@
+import { transaction } from '../blockchain';
+
 // FETCH USER
 function fetch({ contracts, web3 }, user) {
    return contracts.users.methods.fetch(user).call().then(response => {
@@ -7,14 +9,18 @@ function fetch({ contracts, web3 }, user) {
          joined: web3.utils.hexToNumber(response.joined),
          isset: response.isset
       }
+   }).catch(error => {
+      return error.toString();
    })
 }
 
 // ADD USER
-function add({ contracts, user }, name) {
-   return contracts.users.methods.add(name).send({
-      from: user,
-      gas: 500000
+function add({ contracts, user, web3 }, name) {
+   return transaction({
+      web3: web3,
+      query: contracts.users.methods.add(name),
+      contract: contracts.users._address,
+      from: user
    }).then(() => {
       return 'user added successfully';
    }).catch(error => {
@@ -23,27 +29,33 @@ function add({ contracts, user }, name) {
 }
 
 // REMOVE USER
-function remove({ contracts, user }) {
-   return contracts.users.methods.remove().send({
+function remove({ contracts, user, web3 }) {
+   return transaction({
+      web3: web3,
+      query: contracts.users.methods.remove(),
+      contract: contracts.users._address,
       from: user
    }).then(() => {
       return 'user removed successfully';
    }).catch(error => {
-      return error;
+      return error.toString();
    })
 }
 
-// function actions({ contracts }) {
-//    return contracts.users.events.Action().on('data', event => {
+function listen({ contracts }) {
+   return contracts.users.events.Action().on('data', event => {
 
-//       // DECONSTRUCT RESPONSE & LOG MESSAGE
-//       const { source, sender } = event.returnValues;
-//       console.log(sender + ' has ' + source + ' an account');
-//    })
-// }
+      // DECONSTRUCT RESPONSE & LOG MESSAGE
+      const { source, sender } = event.returnValues;
+
+      // LOG EVENT
+      console.log(sender + ' has ' + source + ' an account');
+   })
+}
 
 export {
    fetch,
    add,
-   remove
+   remove,
+   listen
 }

@@ -17,7 +17,8 @@
     "push": "bash scripts/push.sh",
     "ganache": "bash scripts/ganache.sh",
     "truffle": "bash scripts/truffle.sh",
-    "ipfs": "bash scripts/ipfs.sh"
+    "ipfs": "bash scripts/ipfs.sh",
+    "fix": "bash scripts/fix.sh"
   },
   "eslintConfig": {
     "extends": "react-app"

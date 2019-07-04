@@ -29,21 +29,33 @@ function contract(web3, type) {
    );
 }
 
-// FIND REASON TO CONTRACT
-function reason(error) {
+// SIGN DATA TRANSACTION
+function transaction({ web3, query, contract, from }) {
 
-   // STRINGIFY ERROR
-   const stringify = error.toString()
+   // USER PRIVATE KEY
+   const private_key = '0x6dced18d9efdad6ca1eed9dc13d4f768c0b6af28696f045f74d245c5682ac41f';
 
-   // FIND START & END INDEX
-   const start = stringify.search('reason":"') + 9;
-   const end = stringify.search('"},"stack":"')
+   // TRANSACTION OUTLINE
+   const tx = {
+      from: from,
+      to: contract,
+      gas: 500000,
+      data: query.encodeABI()
+   }
 
-   // RETURN REASON
-   return stringify.substring(start, end);
+   // SIGN IT & EXECUTE
+   return web3.eth.accounts.signTransaction(tx, private_key).then(signed => {
+      return web3.eth.sendSignedTransaction(signed.rawTransaction);
+   });
+}
+
+// ESTIMATE GAS OST
+function gas() {
+   return 500000;
 }
 
 export {
    init,
-   reason
+   transaction,
+   gas
 }

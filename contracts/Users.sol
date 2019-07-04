@@ -22,6 +22,10 @@ contract Users {
 
     // FETCH USER DATA
     function fetch(address user) public view returns(User memory) {
+
+        // CONDITIONS
+        require(users[user].isset == true, 'user does not exist');
+
         return users[user];
     }
 

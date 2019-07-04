@@ -33,7 +33,7 @@ function run(files) {
          console.log("REWROTE LATEST IN FRONTEND!");
 
          // THEN OVERWRITE THE REFS FILE
-         fs.writeFile("../rpi-handler/references/latest.json", stringified, (err) => {
+         fs.writeFile("../rpi-handler/resources/latest.json", stringified, (err) => {
 
             if (err) console.log(err);
             console.log("REWROTE LATEST IN RPI HANDLER!");

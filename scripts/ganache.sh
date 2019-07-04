@@ -1,1 +1,1 @@
-ganache-cli --host 193.167.32.156 --port 8888
+sudo ganache-cli --host 193.167.32.156 --port 8888 --secure --unlock 0

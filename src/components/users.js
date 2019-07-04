@@ -30,8 +30,8 @@ function Users() {
             <Item
                 header={ 'Remove User' }
                 func={() => {
-                    remove(state).then(() => {
-                        console.log('user removed successfully');
+                    remove(state).then(response => {
+                        console.log(response);
                     })
                 }}
             />
