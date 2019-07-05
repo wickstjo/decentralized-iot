@@ -4,29 +4,12 @@ import React, { createContext, useReducer } from "react";
 function reducer(state, action) {
    switch (action.type) {
 
-      // BLOCKCHAIN REFERENCES
-      case 'blockchain': {
+      // CONNECT WITH BLOCKCHAIN GATEWAY
+      case 'connect': {
          return {
             ...state,
             web3: action.payload.web3,
-            proxy: action.payload.proxy,
             contracts: action.payload.contracts
-         }
-      }
-
-      // PROXY NETWORK
-      case 'network': {
-         return {
-            ...state,
-            network: action.payload
-         }
-      }
-
-      // PROXY USER
-      case 'user': {
-         return {
-            ...state,
-            user: action.payload
          }
       }
 
@@ -45,11 +28,8 @@ function Provider({ children }) {
 
    // ATTACH THE REDUCER
    const [state, dispatch] = useReducer(reducer, {
-      contracts: undefined,
       web3: undefined,
-      proxy: null,
-      network: undefined,
-      user: undefined
+      contracts: undefined
    });
 
    return (

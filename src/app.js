@@ -6,7 +6,11 @@ import './interface/css/general.scss';
 
 import Init from './init';
 import Menu from './components/menu';
-import Home from './pages/home';
+
+import User from './pages/user';
+import Licence from './pages/licence';
+import Device from './pages/device';
+import Task from './pages/task';
 import Error from './pages/error';
 
 function App() { return (
@@ -15,7 +19,10 @@ function App() { return (
          <Init />
          <Menu />
          <Switch>
-            <Route exact path="/" component={ Home } />
+            <Route exact path="/user" component={ User } />
+            <Route exact path="/licence" component={ Licence } />
+            <Route exact path="/device" component={ Device } />
+            <Route exact path="/task" component={ Task } />
             <Route component={ Error } />
          </Switch>
       </Provider>

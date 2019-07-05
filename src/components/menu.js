@@ -1,25 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Connect from './menu/connect';
+import '../interface/css/menu.scss';
 
 function Menu() { return (
    <div id={ 'menu' }>
-      <div>
       <Item
-         to={ '/' }
-         header={ 'Home' }
+         to={ '/user' }
+         header={ 'User' }
       />
       <Item
-         to={ '/foo' }
-         header={ 'Foo' }
+         to={ '/licence' }
+         header={ 'Licence' }
       />
-      </div>
-      <div>
-         <Connect />
-      </div>
+      <Item
+         to={ '/device' }
+         header={ 'Device' }
+      />
+      <Item
+         to={ '/task' }
+         header={ 'Task' }
+      />
    </div>
 )}
 
+// MENU ITEM
 function Item({ header, to }) { return (
    <Link to={ to } className={ 'item' }>{ header }</Link>
 )}

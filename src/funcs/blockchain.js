@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import { connection } from '../resources/settings.json';
+import { connection, keys } from '../resources/settings.json';
 import references from '../resources/latest.json';
 
 // INITIALIZE SC & WEB3
@@ -11,7 +11,6 @@ function init() {
    // RETURN REFERENCES
    return {
       web3: web3,
-      proxy: web3.givenProvider,
       contracts: {
          devices: contract(web3, 'devices'),
          licences: contract(web3, 'licences'),
@@ -22,31 +21,58 @@ function init() {
 }
 
 // FETCH CORRECT CONTRACT
-function contract(web3, type) {
+function contract(web3, name) {
    return new web3.eth.Contract(
-      references[type].abi,
-      references[type].address
+      references[name].abi,
+      references[name].address
    );
 }
 
-// SIGN DATA TRANSACTION
-function transaction({ web3, query, contract, from }) {
-
-   // USER PRIVATE KEY
-   const private_key = '0x6dced18d9efdad6ca1eed9dc13d4f768c0b6af28696f045f74d245c5682ac41f';
+// SIGN SC TRANSACTION
+function transaction({ query, contract }, { web3 }) {
 
    // TRANSACTION OUTLINE
    const tx = {
-      from: from,
+      from: keys.public,
       to: contract,
       gas: 500000,
       data: query.encodeABI()
    }
 
    // SIGN IT & EXECUTE
-   return web3.eth.accounts.signTransaction(tx, private_key).then(signed => {
-      return web3.eth.sendSignedTransaction(signed.rawTransaction);
-   });
+   return web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
+      return web3.eth.sendSignedTransaction(signed.rawTransaction).then(() => {
+         return true;
+      }).catch(error => {
+         console.log(error.toString())
+         return false;
+      })
+   })
+}
+
+// CALL SC METHOD
+function call({ query, callback }) {
+   return query.call().then(response => {
+      return {
+         success: true,
+         data: callback(response)
+      }
+   }).catch(error => {
+      console.log(error.toString())
+      return { success: false };
+   })
+}
+
+// LISTEN TO SC EVENT
+function event({ contracts }) {
+   return contracts.users.events.Action().on('data', event => {
+
+      // DECONSTRUCT RESPONSE & LOG MESSAGE
+      const { source, sender } = event.returnValues;
+
+      // LOG EVENT
+      console.log(sender + ' has ' + source + ' an account');
+   })
 }
 
 // ESTIMATE GAS OST
@@ -57,5 +83,7 @@ function gas() {
 export {
    init,
    transaction,
+   call,
+   event,
    gas
 }

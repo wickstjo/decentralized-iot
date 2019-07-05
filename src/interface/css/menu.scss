@@ -1,0 +1,23 @@
+#menu {
+    background: gray;
+    display: flex;
+
+    div {
+        flex: 1;
+    }
+
+    div:last-child {
+        text-align: right;
+    }
+
+    .item {
+        padding: 10px 14px;
+        color: white;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .item:hover {
+        background: rgb(110, 110, 110);
+    }
+}

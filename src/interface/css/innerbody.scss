@@ -1,0 +1,13 @@
+#innerbody {
+    padding: 10px;
+
+    .button {
+        background: rgb(177, 103, 103);
+        border-bottom: 2px solid rgb(153, 81, 81);
+        padding: 5px 8px;
+        margin-right: 5px;
+        display: inline-block;
+        cursor: pointer;
+        color: white;
+    }
+}
