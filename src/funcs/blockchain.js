@@ -29,7 +29,7 @@ function contract(web3, name) {
 }
 
 // SIGN SC TRANSACTION
-function transaction({ query, contract }, { web3 }) {
+function transaction({ query, contract, payable }, state) {
 
    // TRANSACTION OUTLINE
    const tx = {
@@ -39,9 +39,14 @@ function transaction({ query, contract }, { web3 }) {
       data: query.encodeABI()
    }
 
+   // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION
+   if (payable !== undefined) {
+      tx.value = payable;
+   }
+
    // SIGN IT & EXECUTE
-   return web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
-      return web3.eth.sendSignedTransaction(signed.rawTransaction).then(() => {
+   return state.web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
+      return state.web3.eth.sendSignedTransaction(signed.rawTransaction).then(() => {
          return true;
       }).catch(error => {
          console.log(error.toString())

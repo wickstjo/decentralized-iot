@@ -11,8 +11,8 @@ function User() {
    const { state } = useContext(Context);
 
    // LOCAL STATE
-   const [local  ] = useState({
-      name: 'foobar'
+   const [local, set_local] = useState({
+      name: ''
    });
 
    // FETCH USER
@@ -28,7 +28,14 @@ function User() {
    const add = () => {
       add_user(state, local.name).then(success => {
          if (success) {
+
+            // LOG SUCCESS
             console.log('added user')
+
+            // RESET NAME FIELD
+            set_local({
+               name: ''
+            })
          }
       })
    }
@@ -41,20 +48,35 @@ function User() {
          }
       })
    }
+
+   // UPDATE LOCAL STATE
+   const update = (event) => {
+      set_local({
+         name: event.target.value
+      })
+   }
    
    return (
       <div id={ 'innerbody' }>
-         <Button
-            header={ 'Fetch User' }
-            func={ fetch }
-         />
-         <Button
-            header={ 'Add User' }
-            func={ add }
-         />
-         <Button
-            header={ 'Remove User' }
-            func={ remove }
+         <div>
+            <Button
+               header={ 'Fetch User' }
+               func={ fetch }
+            />
+            <Button
+               header={ 'Add User' }
+               func={ add }
+            />
+            <Button
+               header={ 'Remove User' }
+               func={ remove }
+            />
+         </div>
+         <input
+            type={ 'text' }
+            placeholder={ 'Set a Name' }
+            value={ local.name }
+            onChange={ update }
          />
       </div>
    )

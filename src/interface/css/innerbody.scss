@@ -10,4 +10,20 @@
         cursor: pointer;
         color: white;
     }
+
+    input {
+        background: rgba(58, 130, 163, 0.87);
+        border: 0px solid black;
+        border-bottom: 2px solid rgba(52, 119, 150, 0.87);
+        font: inherit;
+        padding: 5px 8px;
+        margin-top: 10px;
+        width: 200px;
+        color: white;
+        outline: none;
+    }
+
+    input::placeholder {
+        color: white;
+    }
 }

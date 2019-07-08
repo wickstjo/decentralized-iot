@@ -9,10 +9,20 @@ contract Licences {
     // OWNER ADDRESS => EXPIRATION TIMESTAMP
     mapping (address => uint256) licences;
 
-    // PURCHASE LICENCE
-    function add(uint amount) public payable {
+    // CHECK USER LICENCE
+    function check(address user) public view returns(uint256) {
 
         // CONDITIONS
+        require(licences[user] != 0, 'licence does not exists');
+
+        return licences[user];
+    }
+
+    // PURCHASE LICENCE
+    function buy(uint amount) public payable {
+
+        // CONDITIONS
+        require(amount != 0, 'zero months given');
         require(msg.value >= amount * price, 'not enough funds');
 
         // FIGURE OUT PURCHASED TIME
@@ -32,12 +42,7 @@ contract Licences {
     function remove() public {
 
         // IF THE USER EXISTS, REMOVE ENTRY
-        require(licences[msg.sender] != 0, 'user does not exists');
+        require(licences[msg.sender] != 0, 'licence does not exists');
         delete licences[msg.sender];
-    }
-
-    // FETCH USER LICENCE DATA
-    function fetch(address user) public view returns(uint256) {
-        return licences[user];
     }
 }
