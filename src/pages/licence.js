@@ -1,8 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 
-import { check_price, check_duration, check_licence, buy_licence, remove_licence } from '../funcs/contract';
+import { price, duration, check, buy, remove } from '../funcs/licence';
 import Button from '../components/button';
 
 function Licence() {
@@ -12,41 +12,12 @@ function Licence() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      price: 0,
-      licence: 0,
-      checked: false,
-      months: ''
+      amount: ''
    });
 
-   // CHECK LICENCE PRISE & DURATION ON LOAD
-   useEffect(() => {
-
-      // STATE HAS NOT LOADED YET -- FIX
-
-      check_price(state).then(({ success, data }) => {
-         if (success) {
-            const price = data;
-
-            check_duration(state).then(({ success, data }) => {
-               if (success) {
-                  
-                  // UPDATE LOCAL STATE
-                  set_local({
-                     ...local,
-                     price: price,
-                     duration: data,
-                     checked: true
-                  })
-               }
-            })
-         }
-      })
-      
-   }, [])
-
    // UPDATE LOCAL STATE
-   const price = () => {
-      check_price(state).then(({ success, data }) => {
+   const Price = () => {
+      price(state).then(({ success, data }) => {
          if (success) {
             console.log(data)
          }
@@ -54,8 +25,8 @@ function Licence() {
    }
 
    // UPDATE LOCAL STATE
-   const duration = () => {
-      check_duration(state).then(({ success, data }) => {
+   const Duration = () => {
+      duration(state).then(({ success, data }) => {
          if (success) {
             console.log(data)
          }
@@ -63,8 +34,8 @@ function Licence() {
    }
 
    // UPDATE LOCAL STATE
-   const check = () => {
-      check_licence(state).then(({ success, data }) => {
+   const Check = () => {
+      check(state).then(({ success, data }) => {
          if (success) {
             console.log(data)
          }
@@ -72,8 +43,8 @@ function Licence() {
    }
 
    // UPDATE LOCAL STATE
-   const buy = () => {
-      buy_licence(state, local.months).then(success => {
+   const Buy = () => {
+      buy(state, local.amount).then(success => {
          if (success) {
 
             // LOG SUCCESS
@@ -81,7 +52,6 @@ function Licence() {
 
             // RESET LOCAL STATE
             set_local({
-               ...local,
                amount: ''
             })
          }
@@ -89,8 +59,8 @@ function Licence() {
    }
 
    // UPDATE LOCAL STATE
-   const remove = () => {
-      remove_licence(state).then(success => {
+   const Remove = () => {
+      remove(state).then(success => {
          if (success) {
             console.log('licence removed')
          }
@@ -109,29 +79,29 @@ function Licence() {
          <div>
             <Button
                header={ 'Price' }
-               func={ price }
+               func={ Price }
             />
             <Button
                header={ 'Duration' }
-               func={ duration }
+               func={ Duration }
             />
             <Button
                header={ 'Check' }
-               func={ check }
+               func={ Check }
             />
             <Button
                header={ 'Buy' }
-               func={ buy }
+               func={ Buy }
             />
             <Button
                header={ 'Remove' }
-               func={ remove }
+               func={ Remove }
             />
          </div>
          <input
             type={ 'number' }
             placeholder={ 'How many months?' }
-            value={ local.months }
+            value={ local.amount }
             onChange={ update }
             min={ '1' }
             max={ '5' }

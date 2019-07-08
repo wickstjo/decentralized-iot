@@ -10,6 +10,10 @@ contract Devices {
 
     // IF THE DEVICE EXISTS, RETURN DATA
     function fetch(string memory id) public view returns(Device) {
+
+        // CONDITION
+        require(address(devices[id]) != 0x0000000000000000000000000000000000000000, 'device does not exist');
+
         return devices[id];
     }
 
@@ -34,6 +38,10 @@ contract Devices {
 
     // FETCH DEVICE STATUS
     function status(string memory id) public view returns(bool) {
+
+        // CONDITIONS
+        require(address(devices[id]) != 0x0000000000000000000000000000000000000000, 'device does not exist');
+
         return devices[id].status();
     }
 

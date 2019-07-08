@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 
-import { fetch_user, add_user, remove_user } from '../funcs/contract';
+import { fetch, add, remove } from '../funcs/user';
 import Button from '../components/button';
 
 function User() {
@@ -16,8 +16,8 @@ function User() {
    });
 
    // FETCH USER
-   const fetch = () => {
-      fetch_user(state).then(({ success, data }) => {
+   const Fetch = () => {
+      fetch(state).then(({ success, data }) => {
          if (success) {
             console.log(data)
          }
@@ -25,8 +25,8 @@ function User() {
    }
 
    // ADD USER
-   const add = () => {
-      add_user(state, local.name).then(success => {
+   const Add = () => {
+      add(state, local.name).then(success => {
          if (success) {
 
             // LOG SUCCESS
@@ -41,8 +41,8 @@ function User() {
    }
 
    // REMOVE USER
-   const remove = () => {
-      remove_user(state).then(success => {
+   const Remove = () => {
+      remove(state).then(success => {
          if (success) {
             console.log('removed user')
          }
@@ -61,15 +61,15 @@ function User() {
          <div>
             <Button
                header={ 'Fetch User' }
-               func={ fetch }
+               func={ Fetch }
             />
             <Button
                header={ 'Add User' }
-               func={ add }
+               func={ Add }
             />
             <Button
                header={ 'Remove User' }
-               func={ remove }
+               func={ Remove }
             />
          </div>
          <input
