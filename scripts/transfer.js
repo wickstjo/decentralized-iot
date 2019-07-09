@@ -6,8 +6,10 @@ const promises = [];
 
 // SPECIFY FILES & RUN
 run([
+   'Device',
    'Devices',
    'Licences',
+   'Task',
    'Tasks',
    'Users'
 ]);
@@ -67,9 +69,9 @@ function process(contents) {
    // FETCH NETWORK TIMESTAMP
    const id = Object.keys(build.networks).pop();
 
-   // RETURN ADDRESS & ABI
+   // RETURN ADDRESS (IF POSSIBLE) & ABI
    return {
-      address: build.networks[id].address,
+      address: (build.networks[id] === undefined) ? undefined : build.networks[id].address,
       abi: build.abi
    };
 }

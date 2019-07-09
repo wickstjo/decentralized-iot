@@ -16,6 +16,10 @@ function init() {
          licences: contract(web3, 'licences'),
          tasks: contract(web3, 'tasks'),
          users: contract(web3, 'users')
+      },
+      interface: {
+         device: references['device'].abi,
+         task: references['task'].abi
       }
    }
 }
@@ -25,7 +29,7 @@ function contract(web3, name) {
    return new web3.eth.Contract(
       references[name].abi,
       references[name].address
-   );
+   )
 }
 
 // SIGN SC TRANSACTION
@@ -80,9 +84,12 @@ function event({ contracts }) {
    })
 }
 
-// ESTIMATE GAS OST
-function gas() {
-   return 500000;
+// ASSEMBLE SINGLE CONTRACT REFERENCE
+function assemble({ address, contract }, state) {
+   return new state.web3.eth.Contract(
+      state.interface[contract],
+      address
+   )
 }
 
 export {
@@ -90,5 +97,5 @@ export {
    transaction,
    call,
    event,
-   gas
+   assemble
 }

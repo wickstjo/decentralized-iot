@@ -11,9 +11,8 @@ contract Devices {
     // IF THE DEVICE EXISTS, RETURN DATA
     function fetch(string memory id) public view returns(Device) {
 
-        // CONDITION
+        // CONDITIONS
         require(address(devices[id]) != 0x0000000000000000000000000000000000000000, 'device does not exist');
-
         return devices[id];
     }
 
@@ -29,30 +28,10 @@ contract Devices {
     function remove(string memory id) public {
 
         // CONDITIONS
-        require(devices[id].isset(), 'device does not exist');
+        require(address(devices[id]) != 0x0000000000000000000000000000000000000000, 'device does not exist');
         require(msg.sender == devices[id].owner(), 'you are not the owner');
 
         // REMOVE ENTRY
         delete devices[id];
-    }
-
-    // FETCH DEVICE STATUS
-    function status(string memory id) public view returns(bool) {
-
-        // CONDITIONS
-        require(address(devices[id]) != 0x0000000000000000000000000000000000000000, 'device does not exist');
-
-        return devices[id].status();
-    }
-
-    // TOGGLE DEVICE STATUS
-    function toggle(string memory id) public {
-
-        // CONDITIONS
-        require(devices[id].isset(), 'device does not exist');
-        require(msg.sender == devices[id].owner(), 'you are not the owner');
-
-        // EXECUTE TOGGLE
-        devices[id].toggle(msg.sender);
     }
 }

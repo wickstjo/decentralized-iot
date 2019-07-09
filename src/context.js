@@ -9,7 +9,8 @@ function reducer(state, action) {
          return {
             ...state,
             web3: action.payload.web3,
-            contracts: action.payload.contracts
+            contracts: action.payload.contracts,
+            interface: action.payload.interface
          }
       }
 
@@ -29,7 +30,8 @@ function Provider({ children }) {
    // ATTACH THE REDUCER
    const [state, dispatch] = useReducer(reducer, {
       web3: undefined,
-      contracts: undefined
+      contracts: undefined,
+      interface: undefined
    });
 
    return (
