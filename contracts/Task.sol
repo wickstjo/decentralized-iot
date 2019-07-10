@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract Task {
 
@@ -6,34 +7,32 @@ contract Task {
     address payable public buyer;
     address payable public seller;
 
-    // LOCKED STATUS & PERFORMING DEVICE
+    // ASSIGNED DEVICE & TASK STATUSES
+    address public device;
     bool public locked;
-    string public device;
+    bool public completed;
 
-    // DATA RESPONSE CONTAINER
+    // RESPONSE CONTAINER
     string[] public data;
 
     // TERMS
-    uint32 public expires;
+    string public expires;
     uint public reputation;
     uint public reward;
     string public encryption;
-    bool completed;
 
     // WHEN THE CONTRACT IS CREATED
     constructor(
-        uint32 _expires,
+        string memory _expires,
         uint _reputation,
         uint _reward,
-        string memory _encryption,
-        address payable _buyer
+        string memory _encryption
     ) public payable {
 
-        // CONDITIONS
-        //require(msg.value >= _reward * 1000, 'insufficient funds given');
+        require(msg.value == _reward, 'insufficient funds');
 
         // SET BUYER & STATUS VARS
-        buyer = _buyer;
+        buyer = msg.sender;
         locked = false;
         completed = false;
 
@@ -44,12 +43,27 @@ contract Task {
         encryption = _encryption;
     }
 
+    // FETCH TASK DETAILS
+    function details() public view returns (address, string memory, uint, uint, string memory, bool, bool, string[] memory, address) {
+        return (
+            buyer,
+            expires,
+            reputation,
+            reward,
+            encryption,
+            locked,
+            completed,
+            data,
+            seller
+        );
+    }
+
     // ACCEPT CONTRACT
-    function accept(string memory _device) public payable {
+    function accept(address _device) public payable {
 
         // CONDITIONS
-        require(!locked, 'contract is locked');
-        require(msg.value < reward / 2, 'insufficient funds given');
+        require(!locked, 'task is locked');
+        require(msg.value == reward / 2, 'insufficient funds given');
 
         // CHECK IF SENDER IS REGISTERED
         // CHECK IF DEVICE EXISTS
@@ -63,20 +77,21 @@ contract Task {
     }
 
     // SUBMIT DATA
-    function submit(string memory location) public {
+    function submit(string memory ipfs) public {
 
         // CONDITIONS
+        require(locked, 'task is not locked');
         require(msg.sender == seller, 'you are not the seller');
 
         // PUSH IPFS HASH TO CONTAINER
-        data.push(location);
+        data.push(ipfs);
+
+        // MARK TASK AS COMPLETED
+        completed = true;
     }
 
     // DESTROY THE CONTRACT & PAY PARTICIPANTS
     function release() public {
-
-        // CONDITIONS
-        require(block.timestamp > expires, 'expiration has not been met');
 
         // IF THE SELLER HAS FULFILLED HIS TASK, SEND ETH TO HIM
         if (completed) {

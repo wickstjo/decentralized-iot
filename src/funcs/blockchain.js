@@ -33,7 +33,7 @@ function contract(web3, name) {
 }
 
 // SIGN SC TRANSACTION
-function transaction({ query, contract, payable }, state) {
+function transaction({ query, contract, payable, gas }, state) {
 
    // TRANSACTION OUTLINE
    const tx = {
@@ -46,6 +46,11 @@ function transaction({ query, contract, payable }, state) {
    // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION
    if (payable !== undefined) {
       tx.value = payable;
+   }
+
+   // IF GAS WAS DEFINED, CHANGE THE EXISTING VALUE
+   if (gas !== undefined) {
+      tx.gas = gas;
    }
 
    // SIGN IT & EXECUTE

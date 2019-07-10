@@ -52,7 +52,8 @@ function User() {
    // UPDATE LOCAL STATE
    const update = (event) => {
       set_local({
-         name: event.target.value
+         ...local,
+         [event.target.id]: event.target.value
       })
    }
    
@@ -77,6 +78,7 @@ function User() {
             placeholder={ 'Set a Name' }
             value={ local.name }
             onChange={ update }
+            id={ 'name' }
          />
       </div>
    )

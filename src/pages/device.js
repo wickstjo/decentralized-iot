@@ -16,6 +16,14 @@ function Device() {
       task: '',
       device: ''
    });
+
+   // UPDATE LOCAL STATE
+   const update = (event) => {
+      set_local({
+         ...local,
+         [event.target.id]: event.target.value
+      })
+   }
    
    // FETCH DEVICE ADDRESS
    const Fetch = () => {
@@ -96,30 +104,6 @@ function Device() {
       } else { console.log('task and/or device is not an address') }
    }
 
-   // UPDATE LOCAL NAME
-   const update_name = (event) => {
-      set_local({
-         ...local,
-         name: event.target.value
-      })
-   }
-
-   // UPDATE LOCAL TASK
-   const update_device = (event) => {
-      set_local({
-         ...local,
-         device: event.target.value
-      })
-   }
-
-   // UPDATE LOCAL TASK
-   const update_task = (event) => {
-      set_local({
-         ...local,
-         task: event.target.value
-      })
-   }
-
    return (
       <div id={ 'innerbody' }>
          <div>
@@ -141,7 +125,8 @@ function Device() {
                type={ 'text' }
                placeholder={ 'Device Name' }
                value={ local.name }
-               onChange={ update_name }
+               onChange={ update }
+               id={ 'name' }
             />
          </div>
          <div>
@@ -167,7 +152,8 @@ function Device() {
                type={ 'text' }
                placeholder={ 'Device Address' }
                value={ local.device }
-               onChange={ update_device }
+               onChange={ update }
+               id={ 'device' }
             />
          </div>
          <div>
@@ -175,7 +161,8 @@ function Device() {
                type={ 'text' }
                placeholder={ 'Task Address' }
                value={ local.task }
-               onChange={ update_task }
+               onChange={ update }
+               id={ 'task' }
             />
          </div>
       </div>

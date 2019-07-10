@@ -8,36 +8,40 @@ contract Tasks {
     // LIST OF OPEN TASKS
     Task[] public tasks;
 
+    // FETCH ALL OPEN TASKS
+    function fetch() public view returns(Task[] memory) {
+
+        // CONDITIONS
+        require(tasks.length > 0, 'no tasks have been posted');
+        return tasks;
+    }
+
     // ADD TASK ENTRY
     function add(
-        uint32 expires,
+        string memory expires,
         uint reputation,
         uint reward,
         string memory encryption
     ) public payable {
 
         // CONDITIONS
-        //require(block.timestamp > expires, 'date has expired');
-        require(msg.value >= reward, 'reward does not match');
+        require(msg.value == reward, 'reward does not match');
 
         // INSTANTIATE & PUSH NEW TASK
-        tasks.push(
-            new Task(expires, reputation, reward, encryption, msg.sender)
-        );
+        tasks.push(address(new Task(
+            expires,
+            reputation,
+            reward,
+            encryption
+        )).transfer(msg.value));
     }
 
-    // REMOVE TASK ENTRY
-    function remove(uint256 task) public {
-
-        // MAKE SURE THE SENDER IS THE TASK SELLER
-        require(tasks[task].buyer() == msg.sender, 'you are not the seller');
-
-        // REMOVE ENTRY
-        delete tasks[task];
-    }
-
-    // FETCH ALL OPEN TASKS
-    function fetch() public view returns(Task[] memory) {
-        return tasks;
+    // REMOVE COMPLETED TASKS FROM THE LIST
+    function clean() public {
+        for (uint x = 0; x < tasks.length; x++) {
+            if (tasks[x].completed()) {
+                delete tasks[x];
+            }
+        }
     }
 }

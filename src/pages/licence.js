@@ -70,7 +70,8 @@ function Licence() {
    // UPDATE LOCAL STATE
    const update = (event) => {
       set_local({
-         amount: event.target.value
+         ...local,
+         [event.target.id]: event.target.value
       })
    }
    
@@ -103,6 +104,7 @@ function Licence() {
             placeholder={ 'How many months?' }
             value={ local.amount }
             onChange={ update }
+            id={ 'amount' }
             min={ '1' }
             max={ '5' }
          />
