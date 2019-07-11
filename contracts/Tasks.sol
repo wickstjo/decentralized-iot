@@ -28,12 +28,13 @@ contract Tasks {
         require(msg.value == reward, 'reward does not match');
 
         // INSTANTIATE & PUSH NEW TASK
-        tasks.push(address(new Task(
+        tasks.push(new Task(
             expires,
             reputation,
             reward,
-            encryption
-        )).transfer(msg.value));
+            encryption,
+            msg.sender
+        ));
     }
 
     // REMOVE COMPLETED TASKS FROM THE LIST

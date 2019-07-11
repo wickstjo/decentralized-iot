@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 contract Task {
 
     // RELEVANT ADDRESSES
-    address payable public buyer;
+    address public buyer;
     address payable public seller;
 
     // ASSIGNED DEVICE & TASK STATUSES
@@ -26,13 +26,15 @@ contract Task {
         string memory _expires,
         uint _reputation,
         uint _reward,
-        string memory _encryption
+        string memory _encryption,
+        address _buyer
     ) public payable {
 
+        // CONDITIONS
         require(msg.value == _reward, 'insufficient funds');
 
         // SET BUYER & STATUS VARS
-        buyer = msg.sender;
+        buyer = _buyer;
         locked = false;
         completed = false;
 
@@ -99,7 +101,7 @@ contract Task {
 
         // OTHERWISE, SEND BUYER THE REMAINING ETH
         } else {
-            selfdestruct(buyer);
+            //selfdestruct(buyer);
         }
     }
 }

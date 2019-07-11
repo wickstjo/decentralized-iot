@@ -13,9 +13,10 @@ function Task() {
    // LOCAL STATE
    const [local, set_local] = useState({
       expires: Date.now() + 100000,
-      reputation: '',
-      reward: '5000000000000000000',
-      encryption: '',
+      reputation: '2',
+      //reward: '5000000000000000000',
+      reward: '500000',
+      encryption: 'sdfsdf',
       task: '',
       device: '',
       ipfs: ''
