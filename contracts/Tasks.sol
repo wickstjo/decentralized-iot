@@ -7,6 +7,7 @@ contract Tasks {
 
     // LIST OF OPEN TASKS
     Task[] public tasks;
+    address payable public test;
 
     // FETCH ALL OPEN TASKS
     function fetch() public view returns(Task[] memory) {
@@ -27,22 +28,20 @@ contract Tasks {
         // CONDITIONS
         require(msg.value == reward, 'reward does not match');
 
-        // INSTANTIATE & PUSH NEW TASK
-        tasks.push(new Task(
+        // INSTANTIATE NEW TASK
+        Task task = new Task(
             expires,
             reputation,
             reward,
             encryption,
             msg.sender
-        ));
-    }
+        );
 
-    // REMOVE COMPLETED TASKS FROM THE LIST
-    function clean() public {
-        for (uint x = 0; x < tasks.length; x++) {
-            if (tasks[x].completed()) {
-                delete tasks[x];
-            }
-        }
+        address payable foo = address(uint160(address(task)));
+        //foo.transfer(msg.value);
+        test = foo;
+
+        // TRANSFER REWARD & PUSH TO LIST
+        tasks.push(task);
     }
 }

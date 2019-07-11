@@ -28,10 +28,10 @@ contract Task {
         uint _reward,
         string memory _encryption,
         address _buyer
-    ) public payable {
+    ) public {
 
         // CONDITIONS
-        require(msg.value == _reward, 'insufficient funds');
+        //require(msg.value == _reward, 'insufficient funds');
 
         // SET BUYER & STATUS VARS
         buyer = _buyer;

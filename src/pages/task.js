@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 
-import { fetch, add, details, accept, submit, release } from '../funcs/task';
+import { fetch, add, details, accept, submit, release, test } from '../funcs/task';
 import Button from '../components/button';
 
 function Task() {
@@ -14,8 +14,8 @@ function Task() {
    const [local, set_local] = useState({
       expires: Date.now() + 100000,
       reputation: '2',
-      //reward: '5000000000000000000',
-      reward: '500000',
+      reward: '5000000000000000000',
+      //reward: '500000',
       encryption: 'sdfsdf',
       task: '',
       device: '',
@@ -49,6 +49,15 @@ function Task() {
       }, state).then(success => {
          if (success) {
             console.log('added task')
+         }
+      })
+   }
+
+   // FETCH TASK DETAILS
+   const Test = () => {
+      test(state).then(({ success, data }) => {
+         if (success) {
+            console.log(data);
          }
       })
    }
@@ -107,6 +116,10 @@ function Task() {
             <Button
                header={ 'Add' }
                func={ Add }
+            />
+            <Button
+               header={ 'Test' }
+               func={ Test }
             />
          </div>
          <div>

@@ -10,6 +10,16 @@ function fetch(state) {
     })
 }
 
+// FETCH ALL TASKS
+function test(state) {
+    return call({
+        query: state.contracts.tasks.methods.test(),
+        callback: (response) => {
+            return response;
+        }
+    })
+}
+
 // LIST A TASK
 function add({ expires, reputation, reward, encryption }, state) {
     return transaction({
@@ -108,5 +118,6 @@ export {
     details,
     accept,
     submit,
-    release
+    release,
+    test
 }
