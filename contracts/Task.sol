@@ -1,5 +1,4 @@
 pragma solidity ^0.5.0;
-pragma experimental ABIEncoderV2;
 
 // IMPORT DEVICE CONTRACT
 import { Device } from './Device.sol';
@@ -19,18 +18,20 @@ contract Task {
     uint public reputation;
     string public encryption;
     uint public reward;
+    bool public locked;
 
     // WHEN THE CONTRACT IS CREATED
     constructor(
+        address payable _buyer,
         string memory _expires,
         uint _reputation,
-        string memory _encryption,
-        address payable _buyer
+        string memory _encryption
     ) public payable {
 
         // SET BUYER & STATUS VARS
         buyer = _buyer;
         completed = false;
+        locked = false;
 
         // SET PARAMS
         expires = _expires;
@@ -40,24 +41,13 @@ contract Task {
     }
 
     // FETCH TASK DETAILS
-    function details() public view returns (
-        address payable,
-        address payable,
-        string memory,
-        uint, uint,
-        string memory,
-        bool,
-        string[] memory
-    ) {
+    function details() public view returns (string memory, uint, uint, string memory, bool) {
         return (
-            buyer,
-            seller,
             expires,
             reputation,
             reward,
             encryption,
-            completed,
-            data
+            locked
         );
     }
 
@@ -65,8 +55,10 @@ contract Task {
     function accept(Device _device) public payable {
 
         // CONDITIONS
-        require(seller == 0x0000000000000000000000000000000000000000, 'another user has accepted the task');
+        require(!locked, 'the contract is locked');
         require(msg.value == reward / 2, 'insufficient funds given');
+
+        // CHECK IF ADDRESS IS A DEVICE
         require(_device.status(), 'device is out of order');
         require(_device.owner() == msg.sender, 'you are not the device owner');
 
@@ -75,6 +67,7 @@ contract Task {
 
         // SET SELLER & LOCK THE CONTRACT
         seller = msg.sender;
+        locked = true;
     }
 
     // SUBMIT DATA
@@ -83,15 +76,18 @@ contract Task {
         // CONDITIONS
         require(msg.sender == seller, 'you are not the seller');
 
-        // PUSH IPFS HASH TO CONTAINER
-        data.push(ipfs);
+        // !!! SUBMIT TO BUYER USER CONTRACT
 
-        // MARK TASK AS COMPLETED
+        // PUSH IPFS HASH TO CONTAINER & MARK TASK AS COMPLETED
+        data.push(ipfs);
         completed = true;
     }
 
     // DESTROY THE CONTRACT & PAY PARTICIPANTS
     function release() public {
+
+        // CONDITIONS
+        require(locked, 'task has not been accepted yet');
 
         // IF THE SELLER HAS FULFILLED HIS TASK, SEND ETH TO HIM
         if (completed) {

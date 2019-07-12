@@ -25,7 +25,7 @@ contract Tasks {
     ) public payable {
 
         // INSTANTIATE NEW TASK
-        Task task = (new Task).value(msg.value)(expires, reputation, encryption, msg.sender);
+        Task task = (new Task).value(msg.value)(msg.sender, expires, reputation, encryption);
 
         // TRANSFER REWARD & PUSH TO LIST
         tasks.push(task);

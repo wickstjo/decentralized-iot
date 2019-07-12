@@ -37,14 +37,11 @@ function details(task, state) {
         query: contract.methods.details(),
         callback: (response) => {
             return {
-                buyer: response[0],
-                seller: response[1],
-                expires: response[2],
-                reputation: response[3],
-                reward: response[4],
-                encryption: response[5],
-                completed: response[6],
-                data: response[7]
+                expires: response[0],
+                reputation: response[1],
+                reward: response[2],
+                encryption: response[3],
+                locked: response[4]
             }
         }
     })
