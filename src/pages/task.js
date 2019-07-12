@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 
-import { fetch, add, details, accept, submit, release, test } from '../funcs/task';
+import { fetch, add, details, accept, submit, release } from '../funcs/task';
 import Button from '../components/button';
 
 function Task() {
@@ -14,9 +14,9 @@ function Task() {
    const [local, set_local] = useState({
       expires: Date.now() + 100000,
       reputation: '2',
-      reward: '5000000000000000000',
-      //reward: '500000',
-      encryption: 'sdfsdf',
+      //reward: '5000000000000000000',
+      reward: '5000000',
+      encryption: 'pgp encryption key',
       task: '',
       device: '',
       ipfs: ''
@@ -49,15 +49,6 @@ function Task() {
       }, state).then(success => {
          if (success) {
             console.log('added task')
-         }
-      })
-   }
-
-   // FETCH TASK DETAILS
-   const Test = () => {
-      test(state).then(({ success, data }) => {
-         if (success) {
-            console.log(data);
          }
       })
    }
@@ -117,10 +108,6 @@ function Task() {
                header={ 'Add' }
                func={ Add }
             />
-            <Button
-               header={ 'Test' }
-               func={ Test }
-            />
          </div>
          <div>
             <input
@@ -138,18 +125,18 @@ function Task() {
                id={ 'reputation' }
             />
             <input
-               type={ 'number' }
-               placeholder={ 'reward in wei' }
-               value={ local.reward }
-               onChange={ update }
-               id={ 'reward' }
-            />
-            <input
                type={ 'text' }
                placeholder={ 'public encryption key' }
                value={ local.encryption }
                onChange={ update }
                id={ 'encryption' }
+            />
+            <input
+               type={ 'number' }
+               placeholder={ 'reward in wei' }
+               value={ local.reward }
+               onChange={ update }
+               id={ 'reward' }
             />
          </div>
          <div>

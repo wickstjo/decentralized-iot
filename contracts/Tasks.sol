@@ -21,25 +21,11 @@ contract Tasks {
     function add(
         string memory expires,
         uint reputation,
-        uint reward,
         string memory encryption
     ) public payable {
 
-        // CONDITIONS
-        require(msg.value == reward, 'reward does not match');
-
         // INSTANTIATE NEW TASK
-        Task task = new Task(
-            expires,
-            reputation,
-            reward,
-            encryption,
-            msg.sender
-        );
-
-        address payable foo = address(uint160(address(task)));
-        //foo.transfer(msg.value);
-        test = foo;
+        Task task = (new Task).value(msg.value)(expires, reputation, encryption, msg.sender);
 
         // TRANSFER REWARD & PUSH TO LIST
         tasks.push(task);

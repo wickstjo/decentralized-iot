@@ -10,23 +10,12 @@ function fetch(state) {
     })
 }
 
-// FETCH ALL TASKS
-function test(state) {
-    return call({
-        query: state.contracts.tasks.methods.test(),
-        callback: (response) => {
-            return response;
-        }
-    })
-}
-
 // LIST A TASK
 function add({ expires, reputation, reward, encryption }, state) {
     return transaction({
         query: state.contracts.tasks.methods.add(
             expires.toString(),
             reputation,
-            reward,
             encryption
         ),
         contract: state.contracts.tasks._address,
@@ -49,14 +38,13 @@ function details(task, state) {
         callback: (response) => {
             return {
                 buyer: response[0],
-                expires: response[1],
-                reputation: response[2],
-                reward: response[3],
-                encryption: response[4],
-                locked: response[5],
+                seller: response[1],
+                expires: response[2],
+                reputation: response[3],
+                reward: response[4],
+                encryption: response[5],
                 completed: response[6],
-                data: response[7],
-                seller: response[8]
+                data: response[7]
             }
         }
     })

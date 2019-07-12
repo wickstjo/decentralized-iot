@@ -1,88 +1,86 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
+// IMPORT DEVICE CONTRACT
+import { Device } from './Device.sol';
+
 contract Task {
 
-    // RELEVANT ADDRESSES
-    address public buyer;
+    // BUYER & SELLER
+    address payable public buyer;
     address payable public seller;
 
-    // ASSIGNED DEVICE & TASK STATUSES
-    address public device;
-    bool public locked;
+    // RESPONSE CONTAINER & COMPLETED STATUS
+    string[] public data;
     bool public completed;
 
-    // RESPONSE CONTAINER
-    string[] public data;
-
-    // TERMS
+    // TASK PARAMS
     string public expires;
     uint public reputation;
-    uint public reward;
     string public encryption;
+    uint public reward;
 
     // WHEN THE CONTRACT IS CREATED
     constructor(
         string memory _expires,
         uint _reputation,
-        uint _reward,
         string memory _encryption,
-        address _buyer
-    ) public {
-
-        // CONDITIONS
-        //require(msg.value == _reward, 'insufficient funds');
+        address payable _buyer
+    ) public payable {
 
         // SET BUYER & STATUS VARS
         buyer = _buyer;
-        locked = false;
         completed = false;
 
-        // SET TERMS
+        // SET PARAMS
         expires = _expires;
         reputation = _reputation;
-        reward = _reward;
         encryption = _encryption;
+        reward = msg.value;
     }
 
     // FETCH TASK DETAILS
-    function details() public view returns (address, string memory, uint, uint, string memory, bool, bool, string[] memory, address) {
+    function details() public view returns (
+        address payable,
+        address payable,
+        string memory,
+        uint, uint,
+        string memory,
+        bool,
+        string[] memory
+    ) {
         return (
             buyer,
+            seller,
             expires,
             reputation,
             reward,
             encryption,
-            locked,
             completed,
-            data,
-            seller
+            data
         );
     }
 
-    // ACCEPT CONTRACT
-    function accept(address _device) public payable {
+    // ACCEPT TASK
+    function accept(Device _device) public payable {
 
         // CONDITIONS
-        require(!locked, 'task is locked');
+        require(seller == 0x0000000000000000000000000000000000000000, 'another user has accepted the task');
         require(msg.value == reward / 2, 'insufficient funds given');
+        require(_device.status(), 'device is out of order');
+        require(_device.owner() == msg.sender, 'you are not the device owner');
 
         // CHECK IF SENDER IS REGISTERED
-        // CHECK IF DEVICE EXISTS
+        // CHECK SENDER REPUTATION
 
         // SET SELLER & LOCK THE CONTRACT
         seller = msg.sender;
-        locked = true;
-
-        // SET PERFORMING DEVICE
-        device = _device;
     }
 
     // SUBMIT DATA
     function submit(string memory ipfs) public {
 
         // CONDITIONS
-        require(locked, 'task is not locked');
         require(msg.sender == seller, 'you are not the seller');
 
         // PUSH IPFS HASH TO CONTAINER
@@ -101,7 +99,7 @@ contract Task {
 
         // OTHERWISE, SEND BUYER THE REMAINING ETH
         } else {
-            //selfdestruct(buyer);
+            selfdestruct(buyer);
         }
     }
 }
