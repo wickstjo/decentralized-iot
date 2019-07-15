@@ -1,7 +1,8 @@
 pragma solidity ^0.5.0;
 
-// IMPORT DEVICE CONTRACT
-import { Device } from './Device.sol';
+// IMPORT HELPER CONTRACT INTERFACES
+import { Devices } from './Devices.sol';
+import { Users } from './Users.sol';
 
 contract Task {
 
@@ -20,12 +21,18 @@ contract Task {
     uint public reward;
     bool public locked;
 
+    // HELPER CONTRACTS
+    Devices public devices;
+    Users public users;
+
     // WHEN THE CONTRACT IS CREATED
     constructor(
         address payable _buyer,
         string memory _expires,
         uint _reputation,
-        string memory _encryption
+        string memory _encryption,
+        Devices _devices,
+        Users _users
     ) public payable {
 
         // SET BUYER & STATUS VARS
@@ -38,6 +45,10 @@ contract Task {
         reputation = _reputation;
         encryption = _encryption;
         reward = msg.value;
+
+        // SET CONTRACTS
+        devices = _devices;
+        users = _users;
     }
 
     // FETCH TASK DETAILS
@@ -52,18 +63,20 @@ contract Task {
     }
 
     // ACCEPT TASK
-    function accept(Device _device) public payable {
+    function accept(string memory id) public payable {
 
         // CONDITIONS
         require(!locked, 'the contract is locked');
         require(msg.value == reward / 2, 'insufficient funds given');
 
-        // CHECK IF ADDRESS IS A DEVICE
-        require(_device.status(), 'device is out of order');
-        require(_device.owner() == msg.sender, 'you are not the device owner');
+        // CHECK THAT USER & DEVICE ARE REGISTERED
+        require(users.exists(msg.sender), 'you are not a registered user');
+        require(devices.exists(id), 'the device is not registered');
 
-        // CHECK IF SENDER IS REGISTERED
-        // CHECK SENDER REPUTATION
+        // DEVICE CONDITIONS
+        require(devices.fetch(id).status(), 'device is not active');
+        require(devices.fetch(id).owner() == msg.sender, 'you are not the device owner');
+        require(users.fetch(msg.sender).reputation() >= reputation, 'not enough reputation');
 
         // SET SELLER & LOCK THE CONTRACT
         seller = msg.sender;

@@ -1,5 +1,26 @@
 import { transaction, call, assemble } from './blockchain';
 
+// CHECK INITIALIZED STATUS
+function check(state) {
+    return call({
+        query: state.contracts.tasks.methods.initialized(),
+        callback: (response) => {
+            return response;
+        }
+    })
+}
+
+// INITIALIZE HELPER CONTRACTS
+function init(devices, users, state) {
+    return transaction({
+        query: state.contracts.tasks.methods.init(
+            devices,
+            users
+        ),
+        contract: state.contracts.tasks._address
+    }, state)
+}
+
 // FETCH ALL TASKS
 function fetch(state) {
     return call({
@@ -61,7 +82,8 @@ function accept(task, device, state) {
             return transaction({
                 query: contract.methods.accept(device),
                 contract: task,
-                payable: data.reward / 2
+                payable: data.reward / 2,
+                gas: 5000000
             }, state)
         }
     })
@@ -98,11 +120,12 @@ function release(task, state) {
 }
 
 export {
+    check,
+    init,
     fetch,
     add,
     details,
     accept,
     submit,
-    release,
-    test
+    release
 }

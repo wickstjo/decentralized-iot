@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 
-import { fetch, add, remove } from '../funcs/user';
+import { fetch, exists, add } from '../funcs/user';
 import Button from '../components/button';
 
 function User() {
@@ -12,8 +12,17 @@ function User() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      name: ''
+      name: '',
+      address: ''
    });
+
+   // UPDATE LOCAL STATE
+   const update = (event) => {
+      set_local({
+         ...local,
+         [event.target.id]: event.target.value
+      })
+   }
 
    // FETCH USER
    const Fetch = () => {
@@ -24,36 +33,20 @@ function User() {
       })
    }
 
+   function Exists() {
+      exists(local.address, state).then(({ success, data }) => {
+         if (success) {
+            console.log(data)
+         }
+      })
+   }
+
    // ADD USER
    const Add = () => {
-      add(state, local.name).then(success => {
+      add(local.name, state).then(success => {
          if (success) {
-
-            // LOG SUCCESS
             console.log('added user')
-
-            // RESET NAME FIELD
-            set_local({
-               name: ''
-            })
          }
-      })
-   }
-
-   // REMOVE USER
-   const Remove = () => {
-      remove(state).then(success => {
-         if (success) {
-            console.log('removed user')
-         }
-      })
-   }
-
-   // UPDATE LOCAL STATE
-   const update = (event) => {
-      set_local({
-         ...local,
-         [event.target.id]: event.target.value
       })
    }
    
@@ -65,12 +58,12 @@ function User() {
                func={ Fetch }
             />
             <Button
-               header={ 'Add User' }
-               func={ Add }
+               header={ 'Exists' }
+               func={ Exists }
             />
             <Button
-               header={ 'Remove User' }
-               func={ Remove }
+               header={ 'Add User' }
+               func={ Add }
             />
          </div>
          <input
@@ -79,6 +72,13 @@ function User() {
             value={ local.name }
             onChange={ update }
             id={ 'name' }
+         />
+         <input
+            type={ 'text' }
+            placeholder={ 'Check User Address' }
+            value={ local.address }
+            onChange={ update }
+            id={ 'address' }
          />
       </div>
    )

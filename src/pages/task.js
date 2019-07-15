@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
 import '../interface/css/innerbody.scss';
+import references from '../resources/latest.json';
 
-import { fetch, add, details, accept, submit, release } from '../funcs/task';
+import { check, init, fetch, add, details, accept, submit, release } from '../funcs/task';
 import Button from '../components/button';
 
 function Task() {
@@ -12,6 +13,8 @@ function Task() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
+      devices: references.devices.address,
+      users: references.users.address,
       expires: Date.now() + 100000,
       reputation: '2',
       //reward: '5000000000000000000',
@@ -27,6 +30,23 @@ function Task() {
       set_local({
          ...local,
          [event.target.id]: event.target.value
+      })
+   }
+
+   // CHECK HELPER CONTRACTS
+   function Check() {
+      check(state).then(({ success, data }) => {
+         if (success) {
+            console.log(data);
+         }
+      })
+   }
+
+   const Init = () => {
+      init(local.devices, local.users, state).then(success => {
+         if (success) {
+            console.log('initialized helper contracts')
+         }
       })
    }
 
@@ -66,7 +86,7 @@ function Task() {
 
    // ACCEPT TASK
    const Accept = () => {
-      if (state.web3.utils.isAddress(local.task) && state.web3.utils.isAddress(local.device)) {
+      if (state.web3.utils.isAddress(local.task)) {
          accept(local.task, local.device, state).then(success => {
             if (success) {
                console.log('accepted task')
@@ -99,6 +119,32 @@ function Task() {
    
    return (
       <div id={ 'innerbody' }>
+         <div>
+            <Button
+               header={ 'Check' }
+               func={ Check }
+            />
+            <Button
+               header={ 'Initialize' }
+               func={ Init }
+            />
+         </div>
+         <div>
+            <input
+               type={ 'text' }
+               placeholder={ 'devices contract' }
+               value={ local.devices }
+               onChange={ update }
+               id={ 'devices' }
+            />
+            <input
+               type={ 'text' }
+               placeholder={ 'users contract' }
+               value={ local.users }
+               onChange={ update }
+               id={ 'users' }
+            />
+         </div>
          <div>
             <Button
                header={ 'Fetch' }
