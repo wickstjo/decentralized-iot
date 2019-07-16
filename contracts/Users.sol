@@ -5,7 +5,7 @@ import { User } from './User.sol';
 
 contract Users {
 
-    // OWNER ADDRESS => USER OBJECT
+    // USER & TOKEN MAPS
     mapping (address => User) public users;
 
     // CHECK IF USER EXISTS

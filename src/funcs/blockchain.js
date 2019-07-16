@@ -13,7 +13,6 @@ function init() {
       web3: web3,
       contracts: {
          devices: contract(web3, 'devices'),
-         licences: contract(web3, 'licences'),
          tasks: contract(web3, 'tasks'),
          users: contract(web3, 'users')
       },
