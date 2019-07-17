@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 
-import { fetch, exists, add } from '../funcs/user';
+import { fetch, details, add } from '../funcs/user';
 import Button from '../components/button';
 
 function User() {
@@ -25,7 +25,7 @@ function User() {
    }
 
    // FETCH USER
-   const Fetch = () => {
+   const Address = () => {
       fetch(state).then(({ success, data }) => {
          if (success) {
             console.log(data)
@@ -33,8 +33,8 @@ function User() {
       })
    }
 
-   function Exists() {
-      exists(local.address, state).then(({ success, data }) => {
+   function Details() {
+      details(state).then(({ success, data }) => {
          if (success) {
             console.log(data)
          }
@@ -54,12 +54,12 @@ function User() {
       <div id={ 'innerbody' }>
          <div>
             <Button
-               header={ 'Fetch User' }
-               func={ Fetch }
+               header={ 'Address' }
+               func={ Address }
             />
             <Button
-               header={ 'Exists' }
-               func={ Exists }
+               header={ 'Details' }
+               func={ Details }
             />
             <Button
                header={ 'Add User' }

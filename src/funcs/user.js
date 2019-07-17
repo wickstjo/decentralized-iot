@@ -6,21 +6,21 @@ function fetch(state) {
     return call({
         query: state.contracts.users.methods.fetch(keys.public),
         callback: (response) => {
-            return {
-                name: response[0],
-                reputation: state.web3.utils.hexToNumber(response[1]),
-                joined: state.web3.utils.hexToNumber(response[2])
-            }
+            return response;
         }
     })
 }
 
 // FETCH USER
-function exists(address, state) {
+function details(state) {
     return call({
-        query: state.contracts.users.methods.exists(address),
+        query: state.contracts.users.methods.details(keys.public),
         callback: (response) => {
-            return response;
+            return {
+                name: response[0],
+                joined: response[1],
+                reputation: response[2],
+            };
         }
     })
 }
@@ -35,6 +35,6 @@ function add(name, state) {
 
 export {
     fetch,
-    exists,
+    details,
     add
 }

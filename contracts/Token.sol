@@ -6,9 +6,9 @@ contract Token {
     mapping (address => uint) public tokens;
 
     // HELPER PARAMS
-    uint price;
-    address tasks;
-    bool initialized = false;
+    uint public price;
+    address public tasks;
+    bool public initialized = false;
 
     // INITIALIZE PARAMS
     function init(uint _price, address _tasks) public {
@@ -20,6 +20,11 @@ contract Token {
         price = _price;
         tasks = _tasks;
         initialized = true;
+    }
+
+    // CHECK USER TOKEN AMOUNT
+    function check(address user) public view returns(uint) {
+        return tokens[user];
     }
 
     // ADD TOKEN

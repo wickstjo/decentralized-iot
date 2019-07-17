@@ -17,13 +17,23 @@ contract Users {
         return false;
     }
 
-    // FETCH USER DATA
+    // FETCH USER CONTRACT ADDRESS
     function fetch(address user) public view returns(User) {
 
         // CONDITION
         require(exists(user), 'user does not exist');
 
+        // FETCH DETAILS
         return users[user];
+    }
+
+    // FETCH USER DETAILS
+    function details(address user) public view returns(string memory, uint256, uint) {
+
+        // CONDITION
+        require(exists(user), 'user does not exist');
+
+        return users[user].fetch();
     }
 
     // ADD ENTRY TO HASHMAP

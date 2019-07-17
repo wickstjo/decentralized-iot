@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Context } from './context';
 
 import User from './pages/user';
-import Licence from './pages/licence';
+import Token from './pages/tokens';
 import Device from './pages/device';
 import Task from './pages/task';
 import Error from './pages/error';
@@ -18,7 +18,7 @@ function Pages() {
         return (
             <Switch>
                 <Route exact path="/user" component={ User } />
-                <Route exact path="/licence" component={ Licence } />
+                <Route exact path="/tokens" component={ Token } />
                 <Route exact path="/device" component={ Device } />
                 <Route exact path="/task" component={ Task } />
                 <Route component={ Error } />

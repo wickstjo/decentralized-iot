@@ -8,7 +8,7 @@ const promises = [];
 run([
    'Device',
    'Devices',
-   'Licences',
+   'Token',
    'Task',
    'Tasks',
    'Users'
@@ -55,7 +55,7 @@ function promisify(name) {
          response[name.toLowerCase()] = process(content);
 
          // THEN RESOLVE
-         resolve()
+         resolve();
       });
    })
 }

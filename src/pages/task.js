@@ -15,6 +15,7 @@ function Task() {
    const [local, set_local] = useState({
       devices: references.devices.address,
       users: references.users.address,
+      token: references.token.address,
       expires: Date.now() + 100000,
       reputation: '2',
       //reward: '5000000000000000000',
@@ -43,7 +44,7 @@ function Task() {
    }
 
    const Init = () => {
-      init(local.devices, local.users, state).then(success => {
+      init(local.devices, local.users, local.token, state).then(success => {
          if (success) {
             console.log('initialized helper contracts')
          }
@@ -143,6 +144,13 @@ function Task() {
                value={ local.users }
                onChange={ update }
                id={ 'users' }
+            />
+            <input
+               type={ 'text' }
+               placeholder={ 'token contract' }
+               value={ local.token }
+               onChange={ update }
+               id={ 'token' }
             />
          </div>
          <div>

@@ -9,8 +9,8 @@ function Menu() { return (
          header={ 'User' }
       />
       <Item
-         to={ '/licence' }
-         header={ 'Licence' }
+         to={ '/tokens' }
+         header={ 'Tokens' }
       />
       <Item
          to={ '/device' }

@@ -4,6 +4,7 @@ pragma solidity ^0.5.0;
 import { Task } from './Task.sol';
 import { Devices } from './Devices.sol';
 import { Users } from './Users.sol';
+import { Token } from './Token.sol';
 
 contract Tasks {
 
@@ -13,17 +14,27 @@ contract Tasks {
     // HELPER CONTRACTS
     Devices public devices;
     Users public users;
+    Token public token;
+
+    // HAS CONTRACT BEEN INITIALIZED
     bool public initialized = false;
 
     // INITIALIZE HELPER CONTRACTS
-    function init(Devices _devices, Users _users) public {
+    function init(
+        Devices _devices,
+        Users _users,
+        Token _token
+    ) public {
 
         // CONDITION
         require(!initialized, 'helper contracts have already been initialized');
 
-        // SET VARS
+        // SET REFERENCES
         devices = _devices;
         users = _users;
+        token = _token;
+
+        // CONFIRM INITIALIZATION
         initialized = true;
     }
 
@@ -44,9 +55,13 @@ contract Tasks {
         string memory encryption
     ) public payable {
 
-        // CONDITION
+        // CONDITIONS
         require(initialized, 'helper contracts have not been initialized');
         require(users.exists(msg.sender), 'you are not a registered user');
+        require(token.check(msg.sender) >= 1, 'you do not have the tokens to do this');
+
+        // REMOVE A TOKEN FROM SENDER
+        token.remove(1, msg.sender);
 
         // INSTANTIATE NEW TASK
         Task task = (new Task).value(msg.value)(
