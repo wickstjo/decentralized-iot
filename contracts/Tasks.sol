@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-// IMPORT DEVICE CONTRACT
+// IMPORT INTERFACES
 import { Task } from './Task.sol';
 import { Devices } from './Devices.sol';
 import { Users } from './Users.sol';
@@ -9,12 +9,12 @@ import { Token } from './Token.sol';
 contract Tasks {
 
     // LIST OF OPEN TASKS
-    Task[] public tasks;
+    Task[] tasks;
 
     // HELPER CONTRACTS
-    Devices public devices;
-    Users public users;
-    Token public token;
+    Devices devices;
+    Users users;
+    Token token;
 
     // HAS CONTRACT BEEN INITIALIZED
     bool public initialized = false;
