@@ -6,6 +6,7 @@ import User from './pages/user';
 import Token from './pages/tokens';
 import Device from './pages/device';
 import Task from './pages/task';
+import Initialize from './pages/initialize';
 import Error from './pages/error';
 
 function Pages() {
@@ -21,6 +22,7 @@ function Pages() {
                 <Route exact path="/tokens" component={ Token } />
                 <Route exact path="/device" component={ Device } />
                 <Route exact path="/task" component={ Task } />
+                <Route exact path="/initialize" component={ Initialize } />
                 <Route component={ Error } />
             </Switch>
         )

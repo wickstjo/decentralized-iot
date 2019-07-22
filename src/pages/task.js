@@ -3,24 +3,21 @@ import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 import references from '../resources/latest.json';
 
-import { check, init, fetch, add, details, accept, submit, release } from '../funcs/task';
+import { fetch, add, details, accept, submit, release } from '../funcs/task';
 import Button from '../components/button';
 
 function Task() {
 
-   // GLOBAL STATE
+   // GLOBAL STATE 
    const { state } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      devices: references.devices.address,
-      users: references.users.address,
-      token: references.token.address,
       expires: Date.now() + 100000,
-      reputation: '2',
+      reputation: '',
       //reward: '5000000000000000000',
-      reward: '5000000',
-      encryption: 'pgp encryption key',
+      reward: '',
+      encryption: '',
       task: '',
       device: '',
       ipfs: ''
@@ -31,23 +28,6 @@ function Task() {
       set_local({
          ...local,
          [event.target.id]: event.target.value
-      })
-   }
-
-   // CHECK HELPER CONTRACTS
-   function Check() {
-      check(state).then(({ success, data }) => {
-         if (success) {
-            console.log(data);
-         }
-      })
-   }
-
-   const Init = () => {
-      init(local.devices, local.users, local.token, state).then(success => {
-         if (success) {
-            console.log('initialized helper contracts')
-         }
       })
    }
 
@@ -120,39 +100,6 @@ function Task() {
    
    return (
       <div id={ 'innerbody' }>
-         <div>
-            <Button
-               header={ 'Check' }
-               func={ Check }
-            />
-            <Button
-               header={ 'Initialize' }
-               func={ Init }
-            />
-         </div>
-         <div>
-            <input
-               type={ 'text' }
-               placeholder={ 'devices contract' }
-               value={ local.devices }
-               onChange={ update }
-               id={ 'devices' }
-            />
-            <input
-               type={ 'text' }
-               placeholder={ 'users contract' }
-               value={ local.users }
-               onChange={ update }
-               id={ 'users' }
-            />
-            <input
-               type={ 'text' }
-               placeholder={ 'token contract' }
-               value={ local.token }
-               onChange={ update }
-               id={ 'token' }
-            />
-         </div>
          <div>
             <Button
                header={ 'Fetch' }

@@ -3,7 +3,7 @@ import { Context } from '../context';
 import '../interface/css/innerbody.scss';
 import references from '../resources/latest.json';
 
-import { initialize, price, check, buy, transfer } from '../funcs/token';
+import { price, check, buy, transfer } from '../funcs/token';
 import Button from '../components/button';
 
 function Licence() {
@@ -13,22 +13,9 @@ function Licence() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      price: '',
-      tasks: references.tasks.address,
       amount: '',
       user: ''
    });
-
-   // INITIALIZE TOKEN CONTRACT
-   const Initialize = () => {
-      if (state.web3.utils.isAddress(local.tasks)) {
-         initialize(local.price, local.tasks, state).then(success => {
-            if (success) {
-               console.log('tokens initialized')
-            }
-         })
-      } else { console.log('tasks is not an address') }
-   }
 
    // CHECK TOKEN PRICE
    const Price = () => {
@@ -78,30 +65,6 @@ function Licence() {
    
    return (
       <div id={ 'innerbody' }>
-         <div>
-            <Button
-               header={ 'Initialize' }
-               func={ Initialize }
-            />
-         </div>
-         <div>
-            <input
-               type={ 'number' }
-               placeholder={ 'Token Price' }
-               value={ local.price }
-               onChange={ update }
-               id={ 'price' }
-            />
-            <input
-               type={ 'text' }
-               placeholder={ 'Tasks Address' }
-               value={ local.tasks }
-               onChange={ update }
-               id={ 'tasks' }
-               min={ '1' }
-               max={ '10' }
-            />
-         </div>
          <div>
             <Button
                header={ 'Price' }

@@ -97,6 +97,11 @@ function assemble({ address, contract }, state) {
    )
 }
 
+// INITIALIZE CONTRACTS THAT REQUIRE SOMETHING
+function initialize() {
+   console.log('foobar')
+}
+
 export {
    init,
    transaction,
