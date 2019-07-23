@@ -15,7 +15,6 @@ function Task() {
    const [local, set_local] = useState({
       expires: Date.now() + 100000,
       reputation: '',
-      //reward: '5000000000000000000',
       reward: '',
       encryption: '',
       task: '',

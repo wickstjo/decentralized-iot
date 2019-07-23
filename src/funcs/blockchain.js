@@ -33,34 +33,40 @@ function contract(web3, name) {
 }
 
 // SIGN SC TRANSACTION
-function transaction({ query, contract, payable, gas }, state) {
+function transaction({ query, contract, payable }, state) {
 
-   // TRANSACTION OUTLINE
-   const tx = {
-      from: keys.public,
-      to: contract,
-      gas: 500000,
-      data: query.encodeABI()
-   }
+   // ESTIMATE GAS PRICE
+   return query.estimateGas({}).then(price => {
 
-   // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION
-   if (payable !== undefined) {
-      tx.value = payable;
-   }
+      // TRANSACTION OUTLINE
+      const tx = {
+         from: keys.public,
+         to: contract,
+         gas: price,
+         data: query.encodeABI()
+      }
 
-   // IF GAS WAS DEFINED, CHANGE THE EXISTING VALUE
-   if (gas !== undefined) {
-      tx.gas = gas;
-   }
+      // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION
+      if (payable !== undefined) {
+         tx.value = payable;
+      }
 
-   // SIGN IT & EXECUTE
-   return state.web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
-      return state.web3.eth.sendSignedTransaction(signed.rawTransaction).then(() => {
-         return true;
-      }).catch(error => {
-         console.log(error.toString())
-         return false;
+      // SIGN IT & EXECUTE
+      return state.web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
+         return state.web3.eth.sendSignedTransaction(signed.rawTransaction).then(() => {
+            return true;
+
+         // IF THE TRANSACTION FAILS
+         }).catch(error => {
+            console.log(error.toString())
+            return false;
+         })
       })
+
+   // IF THE GAS ESTIMATION FAILS
+   }).catch(error => {
+      console.log(error.toString())
+      return { success: false };
    })
 }
 
@@ -97,9 +103,17 @@ function assemble({ address, contract }, state) {
    )
 }
 
-// INITIALIZE CONTRACTS THAT REQUIRE SOMETHING
-function initialize() {
-   console.log('foobar')
+// ESTIMATE GAS
+function esimate_gas(query, callback) {
+   return query.estimateGas({}).then(response => {
+      return {
+         success: true,
+         data: callback(response)
+      }
+   }).catch(error => {
+      console.log(error.toString())
+      return { success: false };
+   })
 }
 
 export {
@@ -107,5 +121,6 @@ export {
    transaction,
    call,
    event,
-   assemble
+   assemble,
+   esimate_gas
 }
