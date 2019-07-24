@@ -8,20 +8,26 @@ function Addr({ value, placeholder, update, id }) {
 
    // LOCAL STATE
    const [background, set_background] = useState({
-      background: 'red',
+      background: '',
    });
 
-   // UPDATE BACKGROUND BASED ON VALIDATION
+   // UPDATE BACKGROUND BASED ON VALIDATION RESULT
    useEffect(() => {
-      if (state.web3.utils.isAddress(value)) {
 
-         // VALIDATION PASSES
+      // IF THE VALIDATION PASSES
+      if (state.web3.utils.isAddress(value)) {
          set_background({
             background: 'green'
          })
+      
+      // IF NO VALUE WAS ENTERED
+      } else if (value === '') {
+         set_background({
+            background: ''
+         })
+      
+      // IF THE VALIDATION FAILS
       } else {
-
-         // SOMETHING IS WRONG
          set_background({
             background: 'red'
          })
@@ -37,13 +43,15 @@ function Addr({ value, placeholder, update, id }) {
    }
 
    return (
-      <input
-         type={ 'text' }
-         placeholder={ placeholder }
-         value={ value }
-         style={ background }
-         onChange={ validate }
-      />
+      <div>
+         <input
+            type={ 'text' }
+            placeholder={ placeholder }
+            value={ value }
+            style={ background }
+            onChange={ validate }
+         />
+      </div>
    )
 }
 

@@ -13,8 +13,14 @@ function User() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      name: '',
-      address: ''
+      name: {
+         value: '',
+         status: false
+      },
+      address: {
+         value: '',
+         status: false
+      }
    });
 
    // UPDATE LOCAL STATE
