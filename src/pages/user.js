@@ -4,6 +4,7 @@ import '../interface/css/innerbody.scss';
 
 import { fetch, details, add } from '../funcs/user';
 import Button from '../components/button';
+import Addr from '../components/inputs/addr';
 
 function User() {
 
@@ -17,10 +18,10 @@ function User() {
    });
 
    // UPDATE LOCAL STATE
-   const update = (event) => {
+   const update = (response, id) => {
       set_local({
          ...local,
-         [event.target.id]: event.target.value
+         [id]: response
       })
    }
 
@@ -66,6 +67,12 @@ function User() {
                func={ Add }
             />
          </div>
+         <Addr
+            placeholder={ 'Nickname' }
+            value={ local.name.value }
+            update={ update }
+            id={ 'name' }
+         />
          <input
             type={ 'text' }
             placeholder={ 'Set a Name' }
