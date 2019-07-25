@@ -2,7 +2,10 @@ import React, { useContext } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Context } from './context';
 
-import User from './pages/user';
+import './interface/css/general.scss';
+import './interface/css/innerbody.scss';
+
+import User from './pages/testing';
 import Token from './pages/tokens';
 import Device from './pages/device';
 import Task from './pages/task';

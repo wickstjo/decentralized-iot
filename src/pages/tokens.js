@@ -1,7 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
-import '../interface/css/innerbody.scss';
-import references from '../resources/latest.json';
 
 import { price, check, buy, transfer } from '../funcs/token';
 import Button from '../components/button';

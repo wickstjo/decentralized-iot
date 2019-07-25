@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
-import '../interface/css/innerbody.scss';
 
 import { fetch, details, add } from '../funcs/user';
 import Button from '../components/button';
@@ -18,6 +17,10 @@ function User() {
          status: false
       },
       address: {
+         value: '',
+         status: false
+      },
+      number: {
          value: '',
          status: false
       }

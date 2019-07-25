@@ -6,7 +6,7 @@ import references from '../resources/latest.json';
 function init() {
 
    // ESTABLISH WEB3 CONNECTION
-   let web3 = new Web3(connection.type + '://' + connection.host + ':' + connection.port);
+   const web3 = new Web3(connection.type + '://' + connection.host + ':' + connection.port);
 
    // RETURN REFERENCES
    return {

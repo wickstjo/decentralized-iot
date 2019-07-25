@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
-import '../interface/css/innerbody.scss';
 
 import { init as init_tasks } from '../funcs/task';
 import { init as init_token } from '../funcs/token';

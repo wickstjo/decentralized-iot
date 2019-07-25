@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
-import '../interface/css/innerbody.scss';
 
 import { fetch, add, remove, status, toggle, task, assign } from '../funcs/device';
 import Button from '../components/button';
