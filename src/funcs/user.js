@@ -1,20 +1,9 @@
 import { transaction, call } from './blockchain';
-import { keys } from '../resources/settings.json';
 
 // FETCH USER
-function fetch(state) {
+function details(state, user) {
     return call({
-        query: state.contracts.users.methods.fetch(keys.public),
-        callback: (response) => {
-            return response;
-        }
-    })
-}
-
-// FETCH USER
-function details(state) {
-    return call({
-        query: state.contracts.users.methods.details(keys.public),
+        query: state.contracts.users.methods.details(user),
         callback: (response) => {
             return {
                 name: response[0],
@@ -34,7 +23,6 @@ function add(name, state) {
 }
 
 export {
-    fetch,
     details,
     add
 }

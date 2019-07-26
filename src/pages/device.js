@@ -1,8 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
-
 import { fetch, add, remove, status, toggle, task, assign } from '../funcs/device';
+
 import Button from '../components/button';
+import Address from '../components/inputs/address';
+import Text from '../components/inputs/text';
 
 function Device() {
 
@@ -11,19 +13,28 @@ function Device() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      name: '',
-      task: '',
-      device: ''
+      name: {
+         value: '',
+         status: false
+      },
+      device: {
+         value: '',
+         status: false
+      },
+      task: {
+         value: '',
+         status: false
+      }
    });
 
-   // UPDATE LOCAL STATE
-   const update = (event) => {
+   // SET USER INPUT
+   function update(response, id) {
       set_local({
          ...local,
-         [event.target.id]: event.target.value
+         [id]: response
       })
    }
-   
+
    // FETCH DEVICE ADDRESS
    const Fetch = () => {
       fetch(state).then(({ success, data }) => {
@@ -35,19 +46,17 @@ function Device() {
 
    // ADD DEVICE
    const Add = () => {
-      if (local.name.length >= 3) {
-         add(state, local.name).then(success => {
-            if (success) {
-               console.log('device added')
+      add(state, local.name).then(success => {
+         if (success) {
+            console.log('device added')
 
-               // RESET LOCAL NAME
-               set_local({
-                  ...local,
-                  name: ''
-               })
-            }
-         })
-      } else { console.log('name needs to be longer') }
+            // RESET LOCAL NAME
+            set_local({
+               ...local,
+               name: ''
+            })
+         }
+      })
    }
 
    // REMOVE DEVICE
@@ -105,65 +114,53 @@ function Device() {
 
    return (
       <div id={ 'innerbody' }>
-         <div>
-            <Button
-               header={ 'Fetch' }
-               func={ Fetch }
-            />
-            <Button
-               header={ 'Add' }
-               func={ Add }
-            />
-            <Button
-               header={ 'Remove' }
-               func={ Remove }
-            />
-         </div>
-         <div>
-            <input
-               type={ 'text' }
-               placeholder={ 'Device Name' }
-               value={ local.name }
-               onChange={ update }
-               id={ 'name' }
-            />
-         </div>
-         <div>
-            <Button
-               header={ 'Status' }
-               func={ Status }
-            />
-            <Button
-               header={ 'Toggle' }
-               func={ Toggle }
-            />
-            <Button
-               header={ 'Current Task' }
-               func={ Task }
-            />
-            <Button
-               header={ 'Assign Task' }
-               func={ Assign }
-            />
-         </div>
-         <div>
-            <input
-               type={ 'text' }
-               placeholder={ 'Device Address' }
-               value={ local.device }
-               onChange={ update }
-               id={ 'device' }
-            />
-         </div>
-         <div>
-            <input
-               type={ 'text' }
-               placeholder={ 'Task Address' }
-               value={ local.task }
-               onChange={ update }
-               id={ 'task' }
-            />
-         </div>
+         <Button
+            header={ 'Fetch' }
+            func={ Fetch }
+         />
+         <Button
+            header={ 'Add' }
+            func={ Add }
+         />
+         <Button
+            header={ 'Remove' }
+            func={ Remove }
+         />
+         <Text
+            placeholder={ 'Device Name' }
+            value={ local.name.value }
+            range={[ 3, 15 ]}
+            update={ update }
+            id={ 'name' }
+         />
+         <Button
+            header={ 'Status' }
+            func={ Status }
+         />
+         <Button
+            header={ 'Toggle' }
+            func={ Toggle }
+         />
+         <Button
+            header={ 'Current Task' }
+            func={ Task }
+         />
+         <Button
+            header={ 'Assign Task' }
+            func={ Assign }
+         />
+         <Address
+            placeholder={ 'Device Address' }
+            value={ local.device.value }
+            update={ update }
+            id={ 'device' }
+         />
+         <Address
+            placeholder={ 'Task Address' }
+            value={ local.task.value }
+            update={ update }
+            id={ 'task' }
+         />
       </div>
    )
 }

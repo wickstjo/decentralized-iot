@@ -1,8 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
-
 import { price, check, buy, transfer } from '../funcs/token';
+import { keys } from '../resources/settings.json';
+
 import Button from '../components/button';
+import Address from '../components/inputs/address';
+import Number from '../components/inputs/number';
 
 function Licence() {
 
@@ -11,9 +14,27 @@ function Licence() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      amount: '',
-      user: ''
-   });
+      user: {
+         value: keys.public,
+         status: false
+      },
+      amount: {
+         value: '',
+         status: false
+      },
+      receiving: {
+         value: '',
+         status: false
+      }
+   })
+
+   // SET USER INPUT
+   function update(response, id) {
+      set_local({
+         ...local,
+         [id]: response
+      })
+   }
 
    // CHECK TOKEN PRICE
    const Price = () => {
@@ -24,8 +45,8 @@ function Licence() {
       })
    }
 
-   // CHECK CURRENT TOKEN STATUS
-   const Check = () => {
+   // CHECK CURRENT TOKEN BALANCE
+   const Balance = () => {
       check(state).then(({ success, data }) => {
          if (success) {
             console.log(data);
@@ -52,50 +73,43 @@ function Licence() {
          })
       } else { console.log('user is not an address') }
    }
-
-   // UPDATE LOCAL STATE
-   const update = (event) => {
-      set_local({
-         ...local,
-         [event.target.id]: event.target.value
-      })
-   }
    
    return (
       <div id={ 'innerbody' }>
-         <div>
-            <Button
-               header={ 'Price' }
-               func={ Price }
-            />
-            <Button
-               header={ 'Check' }
-               func={ Check }
-            />
-            <Button
-               header={ 'Buy' }
-               func={ Buy }
-            />
-            <Button
-               header={ 'Transfer' }
-               func={ Transfer }
-            />
-         </div>
-         <input
-            type={ 'number' }
-            placeholder={ 'How Many Tokens' }
-            value={ local.amount }
-            onChange={ update }
-            id={ 'amount' }
-            min={ '1' }
-            max={ '10' }
+         <Button
+            header={ 'Balance' }
+            func={ Balance }
          />
-         <input
-            type={ 'text' }
-            placeholder={ 'User Address' }
-            value={ local.user }
-            onChange={ update }
+         <Button
+            header={ 'Buy' }
+            func={ Buy }
+         />
+         <Button
+            header={ 'Transfer' }
+            func={ Transfer }
+         />
+         <Address
+            placeholder={ 'Your Address' }
+            value={ local.user.value }
+            update={ update }
             id={ 'user' }
+         />
+         <Number
+            placeholder={ 'Amount of tokens' }
+            value={ local.amount.value }
+            range={[ 1, 100 ]}
+            update={ update }
+            id={ 'amount' }
+         />
+         <Address
+            placeholder={ 'Receiving Address' }
+            value={ local.receiving.value }
+            update={ update }
+            id={ 'receiving' }
+         />
+         <Button
+            header={ 'Check Price' }
+            func={ Price }
          />
       </div>
    )

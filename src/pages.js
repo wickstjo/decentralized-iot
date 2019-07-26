@@ -5,7 +5,7 @@ import { Context } from './context';
 import './interface/css/general.scss';
 import './interface/css/innerbody.scss';
 
-import User from './pages/testing';
+import User from './pages/user';
 import Token from './pages/tokens';
 import Device from './pages/device';
 import Task from './pages/task';

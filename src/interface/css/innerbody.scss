@@ -22,10 +22,10 @@
         width: 400px;
         color: white;
         outline: none;
-        text-transform: capitalize;
     }
 
     input::placeholder {
         color: white;
+        text-transform: capitalize;
     }
 }

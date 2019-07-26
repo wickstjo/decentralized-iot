@@ -23,7 +23,7 @@ function Testing() {
    });
 
    // SET USER INPUT
-   const update = (response, id) => {
+   function update(response, id) {
       set_local({
          ...local,
          [id]: response

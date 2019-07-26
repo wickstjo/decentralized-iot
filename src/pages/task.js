@@ -1,8 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../context';
-
 import { fetch, add, details, accept, submit, release } from '../funcs/task';
+
 import Button from '../components/button';
+import Address from '../components/inputs/address';
+import Number from '../components/inputs/number';
+import Text from '../components/inputs/text';
 
 function Task() {
 
@@ -11,20 +14,41 @@ function Task() {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      expires: Date.now() + 100000,
-      reputation: '',
-      reward: '',
-      encryption: '',
-      task: '',
-      device: '',
-      ipfs: ''
+      expires: {
+         value: '',
+         status: false
+      },
+      reputation: {
+         value: '',
+         status: false
+      },
+      reward: {
+         value: '',
+         status: false
+      },
+      encryption: {
+         value: '',
+         status: false
+      },
+      task: {
+         value: '',
+         status: false
+      },
+      device: {
+         value: '',
+         status: false
+      },
+      ipfs: {
+         value: '',
+         status: false
+      }
    });
 
-   // UPDATE LOCAL STATE
-   const update = (event) => {
+   // SET USER INPUT
+   function update(response, id) {
       set_local({
          ...local,
-         [event.target.id]: event.target.value
+         [id]: response
       })
    }
 
@@ -97,87 +121,77 @@ function Task() {
    
    return (
       <div id={ 'innerbody' }>
-         <div>
-            <Button
-               header={ 'Fetch' }
-               func={ Fetch }
-            />
-            <Button
-               header={ 'Add' }
-               func={ Add }
-            />
-         </div>
-         <div>
-            <input
-               type={ 'text' }
-               placeholder={ 'expiration date' }
-               value={ local.expires }
-               onChange={ update }
-               id={ 'expires' }
-            />
-            <input
-               type={ 'number' }
-               placeholder={ 'required reputation' }
-               value={ local.reputation }
-               onChange={ update }
-               id={ 'reputation' }
-            />
-            <input
-               type={ 'text' }
-               placeholder={ 'public encryption key' }
-               value={ local.encryption }
-               onChange={ update }
-               id={ 'encryption' }
-            />
-            <input
-               type={ 'number' }
-               placeholder={ 'reward in wei' }
-               value={ local.reward }
-               onChange={ update }
-               id={ 'reward' }
-            />
-         </div>
-         <div>
-            <Button
-               header={ 'Details' }
-               func={ Details }
-            />
-            <Button
-               header={ 'Accept' }
-               func={ Accept }
-            />
-            <Button
-               header={ 'Submit' }
-               func={ Submit }
-            />
-            <Button
-               header={ 'Release' }
-               func={ Release }
-            />
-         </div>
-         <div>
-            <input
-               type={ 'text' }
-               placeholder={ 'task contract' }
-               value={ local.task }
-               onChange={ update }
-               id={ 'task' }
-            />
-            <input
-               type={ 'text' }
-               placeholder={ 'performing device' }
-               value={ local.device }
-               onChange={ update }
-               id={ 'device' }
-            />
-            <input
-               type={ 'text' }
-               placeholder={ 'IPFS hash' }
-               value={ local.ipfs }
-               onChange={ update }
-               id={ 'ipfs' }
-            />
-         </div>
+         <Button
+            header={ 'Fetch' }
+            func={ Fetch }
+         />
+         <Button
+            header={ 'Add' }
+            func={ Add }
+         />
+         <Number
+            placeholder={ 'Expiration Date' }
+            value={ local.expires.value }
+            range={[ 1, 10 ]}
+            update={ update }
+            id={ 'expires' }
+         />
+         <Number
+            placeholder={ 'Minimum Reputation' }
+            value={ local.reputation.value }
+            range={[ 1, 10 ]}
+            update={ update }
+            id={ 'reputation' }
+         />
+         <Text
+            placeholder={ 'Public Encryption Key' }
+            value={ local.encryption.value }
+            range={[ 5, 20 ]}
+            update={ update }
+            id={ 'encryption' }
+         />
+         <Number
+            placeholder={ 'Reward in Wei' }
+            value={ local.reward.value }
+            range={[ 1, 10 ]}
+            update={ update }
+            id={ 'reward' }
+         />
+         <Button
+            header={ 'Details' }
+            func={ Details }
+         />
+         <Button
+            header={ 'Accept' }
+            func={ Accept }
+         />
+         <Button
+            header={ 'Submit' }
+            func={ Submit }
+         />
+         <Button
+            header={ 'Release' }
+            func={ Release }
+         />
+         <Address
+            placeholder={ 'Task Address' }
+            value={ local.task.value }
+            update={ update }
+            id={ 'task' }
+         />
+         <Address
+            placeholder={ 'Device Address' }
+            value={ local.device.value }
+            update={ update }
+            id={ 'device' }
+         />
+         <Text
+            placeholder={ 'IPFS Hash' }
+            value={ local.ipfs.value }
+            range={[ 5, 20 ]}
+            update={ update }
+            id={ 'ipfs' }
+         />
       </div>
    )
 }
