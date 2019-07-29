@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { fetch, add, details, accept, submit, release } from '../funcs/task';
+import { input as reducer } from '../funcs/reducers';
 
-import Button from '../components/button';
+import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
 import Number from '../components/inputs/number';
 import Text from '../components/inputs/text';
@@ -13,7 +14,7 @@ function Task() {
    const { state } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useState({
+   const [local, set_local] = useReducer(reducer, {
       expires: {
          value: '',
          status: null
@@ -47,11 +48,14 @@ function Task() {
    // SET USER INPUT
    function update(response, id) {
       set_local({
-         ...local,
-         [id]: response
+         type: 'field',
+         payload: {
+            name: id,
+            value: response
+         }
       })
    }
-
+   
    // FETCH ALL TASKS
    function Fetch() {
       fetch(state).then(({ success, data }) => {
@@ -120,6 +124,12 @@ function Task() {
          <Button
             header={ 'Add' }
             func={ Add }
+            require={[
+               local.expires.status,
+               local.reputation.status,
+               local.encryption.status,
+               local.reward.status
+            ]}
          />
          <Number
             placeholder={ 'Expiration Date' }
@@ -152,18 +162,29 @@ function Task() {
          <Button
             header={ 'Details' }
             func={ Details }
+            require={[ local.task.status ]}
          />
          <Button
             header={ 'Accept' }
             func={ Accept }
+            require={[
+               local.task.status,
+               local.device.status
+            ]}
          />
          <Button
             header={ 'Submit' }
             func={ Submit }
+            require={[
+               local.task.status,
+               local.device.status,
+               local.ipfs.status
+            ]}
          />
          <Button
             header={ 'Release' }
             func={ Release }
+            require={[ local.task.status ]}
          />
          <Address
             placeholder={ 'Task Address' }

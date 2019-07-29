@@ -13,6 +13,39 @@ function shorten(string) {
    return string;
 }
 
+// CHECK IF ALL VALUES HAVE PASSED VALIDATION
+function check_validation(values) {
+
+   // IF VALUES WERE DEFINED
+   if (values !== undefined) {
+
+      // DEFAULT TO TRUE
+      let response = true;
+
+      // LOOP THROUGH VALUES
+      for (let value of values) {
+         if (value !== true) {
+
+            // IF IT ISNT TRUE, SWITCH TO FALSE & STOP LOOPING
+            response = false;
+            break;
+         }
+      }
+
+      // FINALLY RETURN RESULT
+      return response;
+
+   // OTHERWISE, AUTOMATICALLY RETURN TRUE
+   } else { return true; }
+}
+
+// WAIT FOR GIVEN MILLISECONDS
+function sleep (time) {
+   return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 export {
-   shorten
+   shorten,
+   check_validation,
+   sleep
 }

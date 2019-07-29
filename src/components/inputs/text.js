@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 function Text({ value, placeholder, range, update, id }) {
 
-   // BACKGROUND STATE
-   const [background, set_background] = useState({
-      background: '',
-   });
+   // STYLE STATE
+   const [style, set_style] = useState('bad-input');
 
    // VALIDATE ON INITIAL LOAD
    useEffect(() => {
-      validate(value);
+      validate(value)
    }, [])
 
    // VALIDATE USER INPUT
@@ -23,24 +21,18 @@ function Text({ value, placeholder, range, update, id }) {
          result = true;
       }
 
-      // IF NO VALUE WAS GIVEN
-      if (input === '') {
-         set_background({
-            background: ''
-         })
+      // CHANGE STYLE
+      switch(result) {
 
-      // IF THE VALIDATION PASSES
-      } else if (result) {
-         set_background({
-            background: 'green'
-         })
-      
-      
-      // IF THE VALIDATION FAILS
-      } else {
-         set_background({
-            background: 'red'
-         })
+         // IF THE VALIDATION PASSES
+         case true:
+            set_style('good-input')
+         break;
+
+         // OTHERWISE
+         default: {
+            set_style('bad-input')
+         }
       }
 
       // UPDATE PARENT STATE
@@ -51,12 +43,11 @@ function Text({ value, placeholder, range, update, id }) {
    }
 
    return (
-      <div>
+      <div className={ style }>
          <input
             type={ 'text' }
             placeholder={ placeholder }
             value={ value }
-            style={ background }
             onChange={ event => { validate(event.target.value) }}
          />
       </div>

@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { price, check, buy, transfer } from '../funcs/token';
+import { input as reducer } from '../funcs/reducers';
 import { keys } from '../resources/settings.json';
 
-import Button from '../components/button';
+import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
 import Number from '../components/inputs/number';
 
@@ -13,7 +14,7 @@ function Licence() {
    const { state } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useState({
+   const [local, set_local] = useReducer(reducer, {
       user: {
          value: keys.public,
          status: null
@@ -31,8 +32,11 @@ function Licence() {
    // SET USER INPUT
    function update(response, id) {
       set_local({
-         ...local,
-         [id]: response
+         type: 'field',
+         payload: {
+            name: id,
+            value: response
+         }
       })
    }
 
@@ -75,16 +79,30 @@ function Licence() {
    return (
       <div id={ 'innerbody' }>
          <Button
+            header={ 'Check Price' }
+            func={ Price }
+         />
+         <Button
             header={ 'Balance' }
             func={ Balance }
+            require={[ local.user.status ]}
          />
          <Button
             header={ 'Buy' }
             func={ Buy }
+            require={[
+               local.user.status,
+               local.amount.status
+            ]}
          />
          <Button
             header={ 'Transfer' }
             func={ Transfer }
+            require={[
+               local.user.status,
+               local.amount.status,
+               local.receiving.status
+            ]}
          />
          <Address
             placeholder={ 'Your Address' }
@@ -104,10 +122,6 @@ function Licence() {
             value={ local.receiving.value }
             update={ update }
             id={ 'receiving' }
-         />
-         <Button
-            header={ 'Check Price' }
-            func={ Price }
          />
       </div>
    )

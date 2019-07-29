@@ -19,7 +19,7 @@ function reducer(state, action) {
          return state;
       }
    }
-};
+}
 
 // DECLARE CONTEXT
 const Context = createContext();
@@ -32,7 +32,7 @@ function Provider({ children }) {
       web3: undefined,
       contracts: undefined,
       interface: undefined
-   });
+   })
 
    return (
       <Context.Provider value={{ state, dispatch }}>

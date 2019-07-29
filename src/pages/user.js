@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { details, add } from '../funcs/user';
+import { input as reducer } from '../funcs/reducers';
 import { keys } from '../resources/settings.json';
 
-import Button from '../components/button';
+import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
 import Text from '../components/inputs/text';
 
@@ -13,7 +14,7 @@ function User() {
    const { state } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useState({
+   const [local, set_local] = useReducer(reducer, {
       name: {
          value: '',
          status: null
@@ -22,13 +23,16 @@ function User() {
          value: keys.public,
          status: null
       }
-   });
+   })
 
    // SET USER INPUT
    function update(response, id) {
       set_local({
-         ...local,
-         [id]: response
+         type: 'field',
+         payload: {
+            name: id,
+            value: response
+         }
       })
    }
 
@@ -55,6 +59,12 @@ function User() {
          <Button
             header={ 'Add User' }
             func={ Add }
+            require={[ local.name.status ]}
+         />
+         <Button
+            header={ 'Details' }
+            func={ Details }
+            require={[ local.address.status ]}
          />
          <Text 
             placeholder={ 'What is your name?' }
@@ -62,10 +72,6 @@ function User() {
             range={[ 3, 15 ]}
             update={ update }
             id={ 'name' }
-         />
-         <Button
-            header={ 'Details' }
-            func={ Details }
          />
          <Address
             placeholder={ 'Check address' }

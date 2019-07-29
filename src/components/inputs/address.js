@@ -6,10 +6,8 @@ function Address({ value, placeholder, update, id }) {
    // GLOBAL STATE
    const { state } = useContext(Context);
 
-   // BACKGROUND STATE
-   const [background, set_background] = useState({
-      background: '',
-   })
+   // STYLE STATE
+   const [style, set_style] = useState('bad-input');
 
    // VALIDATE ON INITIAL LOAD
    useEffect(() => {
@@ -22,23 +20,18 @@ function Address({ value, placeholder, update, id }) {
       // PERFORM CHECK
       const result = state.web3.utils.isAddress(input); 
 
-      // IF NO VALUE WAS ENTERED
-      if (input === '') {
-         set_background({
-            background: ''
-         })
+      // CHANGE STYLE
+      switch(result) {
 
-      // IF THE VALIDATION PASSES
-      } else if (result) {
-         set_background({
-            background: 'green'
-         })
-      
-      // IF THE VALIDATION FAILS
-      } else {
-         set_background({
-            background: 'red'
-         })
+         // IF THE VALIDATION PASSES
+         case true:
+            set_style('good-input')
+         break;
+
+         // OTHERWISE
+         default: {
+            set_style('bad-input')
+         }
       }
 
       // UPDATE PARENT STATE
@@ -49,12 +42,11 @@ function Address({ value, placeholder, update, id }) {
    }
 
    return (
-      <div>
+      <div className={ style }>
          <input
             type={ 'text' }
             placeholder={ placeholder }
             value={ value }
-            style={ background }
             onChange={ event => { validate(event.target.value) }}
          />
       </div>

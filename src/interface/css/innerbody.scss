@@ -1,31 +1,50 @@
 #innerbody {
-    padding: 10px;
+   padding: 10px;
 
-    .button {
-        background: rgb(177, 103, 103);
-        border-bottom: 2px solid rgb(153, 81, 81);
-        padding: 5px 8px;
-        margin-right: 5px;
-        margin-bottom: 5px;
-        display: inline-block;
-        cursor: pointer;
-        color: white;
-    }
+   input {
+      background: rgba(58, 130, 163, 0.87);
+      border: 0px solid black;
+      border-bottom: 2px solid rgba(52, 119, 150, 0.87);
+      font: inherit;
+      padding: 5px 8px;
+      width: 100%;
+      color: white;
+      outline: none;
+   }
+   
+   input::placeholder {
+      color: white;
+      text-transform: capitalize;
+   }
 
-    input {
-        background: rgba(58, 130, 163, 0.87);
-        border: 0px solid black;
-        border-bottom: 2px solid rgba(52, 119, 150, 0.87);
-        font: inherit;
-        padding: 5px 8px;
-        margin-bottom: 5px;
-        width: 400px;
-        color: white;
-        outline: none;
-    }
+   .bad-input, .good-input {
+      border-left: 4px solid rgb(206, 77, 77);
+      width: 400px;
+      margin-bottom: 5px;
+      padding-left: 1px;
+      transition-property: background, border;
+      transition-duration: 0.2s, 0.2s;
+   }
 
-    input::placeholder {
-        color: white;
-        text-transform: capitalize;
-    }
+   .good-input {
+      border-left: 4px solid rgb(91, 129, 76);
+   }
+   
+   .bad-button, .good-button {
+      background: rgb(177, 103, 103);
+      border-bottom: 2px solid rgb(153, 81, 81);
+      padding: 5px 8px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      display: inline-block;
+      cursor: pointer;
+      color: white;
+      transition-property: background, border;
+      transition-duration: 0.2s, 0.2s;
+   }
+   
+   .good-button {
+      background: rgb(102, 153, 82);
+      border-bottom: 2px solid rgb(81, 134, 68);
+   }
 }

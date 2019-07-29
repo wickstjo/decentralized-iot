@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { init as init_tasks } from '../funcs/task';
 import { init as init_token } from '../funcs/token';
+import { input as reducer } from '../funcs/reducers';
 
-import Button from '../components/button';
+import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
 import Number from '../components/inputs/number';
 
@@ -13,7 +14,7 @@ function User() {
    const { state } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useState({
+   const [local, set_local] = useReducer(reducer, {
       price: {
          value: '',
          status: null
@@ -39,8 +40,11 @@ function User() {
    // SET USER INPUT
    function update(response, id) {
       set_local({
-         ...local,
-         [id]: response
+         type: 'field',
+         payload: {
+            name: id,
+            value: response
+         }
       })
    }
 
@@ -67,6 +71,10 @@ function User() {
          <Button
             header={ 'Initialize Token' }
             func={ token }
+            require={[
+               local.price.status,
+               local.tasks.status
+            ]}
          />
          <Number
             placeholder={ 'Token Price' }
@@ -84,6 +92,11 @@ function User() {
          <Button
             header={ 'Initialize Tasks' }
             func={ tasks }
+            require={[
+               local.devices.status,
+               local.users.status,
+               local.token.status
+            ]}
          />
          <Address
             placeholder={ 'Devices Contract' }
