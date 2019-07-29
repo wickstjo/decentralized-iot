@@ -16,11 +16,11 @@ function User() {
    const [local, set_local] = useState({
       name: {
          value: '',
-         status: false
+         status: null
       },
       address: {
          value: keys.public,
-         status: false
+         status: null
       }
    });
 
@@ -42,7 +42,7 @@ function User() {
    }
 
    // ADD USER
-   const Add = () => {
+   function Add() {
       add(local.name, state).then(success => {
          if (success) {
             console.log('added user')
@@ -52,6 +52,10 @@ function User() {
    
    return (
       <div id={ 'innerbody' }>
+         <Button
+            header={ 'Add User' }
+            func={ Add }
+         />
          <Text 
             placeholder={ 'What is your name?' }
             value={ local.name.value }
@@ -60,18 +64,14 @@ function User() {
             id={ 'name' }
          />
          <Button
-            header={ 'Add User' }
-            func={ Add }
+            header={ 'Details' }
+            func={ Details }
          />
          <Address
             placeholder={ 'Check address' }
             value={ local.address.value }
             update={ update }
             id={ 'address' }
-         />
-         <Button
-            header={ 'Details' }
-            func={ Details }
          />
       </div>
    )

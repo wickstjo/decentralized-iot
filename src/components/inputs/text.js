@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Text({ value, placeholder, range, update, id }) {
 
@@ -7,19 +7,24 @@ function Text({ value, placeholder, range, update, id }) {
       background: '',
    });
 
+   // VALIDATE ON INITIAL LOAD
+   useEffect(() => {
+      validate(value);
+   }, [])
+
    // VALIDATE USER INPUT
-   function validate(event) {
+   function validate(input) {
 
       // DEFAULT TO FALSE
       let result = false;
 
       // IF THE REQUIREMENTS ARE MET, SWITCH TO TRUE
-      if (isNaN(event.target.value) && event.target.value.length >= range[0] && event.target.value.length <= range[1]) {
+      if (isNaN(input) && input.length >= range[0] && input.length <= range[1]) {
          result = true;
       }
 
       // IF NO VALUE WAS GIVEN
-      if (event.target.value === '') {
+      if (input === '') {
          set_background({
             background: ''
          })
@@ -40,7 +45,7 @@ function Text({ value, placeholder, range, update, id }) {
 
       // UPDATE PARENT STATE
       update({
-         value: event.target.value,
+         value: input,
          status: result
       }, id)
    }
@@ -52,7 +57,7 @@ function Text({ value, placeholder, range, update, id }) {
             placeholder={ placeholder }
             value={ value }
             style={ background }
-            onChange={ validate }
+            onChange={ event => { validate(event.target.value) }}
          />
       </div>
    )

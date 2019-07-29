@@ -15,15 +15,15 @@ function Device() {
    const [local, set_local] = useState({
       name: {
          value: '',
-         status: false
+         status: null
       },
       device: {
          value: '',
-         status: false
+         status: null
       },
       task: {
          value: '',
-         status: false
+         status: null
       }
    });
 
@@ -36,7 +36,7 @@ function Device() {
    }
 
    // FETCH DEVICE ADDRESS
-   const Fetch = () => {
+   function Fetch() {
       fetch(state).then(({ success, data }) => {
          if (success) {
             console.log(data)
@@ -45,7 +45,7 @@ function Device() {
    }
 
    // ADD DEVICE
-   const Add = () => {
+   function Add() {
       add(state, local.name).then(success => {
          if (success) {
             console.log('device added')
@@ -60,7 +60,7 @@ function Device() {
    }
 
    // REMOVE DEVICE
-   const Remove = () => {
+   function Remove() {
       remove(state).then(success => {
          if (success) {
             console.log('device removed')
@@ -69,47 +69,39 @@ function Device() {
    }
 
    // FETCH DEVICE ADDRESS
-   const Status = () => {
-      if (state.web3.utils.isAddress(local.device)) {
-         status(state, local.device).then(({ success, data }) => {
-            if (success) {
-               console.log(data)
-            }
-         })
-      } else { console.log('device is not an address') }
+   function Status() {
+      status(state, local.device).then(({ success, data }) => {
+         if (success) {
+            console.log(data)
+         }
+      })
    }
 
    // FETCH DEVICE ADDRESS
-   const Toggle = () => {
-      if (state.web3.utils.isAddress(local.device)) {
-         toggle(state, local.device).then(success => {
-            if (success) {
-               console.log('status toggled')
-            }
-         })
-      } else { console.log('device is not an address') }
+   function Toggle() {
+      toggle(state, local.device).then(success => {
+         if (success) {
+            console.log('status toggled')
+         }
+      })
    }
 
    // FETCH DEVICE ADDRESS
-   const Task = () => {
-      if (state.web3.utils.isAddress(local.device)) {
-         task(state, local.device).then(({ success, data }) => {
-            if (success) {
-               console.log(data)
-            }
-         })
-      } else { console.log('device is not an address') }
+   function Task() {
+      task(state, local.device).then(({ success, data }) => {
+         if (success) {
+            console.log(data)
+         }
+      })
    }
 
    // FETCH DEVICE ADDRESS
-   const Assign = () => {
-      if (state.web3.utils.isAddress(local.device) && state.web3.utils.isAddress(local.task)) {
-         assign(state, local.device, local.task).then(success => {
-            if (success) {
-               console.log('task was assigned')
-            }
-         })
-      } else { console.log('task and/or device is not an address') }
+   function Assign() {
+      assign(state, local.device, local.task).then(success => {
+         if (success) {
+            console.log('task was assigned')
+         }
+      })
    }
 
    return (

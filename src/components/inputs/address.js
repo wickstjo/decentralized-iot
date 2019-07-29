@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../../context';
 
 function Address({ value, placeholder, update, id }) {
@@ -11,14 +11,19 @@ function Address({ value, placeholder, update, id }) {
       background: '',
    })
 
+   // VALIDATE ON INITIAL LOAD
+   useEffect(() => {
+      validate(value);
+   }, [])
+
    // VALIDATE USER INPUT
-   function validate(event) {
+   function validate(input) {
 
       // PERFORM CHECK
-      const result = state.web3.utils.isAddress(event.target.value); 
+      const result = state.web3.utils.isAddress(input); 
 
       // IF NO VALUE WAS ENTERED
-      if (event.target.value === '') {
+      if (input === '') {
          set_background({
             background: ''
          })
@@ -38,7 +43,7 @@ function Address({ value, placeholder, update, id }) {
 
       // UPDATE PARENT STATE
       update({
-         value: event.target.value,
+         value: input,
          status: result
       }, id)
    }
@@ -50,7 +55,7 @@ function Address({ value, placeholder, update, id }) {
             placeholder={ placeholder }
             value={ value }
             style={ background }
-            onChange={ validate }
+            onChange={ event => { validate(event.target.value) }}
          />
       </div>
    )

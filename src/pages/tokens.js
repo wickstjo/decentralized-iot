@@ -16,15 +16,15 @@ function Licence() {
    const [local, set_local] = useState({
       user: {
          value: keys.public,
-         status: false
+         status: null
       },
       amount: {
          value: '',
-         status: false
+         status: null
       },
       receiving: {
          value: '',
-         status: false
+         status: null
       }
    })
 
@@ -37,7 +37,7 @@ function Licence() {
    }
 
    // CHECK TOKEN PRICE
-   const Price = () => {
+   function Price() {
       price(state).then(({ success, data }) => {
          if (success) {
             console.log(data);
@@ -46,7 +46,7 @@ function Licence() {
    }
 
    // CHECK CURRENT TOKEN BALANCE
-   const Balance = () => {
+   function Balance() {
       check(state).then(({ success, data }) => {
          if (success) {
             console.log(data);
@@ -55,7 +55,7 @@ function Licence() {
    }
 
    // CHECK CURRENT TOKEN STATUS
-   const Buy = () => {
+   function Buy() {
       buy(local.amount, state).then(success => {
          if (success) {
             console.log('bought ' + local.amount + ' tokens')
@@ -64,14 +64,12 @@ function Licence() {
    }
 
    // CHECK CURRENT TOKEN STATUS
-   const Transfer = () => {
-      if (state.web3.utils.isAddress(local.user)) {
-         transfer(local.amount, local.user, state).then(success => {
-            if (success) {
-               console.log('transferred ' + local.amount + ' tokens')
-            }
-         })
-      } else { console.log('user is not an address') }
+   function Transfer() {
+      transfer(local.amount, local.user, state).then(success => {
+         if (success) {
+            console.log('transferred ' + local.amount + ' tokens')
+         }
+      })
    }
    
    return (

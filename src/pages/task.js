@@ -16,31 +16,31 @@ function Task() {
    const [local, set_local] = useState({
       expires: {
          value: '',
-         status: false
+         status: null
       },
       reputation: {
          value: '',
-         status: false
+         status: null
       },
       reward: {
          value: '',
-         status: false
+         status: null
       },
       encryption: {
          value: '',
-         status: false
+         status: null
       },
       task: {
          value: '',
-         status: false
+         status: null
       },
       device: {
          value: '',
-         status: false
+         status: null
       },
       ipfs: {
          value: '',
-         status: false
+         status: null
       }
    });
 
@@ -53,7 +53,7 @@ function Task() {
    }
 
    // FETCH ALL TASKS
-   const Fetch = () => {
+   function Fetch() {
       fetch(state).then(({ success, data }) => {
          if (success) {
             console.log(data);
@@ -62,7 +62,7 @@ function Task() {
    }
 
    // ADD TASK
-   const Add = () => {
+   function Add() {
       add({
          expires: local.expires,
          reputation: local.reputation,
@@ -76,47 +76,39 @@ function Task() {
    }
 
    // FETCH TASK DETAILS
-   const Details = () => {
-      if (state.web3.utils.isAddress(local.task)) {
-         details(local.task, state).then(({ success, data }) => {
-            if (success) {
-               console.log(data);
-            }
-         })
-      } else { console.log('task is not an address') }
+   function Details() {
+      details(local.task, state).then(({ success, data }) => {
+         if (success) {
+            console.log(data);
+         }
+      })
    }
 
    // ACCEPT TASK
-   const Accept = () => {
-      if (state.web3.utils.isAddress(local.task)) {
-         accept(local.task, local.device, state).then(success => {
-            if (success) {
-               console.log('accepted task')
-            }
-         })
-      } else { console.log('task and/or device are not addresses') }
+   function Accept() {
+      accept(local.task, local.device, state).then(success => {
+         if (success) {
+            console.log('accepted task')
+         }
+      })
    }
 
    // SUBMIT DATA TO TASK
-   const Submit = () => {
-      if (state.web3.utils.isAddress(local.task)) {
-         submit(local.task, local.ipfs, state).then(success => {
-            if (success) {
-               console.log('data submitted')
-            }
-         })
-      } else { console.log('task is not an address') }
+   function Submit() {
+      submit(local.task, local.ipfs, state).then(success => {
+         if (success) {
+            console.log('data submitted')
+         }
+      })
    }
 
    // RELEASE TASK
-   const Release = () => {
-      if (state.web3.utils.isAddress(local.task)) {
-         release(local.task, state).then(success => {
-            if (success) {
-               console.log('contract released')
-            }
-         })
-      } else { console.log('task is not an address') }
+   function Release() {
+      release(local.task, state).then(success => {
+         if (success) {
+            console.log('contract released')
+         }
+      })
    }
    
    return (
