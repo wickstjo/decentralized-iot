@@ -1,12 +1,9 @@
 import { transaction, call, assemble } from './blockchain';
 
-// RPI DEVICE ID
-const id = 'cdbde0df13a59633a2a55ee9342d9b31650ae27c0a3c0d80bab4b1561f4df16e';
-
 // FETCH DEVICE CONTRACT
-function fetch(state) {
+function fetch(hash, state) {
     return call({
-        query: state.contracts.devices.methods.fetch(id),
+        query: state.contracts.devices.methods.fetch(hash),
         callback: (response) => {
             return response;
         }
@@ -14,23 +11,15 @@ function fetch(state) {
 }
 
 // ADD DEVICE
-function add(state, name) {
+function add(hash, name, state) {
     return transaction({
-        query: state.contracts.devices.methods.add(id, name),
-        contract: state.contracts.devices._address,
-    }, state)
-}
-
-// REMOVE DEVICE
-function remove(state) {
-    return transaction({
-        query: state.contracts.devices.methods.remove(id),
+        query: state.contracts.devices.methods.add(hash, name),
         contract: state.contracts.devices._address,
     }, state)
 }
 
 // FETCH DEVICE CONTRACT
-function status(state, device) {
+function status(device, state) {
     
     // GENERATE REFERENCE
     const contract = assemble({
@@ -47,7 +36,7 @@ function status(state, device) {
 }
 
 // TOGGLE STATUS
-function toggle(state, device) {
+function toggle(device, state) {
 
     // GENERATE REFERENCE
     const contract = assemble({
@@ -62,7 +51,7 @@ function toggle(state, device) {
 }
 
 // FETCH ASSIGNED TASK
-function task(state, device) {
+function task(device, state) {
 
     // GENERATE REFERENCE
     const contract = assemble({
@@ -79,7 +68,7 @@ function task(state, device) {
 }
 
 // ASSIGN TASK
-function assign(state, device, task) {
+function assign(device, task, state) {
 
     // GENERATE REFERENCE
     const contract = assemble({
@@ -96,7 +85,6 @@ function assign(state, device, task) {
 export {
     fetch,
     add,
-    remove,
     status,
     toggle,
     task,

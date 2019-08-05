@@ -2,6 +2,7 @@ import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { fetch, add, details, accept, submit, release } from '../funcs/task';
 import reducer from '../states/input';
+import { assess } from '../funcs/blockchain';
 
 import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
@@ -11,12 +12,12 @@ import Text from '../components/inputs/text';
 function Task() {
 
    // GLOBAL STATE 
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
       expires: {
-         value: '',
+         value: Date.now() + 200000,
          status: null
       },
       reputation: {
@@ -40,7 +41,7 @@ function Task() {
          status: null
       },
       ipfs: {
-         value: '',
+         value: 'QmSoLju6m7xTh3DuokvT3886QRYqxAzb1kShaanJgW36yx',
          status: null
       }
    });
@@ -58,60 +59,66 @@ function Task() {
    
    // FETCH ALL TASKS
    function Fetch() {
-      fetch(state).then(({ success, data }) => {
-         if (success) {
-            console.log(data);
-         }
+      fetch(state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
 
    // ADD TASK
    function Add() {
       add({
-         expires: local.expires,
-         reputation: local.reputation,
-         reward: local.reward,
-         encryption: local.encryption
-      }, state).then(success => {
-         if (success) {
-            console.log('added task')
-         }
+         expires: local.expires.value,
+         reputation: local.reputation.value,
+         reward: local.reward.value,
+         encryption: local.encryption.value
+      }, state).then(result => {
+         assess({
+            msg: 'task posted successfully'
+         }, result, dispatch)
       })
    }
 
    // FETCH TASK DETAILS
    function Details() {
-      details(local.task, state).then(({ success, data }) => {
-         if (success) {
-            console.log(data);
-         }
+      details(local.task.value, state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
 
    // ACCEPT TASK
    function Accept() {
-      accept(local.task, local.device, state).then(success => {
-         if (success) {
-            console.log('accepted task')
-         }
+      accept(local.task.value, local.device.value, state).then(result => {
+         assess({
+            msg: 'task accepted successfully'
+         }, result, dispatch)
       })
    }
 
    // SUBMIT DATA TO TASK
    function Submit() {
-      submit(local.task, local.ipfs, state).then(success => {
-         if (success) {
-            console.log('data submitted')
-         }
+      submit(local.task.value, local.ipfs.value, state).then(result => {
+         assess({
+            msg: 'data submitted successfully'
+         }, result, dispatch)
       })
    }
 
    // RELEASE TASK
    function Release() {
-      release(local.task, state).then(success => {
-         if (success) {
-            console.log('contract released')
-         }
+      release(local.task.value, state).then(result => {
+         assess({
+            msg: 'task released successfully'
+         }, result, dispatch)
       })
    }
    
@@ -134,7 +141,7 @@ function Task() {
          <Number
             placeholder={ 'Expiration Date' }
             value={ local.expires.value }
-            range={[ 1, 10 ]}
+            range={[ Date.now(), Infinity ]}
             update={ update }
             id={ 'expires' }
          />
@@ -155,7 +162,7 @@ function Task() {
          <Number
             placeholder={ 'Reward in Wei' }
             value={ local.reward.value }
-            range={[ 1, 10 ]}
+            range={[ 1000, 100000 ]}
             update={ update }
             id={ 'reward' }
          />
@@ -192,16 +199,17 @@ function Task() {
             update={ update }
             id={ 'task' }
          />
-         <Address
-            placeholder={ 'Device Address' }
+         <Text
+            placeholder={ 'Device Hash' }
             value={ local.device.value }
+            range={[ 64, 64 ]}
             update={ update }
             id={ 'device' }
          />
          <Text
             placeholder={ 'IPFS Hash' }
             value={ local.ipfs.value }
-            range={[ 5, 20 ]}
+            range={[ 46, 46 ]}
             update={ update }
             id={ 'ipfs' }
          />

@@ -1,7 +1,8 @@
 import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
-import { fetch, add, remove, status, toggle, task, assign } from '../funcs/device';
+import { fetch, add, status, toggle, task, assign } from '../funcs/device';
 import reducer from '../states/input';
+import { assess } from '../funcs/blockchain';
 
 import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
@@ -10,10 +11,14 @@ import Text from '../components/inputs/text';
 function Device() {
 
    // GLOBAL STATE
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
+      hash: {
+         value: 'cdbde0df13a59633a2a55ee9342d9b31650ae27c0a3c0d80bab4b1561f4df16e',
+         status: null
+      },
       name: {
          value: '',
          status: null
@@ -41,70 +46,64 @@ function Device() {
 
    // FETCH DEVICE ADDRESS
    function Fetch() {
-      fetch(state).then(({ success, data }) => {
-         if (success) {
-            console.log(data)
-         }
+      fetch(local.hash.value, state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
 
    // ADD DEVICE
    function Add() {
-      add(state, local.name).then(success => {
-         if (success) {
-            console.log('device added')
-
-            // RESET LOCAL NAME
-            set_local({
-               ...local,
-               name: ''
-            })
-         }
-      })
-   }
-
-   // REMOVE DEVICE
-   function Remove() {
-      remove(state).then(success => {
-         if (success) {
-            console.log('device removed')
-         }
+      add(local.hash.value, local.name.value, state).then(result => {
+         assess({
+            msg: 'device added successful'
+         }, result, dispatch)
       })
    }
 
    // FETCH DEVICE ADDRESS
    function Status() {
-      status(state, local.device).then(({ success, data }) => {
-         if (success) {
-            console.log(data)
-         }
+      status(local.device.value, state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
 
    // FETCH DEVICE ADDRESS
    function Toggle() {
-      toggle(state, local.device).then(success => {
-         if (success) {
-            console.log('status toggled')
-         }
+      toggle(local.device.value, state).then(result => {
+         assess({
+            msg: 'status toggled successful'
+         }, result, dispatch)
       })
    }
 
    // FETCH DEVICE ADDRESS
    function Task() {
-      task(state, local.device).then(({ success, data }) => {
-         if (success) {
-            console.log(data)
-         }
+      task(local.device.value, state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
 
    // FETCH DEVICE ADDRESS
    function Assign() {
-      assign(state, local.device, local.task).then(success => {
-         if (success) {
-            console.log('task was assigned')
-         }
+      assign(local.device.value, local.task.value, state).then(result => {
+         assess({
+            msg: 'task assigned successful'
+         }, result, dispatch)
       })
    }
 
@@ -113,17 +112,22 @@ function Device() {
          <Button
             header={ 'Fetch' }
             func={ Fetch }
-            require={[ local.name.status ]}
+            require={[ local.hash.status ]}
          />
          <Button
             header={ 'Add' }
             func={ Add }
-            require={[ local.name.status ]}
+            require={[
+               local.hash.status,
+               local.name.status
+            ]}
          />
-         <Button
-            header={ 'Remove' }
-            func={ Remove }
-            require={[ local.name.status ]}
+         <Text
+            placeholder={ 'Device Hash' }
+            value={ local.hash.value }
+            range={[ 64, 64 ]}
+            update={ update }
+            id={ 'hash' }
          />
          <Text
             placeholder={ 'Device Name' }
@@ -146,8 +150,7 @@ function Device() {
             header={ 'Current Task' }
             func={ Task }
             require={[
-               local.device.status,
-               local.task.status
+               local.device.status
             ]}
          />
          <Button

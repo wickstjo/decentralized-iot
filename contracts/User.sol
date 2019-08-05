@@ -10,7 +10,7 @@ contract User {
     constructor(string memory _name, uint256 _joined) public {
         name = _name;
         joined = _joined;
-        reputation = 0;
+        reputation = 1;
         isset = true;
     }
 
