@@ -1,17 +1,18 @@
 import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { price, check, buy, transfer } from '../funcs/token';
-import { input as reducer } from '../funcs/reducers';
+import reducer from '../states/input';
 import { keys } from '../resources/settings.json';
+import { assess } from '../funcs/blockchain';
 
 import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
 import Number from '../components/inputs/number';
 
-function Licence() {
+function Token() {
 
    // GLOBAL STATE
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
@@ -23,7 +24,7 @@ function Licence() {
          value: '',
          status: null
       },
-      receiving: {
+      recipient: {
          value: '',
          status: null
       }
@@ -42,42 +43,48 @@ function Licence() {
 
    // CHECK TOKEN PRICE
    function Price() {
-      price(state).then(({ success, data }) => {
-         if (success) {
-            console.log(data);
-         }
+      price(state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
 
    // CHECK CURRENT TOKEN BALANCE
    function Balance() {
-      check(state).then(({ success, data }) => {
-         if (success) {
-            console.log(data);
-         }
+      check(local.user.value, state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
 
    // CHECK CURRENT TOKEN STATUS
    function Buy() {
-      buy(local.amount, state).then(success => {
-         if (success) {
-            console.log('bought ' + local.amount + ' tokens')
-         }
+      buy(local.amount.value, state).then(result => {
+         assess({
+            msg: 'purchase successful'
+         }, result, dispatch)
       })
    }
 
    // CHECK CURRENT TOKEN STATUS
    function Transfer() {
-      transfer(local.amount, local.user, state).then(success => {
-         if (success) {
-            console.log('transferred ' + local.amount + ' tokens')
-         }
+      transfer(local.amount.value, local.recipient.value, state).then(result => {
+         assess({
+            msg: 'transfer successful'
+         }, result, dispatch)
       })
    }
    
    return (
-      <div id={ 'innerbody' }>
+      <div>
          <Button
             header={ 'Check Price' }
             func={ Price }
@@ -101,7 +108,7 @@ function Licence() {
             require={[
                local.user.status,
                local.amount.status,
-               local.receiving.status
+               local.recipient.status
             ]}
          />
          <Address
@@ -118,13 +125,13 @@ function Licence() {
             id={ 'amount' }
          />
          <Address
-            placeholder={ 'Receiving Address' }
-            value={ local.receiving.value }
+            placeholder={ 'recipients Address' }
+            value={ local.recipient.value }
             update={ update }
-            id={ 'receiving' }
+            id={ 'recipient' }
          />
       </div>
    )
 }
 
-export default Licence;
+export default Token;

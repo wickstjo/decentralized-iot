@@ -1,7 +1,7 @@
 import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { fetch, add, remove, status, toggle, task, assign } from '../funcs/device';
-import { input as reducer } from '../funcs/reducers';
+import reducer from '../states/input';
 
 import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
@@ -109,7 +109,7 @@ function Device() {
    }
 
    return (
-      <div id={ 'innerbody' }>
+      <div>
          <Button
             header={ 'Fetch' }
             func={ Fetch }

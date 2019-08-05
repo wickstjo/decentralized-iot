@@ -27,7 +27,7 @@ contract Tasks {
     ) public {
 
         // CONDITION
-        require(!initialized, 'helper contracts have already been initialized');
+        require(!initialized, 'contract has already been initialized');
 
         // SET REFERENCES
         devices = _devices;

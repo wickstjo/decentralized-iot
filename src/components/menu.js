@@ -7,6 +7,10 @@ function Menu() { return (
    <div id={ 'menu' }>
       <div>
          <Item
+            to={ '/' }
+            header={ 'Home' }
+         />
+         <Item
             to={ '/user' }
             header={ 'User' }
          />

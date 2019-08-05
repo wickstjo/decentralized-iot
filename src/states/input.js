@@ -1,4 +1,3 @@
-// INPUT REDUCER
 function input(local, action) {
    switch (action.type) {
 
@@ -17,6 +16,4 @@ function input(local, action) {
    }
 }
 
-export {
-   input
-}
+export default input;

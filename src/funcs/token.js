@@ -1,5 +1,4 @@
 import { transaction, call } from './blockchain';
-import { keys } from '../resources/settings.json';
 
 // INITIALIZE TOKEN CONTRACT
 function init(price, tasks, state) {
@@ -20,9 +19,9 @@ function price(state) {
 }
 
 // CHECK LICENCE STATUS
-function check(state) {
+function check(user, state) {
    return call({
-      query: state.contracts.token.methods.check(keys.public),
+      query: state.contracts.token.methods.check(user),
       callback: (response) => {
          return response;
       }
@@ -31,21 +30,30 @@ function check(state) {
 
 // BUY LICENCE
 function buy(amount, state) {
-   return price(state).then(({ success, data }) => {
-      if (success) {
-         return transaction({
-               query: state.contracts.token.methods.add(amount),
-               contract: state.contracts.token._address,
-               payable: amount * data
-         }, state)
+   return price(state).then(result => {
+      switch(result.success) {
+
+         // ON SUCCESS
+         case true: {
+            return transaction({
+                  query: state.contracts.token.methods.add(amount),
+                  contract: state.contracts.token._address,
+                  payable: amount * result.data
+            }, state)
+         }
+
+         // ON ERROR
+         default: { return {
+            reason: result.reason
+         }}
       }
    })
 }
 
 // REMOVE LICENCE
-function transfer(amount, user, state) {
+function transfer(amount, recipient, state) {
    return transaction({
-      query: state.contracts.token.methods.transfer(amount, user),
+      query: state.contracts.token.methods.transfer(amount, recipient),
       contract: state.contracts.token._address,
    }, state)
 }

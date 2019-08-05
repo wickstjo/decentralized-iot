@@ -40,21 +40,23 @@ function contracts(web3) {
 // SIGN SC TRANSACTION
 function transaction({ query, contract, payable }, state) {
 
+   // TRANSACTION OUTLINE
+   const tx = {
+      from: keys.public,
+      to: contract,
+      data: query.encodeABI()
+   }
+
+   // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION
+   if (payable !== undefined) {
+      tx.value = payable;
+   }
+
    // ESTIMATE GAS PRICE
-   return query.estimateGas({}).then(price => {
+   return query.estimateGas(tx).then(price => {
 
-      // TRANSACTION OUTLINE
-      const tx = {
-         from: keys.public,
-         to: contract,
-         gas: price,
-         data: query.encodeABI()
-      }
-
-      // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION
-      if (payable !== undefined) {
-         tx.value = payable;
-      }
+      // ADD GAS PROPERTY TO TRANSACTION
+      tx.gas = price;
 
       // SIGN IT & EXECUTE
       return state.web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
@@ -65,20 +67,16 @@ function transaction({ query, contract, payable }, state) {
 
          // IF THE TRANSACTION FAILS
          }).catch(error => {
-            console.log(error.toString())
             return {
-               success: false,
-               reason: error.toString()
+               reason: prune(error)
             }
          })
       })
 
    // IF THE GAS ESTIMATION FAILS
    }).catch(error => {
-      console.log(error.toString())
       return {
-         success: false,
-         reason: error.toString()
+         reason: prune(error)
       }
    })
 }
@@ -91,24 +89,20 @@ function call({ query, callback }) {
          data: callback(response)
       }
    }).catch(error => {
-      console.log(error.toString())
       return {
-         success: false,
-         reason: error.toString()
+         reason: prune(error)
       }
    })
 }
 
-// LISTEN TO SC EVENT
-function event({ contracts }) {
-   return contracts.users.events.Action().on('data', event => {
+// PRUNE ERROR MESSAGE
+function prune(error) {
 
-      // DECONSTRUCT RESPONSE & LOG MESSAGE
-      const { source, sender } = event.returnValues;
+   // CONVERT TO STRING & NUKE GARBAGE
+   error = error.toString();
+   error = error.replace('Error: Returned error: VM Exception while processing transaction: revert ', '');
 
-      // LOG EVENT
-      console.log(sender + ' has ' + source + ' an account');
-   })
+   return error;
 }
 
 // ASSEMBLE SINGLE CONTRACT REFERENCE
@@ -119,27 +113,45 @@ function assemble({ address, contract }, state) {
    )
 }
 
-// ESTIMATE GAS
-function esimate_gas(query, callback) {
-   return query.estimateGas({}).then(response => {
-      return {
-         success: true,
-         data: callback(response)
+// ASSESS METHOD RESPONSE
+function assess({ msg, func }, result, dispatch) {
+   switch(result.success) {
+
+      // ON SUCCESS
+      case true:
+
+         // IF A FUNCTION WAS PROVIDED, EXECUTE IT
+         if (func !== undefined) {
+            func(result.data)
+         }
+
+         dispatch({
+            type: 'add-message',
+            payload: {
+               text: msg,
+               type: 'good'
+            }
+         })
+      break;
+
+      // ON ERROR
+      default: {
+         dispatch({
+            type: 'add-message',
+            payload: {
+               text: result.reason,
+               type: 'bad'
+            }
+         })
       }
-   }).catch(error => {
-      console.log(error.toString())
-      return {
-         success: false,
-         reason: error.toString()
-      }
-   })
+   }
 }
 
 export {
    init,
    transaction,
    call,
-   event,
    assemble,
-   esimate_gas
+   assess,
+   prune
 }

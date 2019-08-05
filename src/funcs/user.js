@@ -1,7 +1,7 @@
 import { transaction, call } from './blockchain';
 
 // FETCH USER
-function details(state, user) {
+function details(user, state) {
     return call({
         query: state.contracts.users.methods.details(user),
         callback: (response) => {
@@ -9,7 +9,7 @@ function details(state, user) {
                 name: response[0],
                 joined: response[1],
                 reputation: response[2],
-            };
+            }
         }
     })
 }

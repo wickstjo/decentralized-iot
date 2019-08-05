@@ -1,8 +1,9 @@
 import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { details, add } from '../funcs/user';
-import { input as reducer } from '../funcs/reducers';
+import reducer from '../states/input';
 import { keys } from '../resources/settings.json';
+import { assess } from '../funcs/blockchain';
 
 import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
@@ -11,7 +12,7 @@ import Text from '../components/inputs/text';
 function User() {
 
    // GLOBAL STATE
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
@@ -36,26 +37,29 @@ function User() {
       })
    }
 
-   // FETCH USER DETAILS
-   function Details() {
-      details(state).then(({ success, data }) => {
-         if (success) {
-            console.log(data)
-         }
+   // ADD USER
+   function Add() {
+      add(local.name.value, state).then(result => {
+         assess({
+            msg: 'user added'
+         }, result, dispatch)
       })
    }
 
-   // ADD USER
-   function Add() {
-      add(local.name, state).then(success => {
-         if (success) {
-            console.log('added user')
-         }
+   // FETCH USER DETAILS
+   function Details() {
+      details(local.address.value, state).then(result => {
+         assess({
+            msg: 'fetched successfully',
+            func: (data) => {
+               console.log(data)
+            }
+         }, result, dispatch)
       })
    }
    
    return (
-      <div id={ 'innerbody' }>
+      <div>
          <Button
             header={ 'Add User' }
             func={ Add }

@@ -2,7 +2,9 @@ import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
 import { init as init_tasks } from '../funcs/task';
 import { init as init_token } from '../funcs/token';
-import { input as reducer } from '../funcs/reducers';
+import { assess } from '../funcs/blockchain';
+import reducer from '../states/input';
+import latest from '../resources/latest.json';
 
 import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
@@ -11,7 +13,7 @@ import Number from '../components/inputs/number';
 function User() {
 
    // GLOBAL STATE
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
@@ -20,19 +22,19 @@ function User() {
          status: null
       },
       tasks: {
-         value: '',
+         value: latest.tasks.address,
          status: null
       },
       devices: {
-         value: '',
+         value: latest.devices.address,
          status: null
       },
       users: {
-         value: '',
+         value: latest.users.address,
          status: null
       },
       token: {
-         value: '',
+         value: latest.token.address,
          status: null
       }
    })
@@ -50,24 +52,24 @@ function User() {
 
    // INITIALIZE TOKENinitS
    function token() {
-      init_token(local.price, local.tasks, state).then(success => {
-         if (success) {
-            console.log('tokens initialized')
-         }
+      init_token(local.price.value, local.tasks.value, state).then(result => {
+         assess({
+            msg: 'token contract initiated'
+         }, result, dispatch)
       })
    }
 
    // INTIALIZE TASKS
    function tasks() {
-      init_tasks(local.devices, local.users, local.token, state).then(success => {
-         if (success) {
-            console.log('initialized helper contracts')
-         }
+      init_tasks(local.devices.value, local.users.value, local.token.value, state).then(result => {
+         assess({
+            msg: 'tasks contract initiated'
+         }, result, dispatch)
       })
    }
    
    return (
-      <div id={ 'innerbody' }>
+      <div>
          <Button
             header={ 'Initialize Token' }
             func={ token }
@@ -79,7 +81,7 @@ function User() {
          <Number
             placeholder={ 'Token Price' }
             value={ local.price.value }
-            range={[ 1, 10 ]}
+            range={[ 1000, 100000 ]}
             update={ update }
             id={ 'price' }
          />

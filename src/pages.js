@@ -1,10 +1,11 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Context } from './context';
 
 import './interface/css/general.scss';
 import './interface/css/innerbody.scss';
 
+import Home from './pages/home';
 import User from './pages/user';
 import Token from './pages/tokens';
 import Device from './pages/device';
@@ -20,8 +21,9 @@ function Pages() {
     // IF WEB3 ISSET, RETURN NAVIGATION
     if (state.web3 !== undefined) {
         return (
-            <Fragment>
+            <div id={ 'innerbody' }>
                 <Switch>
+                    <Route exact path="/" component={ Home } />
                     <Route exact path="/user" component={ User } />
                     <Route exact path="/tokens" component={ Token } />
                     <Route exact path="/device" component={ Device } />
@@ -29,7 +31,7 @@ function Pages() {
                     <Route exact path="/initialize" component={ Initialize } />
                     <Route component={ Error } />
                 </Switch>
-            </Fragment>
+            </div>
         )
 
     // OTHERWISE, SHOW LOADING
