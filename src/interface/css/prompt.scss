@@ -1,0 +1,37 @@
+#prompt {
+    background: rgba(0, 0, 0, 0.644);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+    transition: opacity 0.1s;
+    opacity: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    #inner {
+        width: 400px;
+        background: #F1F1F1;
+        padding: 9px 11px;
+    }
+
+    // CLOSE PROMPT CROSS
+    #close {
+        background: url('../images/close.png') center center no-repeat;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        height: 80px;
+        width: 80px;
+        opacity: 0.6;
+        transition: 0.3s;
+    }
+
+    #close:hover {
+        cursor: pointer;
+        opacity: 1;
+    }
+}

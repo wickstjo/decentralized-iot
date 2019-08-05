@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Context } from './context';
 
@@ -20,14 +20,16 @@ function Pages() {
     // IF WEB3 ISSET, RETURN NAVIGATION
     if (state.web3 !== undefined) {
         return (
-            <Switch>
-                <Route exact path="/user" component={ User } />
-                <Route exact path="/tokens" component={ Token } />
-                <Route exact path="/device" component={ Device } />
-                <Route exact path="/task" component={ Task } />
-                <Route exact path="/initialize" component={ Initialize } />
-                <Route component={ Error } />
-            </Switch>
+            <Fragment>
+                <Switch>
+                    <Route exact path="/user" component={ User } />
+                    <Route exact path="/tokens" component={ Token } />
+                    <Route exact path="/device" component={ Device } />
+                    <Route exact path="/task" component={ Task } />
+                    <Route exact path="/initialize" component={ Initialize } />
+                    <Route component={ Error } />
+                </Switch>
+            </Fragment>
         )
 
     // OTHERWISE, SHOW LOADING

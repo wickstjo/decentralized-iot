@@ -1,0 +1,36 @@
+#messages {
+   position: absolute;
+   right: 0px;
+   bottom: 0px;
+   z-index: 99;
+   display: flex;
+   opacity: 1;
+   transition: opacity 0.3s;
+   margin: 20px;
+   margin-bottom: 15px;
+   flex-direction: column;
+   align-items: flex-end;
+   width: 250px;
+
+   #message {
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      text-shadow: 1px 1px #242424;
+      margin-bottom: 5px;
+      transition: opacity 0.2s;
+      opacity: 0;
+      width: fit-content;
+   }
+
+   .bad {
+      background: rgb(187, 49, 49);
+      border: 1px solid rgb(105, 50, 50);
+   }
+   
+   .good {
+      background: rgb(37, 138, 54);
+      border: 1px solid rgb(27, 80, 36);
+   }
+}

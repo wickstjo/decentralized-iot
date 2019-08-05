@@ -1,22 +1,17 @@
 import Web3 from 'web3';
-import { connection, keys } from '../resources/settings.json';
+import { gateways, keys } from '../resources/settings.json';
 import references from '../resources/latest.json';
 
 // INITIALIZE SC & WEB3
 function init() {
 
    // ESTABLISH WEB3 CONNECTION
-   const web3 = new Web3(connection.type + '://' + connection.host + ':' + connection.port);
+   const web3 = new Web3('ws://' + gateways.blockchain.host + ':' + gateways.blockchain.port);
 
    // RETURN REFERENCES
    return {
       web3: web3,
-      contracts: {
-         devices: contract(web3, 'devices'),
-         token: contract(web3, 'token'),
-         tasks: contract(web3, 'tasks'),
-         users: contract(web3, 'users')
-      },
+      contracts: contracts(web3),
       interface: {
          device: references['device'].abi,
          task: references['task'].abi
@@ -24,12 +19,22 @@ function init() {
    }
 }
 
-// FETCH CORRECT CONTRACT
-function contract(web3, name) {
-   return new web3.eth.Contract(
-      references[name].abi,
-      references[name].address
-   )
+// CONSTRUCT SMART CONTRACT REFERENCE
+function contracts(web3) {
+    
+   // RELEVANT SMART CONTRACT NAMES & RESPONSE PLACEHOLDER
+   const contracts = ['devices', 'token', 'tasks', 'users']
+   const response = {};
+
+   // LOOP THROUGH & COMBINE EACH ABI & ADDRESS
+   contracts.forEach(name => {
+      response[name] = new web3.eth.Contract(
+         references[name].abi,
+         references[name].address
+      )
+   })
+
+   return response;
 }
 
 // SIGN SC TRANSACTION
@@ -54,19 +59,27 @@ function transaction({ query, contract, payable }, state) {
       // SIGN IT & EXECUTE
       return state.web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
          return state.web3.eth.sendSignedTransaction(signed.rawTransaction).then(() => {
-            return true;
+            return {
+               success: true
+            }
 
          // IF THE TRANSACTION FAILS
          }).catch(error => {
             console.log(error.toString())
-            return false;
+            return {
+               success: false,
+               reason: error.toString()
+            }
          })
       })
 
    // IF THE GAS ESTIMATION FAILS
    }).catch(error => {
       console.log(error.toString())
-      return { success: false };
+      return {
+         success: false,
+         reason: error.toString()
+      }
    })
 }
 
@@ -79,7 +92,10 @@ function call({ query, callback }) {
       }
    }).catch(error => {
       console.log(error.toString())
-      return { success: false };
+      return {
+         success: false,
+         reason: error.toString()
+      }
    })
 }
 
@@ -112,7 +128,10 @@ function esimate_gas(query, callback) {
       }
    }).catch(error => {
       console.log(error.toString())
-      return { success: false };
+      return {
+         success: false,
+         reason: error.toString()
+      }
    })
 }
 
