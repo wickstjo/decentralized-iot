@@ -1,90 +1,66 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../context';
-import { details, add } from '../funcs/user';
-import reducer from '../states/input';
-import { keys } from '../resources/settings.json';
-import { assess } from '../funcs/blockchain';
+import { details } from '../contracts/user';
 
-import Button from '../components/inputs/button';
-import Address from '../components/inputs/address';
-import Text from '../components/inputs/text';
-
-function User() {
+function User({ match }) {
 
    // GLOBAL STATE
-   const { state, dispatch } = useContext(Context);
+   const { state } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useReducer(reducer, {
-      name: {
-         value: '',
-         status: null
-      },
-      address: {
-         value: keys.public,
-         status: null
-      }
+   const [local, set_local] = useState({
+      found: null,
+      data: {}
    })
 
-   // SET USER INPUT
-   function update(response, id) {
-      set_local({
-         type: 'field',
-         payload: {
-            name: id,
-            value: response
+   // FETCH DETAILS
+   useEffect(() => {
+      details(match.params.address, state).then(result => {
+         if (result.success) {
+
+            // ON SUCCESS
+            set_local({
+               found: true,
+               data: result.data
+            })
+         } else {
+
+            // ON ERROR
+            set_local({
+               ...local,
+               found: false
+            })
          }
       })
-   }
+   }, [])
 
-   // ADD USER
-   function Add() {
-      add(local.name.value, state).then(result => {
-         assess({
-            msg: 'user added'
-         }, result, dispatch)
-      })
-   }
+   // RENDER CONTENT
+   switch (local.found) {
 
-   // FETCH USER DETAILS
-   function Details() {
-      details(local.address.value, state).then(result => {
-         assess({
-            msg: 'fetched successfully',
-            func: (data) => {
-               console.log(data)
-            }
-         }, result, dispatch)
-      })
+      // USER FOUND
+      case true: { return (
+         <Details data={ local.data } />
+      )}
+
+      // USER NOT FOUND
+      case false: { return (
+         <div>User was not found!</div>
+      )}
+
+      // LOADING
+      default: { return (
+         <div>Loading..</div>
+      )}
    }
-   
-   return (
-      <div>
-         <Button
-            header={ 'Add User' }
-            func={ Add }
-            require={[ local.name.status ]}
-         />
-         <Button
-            header={ 'Details' }
-            func={ Details }
-            require={[ local.address.status ]}
-         />
-         <Text 
-            placeholder={ 'What is your name?' }
-            value={ local.name.value }
-            range={[ 3, 15 ]}
-            update={ update }
-            id={ 'name' }
-         />
-         <Address
-            placeholder={ 'Check address' }
-            value={ local.address.value }
-            update={ update }
-            id={ 'address' }
-         />
-      </div>
-   )
 }
+
+// PRESENT USER DETAILS
+function Details({ data }) { return (
+   <div>
+      <div>Name: { data.name }</div>
+      <div>Reputation: { data.reputation }</div>
+      <div>Joined: { data.joined }</div>
+   </div>
+)}
 
 export default User;

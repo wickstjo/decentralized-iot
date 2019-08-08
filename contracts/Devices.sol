@@ -38,11 +38,10 @@ contract Devices {
     }
 
     // CREATE NEW DEVICE INSTANCE
-    function add(string memory id, string memory name) public {
+    function add(string memory id) public {
 
         // IF THE ID DOES NOT EXIST, INSTANTIATE & PUSH NEW DEVICE
         require(!exists(id), 'device already exist');
-
-        devices[id] = new Device(name, msg.sender);
+        devices[id] = new Device(msg.sender);
     }
 }

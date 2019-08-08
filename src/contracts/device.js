@@ -1,4 +1,4 @@
-import { transaction, call, assemble } from './blockchain';
+import { transaction, call, assemble } from '../funcs/blockchain';
 
 // FETCH DEVICE CONTRACT
 function fetch(hash, state) {
@@ -11,9 +11,9 @@ function fetch(hash, state) {
 }
 
 // ADD DEVICE
-function add(hash, name, state) {
+function add(hash, state) {
     return transaction({
-        query: state.contracts.devices.methods.add(hash, name),
+        query: state.contracts.devices.methods.add(hash),
         contract: state.contracts.devices._address,
     }, state)
 }

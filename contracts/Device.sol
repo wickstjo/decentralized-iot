@@ -2,8 +2,7 @@ pragma solidity ^0.5.0;
 
 contract Device {
 
-    // REF VARS
-    string public name;
+    // DEVICE OWNER
     address payable public owner;
 
     // LATEST ASSIGNED TASK
@@ -14,10 +13,9 @@ contract Device {
     bool public isset;
 
     // WHEN CONTRACT IS FIRST BUILT
-    constructor(string memory _name, address payable _owner) public {
+    constructor(address payable _owner) public {
 
-        // SET REFERENCES
-        name = _name;
+        // SET DEVICE OWNER
         owner = _owner;
 
         // SET BOOLS

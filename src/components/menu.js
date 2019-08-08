@@ -11,16 +11,16 @@ function Menu() { return (
             header={ 'Home' }
          />
          <Item
-            to={ '/user' }
-            header={ 'User' }
+            to={ '/users' }
+            header={ 'Users' }
          />
          <Item
             to={ '/tokens' }
             header={ 'Tokens' }
          />
          <Item
-            to={ '/device' }
-            header={ 'Device' }
+            to={ '/devices' }
+            header={ 'Devices' }
          />
          <Item
             to={ '/task' }

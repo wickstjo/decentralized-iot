@@ -1,7 +1,7 @@
 import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
-import { init as init_tasks } from '../funcs/task';
-import { init as init_token } from '../funcs/token';
+import { init as init_tasks } from '../contracts/task';
+import { init as init_token } from '../contracts/token';
 import { assess } from '../funcs/blockchain';
 import reducer from '../states/input';
 import latest from '../resources/latest.json';

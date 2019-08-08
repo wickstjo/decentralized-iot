@@ -1,6 +1,6 @@
 import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
-import { price, check, buy, transfer } from '../funcs/token';
+import { price, check, buy, transfer } from '../contracts/token';
 import reducer from '../states/input';
 import { keys } from '../resources/settings.json';
 import { assess } from '../funcs/blockchain';

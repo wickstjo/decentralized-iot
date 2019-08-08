@@ -1,4 +1,4 @@
-import { transaction, call } from './blockchain';
+import { transaction, call } from '../funcs/blockchain';
 
 // INITIALIZE TOKEN CONTRACT
 function init(price, tasks, state) {

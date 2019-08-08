@@ -1,6 +1,6 @@
 import React, { useContext, useReducer } from 'react';
 import { Context } from '../context';
-import { fetch, add, details, accept, submit, release } from '../funcs/task';
+import { fetch, add, details, accept, submit, release } from '../contracts/task';
 import reducer from '../states/input';
 import { assess } from '../funcs/blockchain';
 

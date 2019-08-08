@@ -1,4 +1,4 @@
-import { transaction, call } from './blockchain';
+import { transaction, call } from '../funcs/blockchain';
 
 // FETCH USER
 function details(user, state) {

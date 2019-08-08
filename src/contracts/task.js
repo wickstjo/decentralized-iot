@@ -1,4 +1,4 @@
-import { transaction, call, assemble } from './blockchain';
+import { transaction, call, assemble } from '../funcs/blockchain';
 
 // CHECK INITIALIZED STATUS
 function check(state) {
