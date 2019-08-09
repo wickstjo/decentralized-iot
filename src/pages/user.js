@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useEffect, Fragment } from 'react';
+import React, { useContext, useReducer, useEffect } from 'react';
 import { Context } from '../context';
 import { values, reducer } from '../states/user';
 
@@ -6,6 +6,7 @@ import { details } from '../contracts/user';
 import { collection } from '../contracts/device';
 
 import List from '../components/list';
+import Links from '../components/links';
 
 function User({ match }) {
 
@@ -69,15 +70,22 @@ function User({ match }) {
 
       // USER FOUND
       case true: { return (
-         <Fragment>
-            <Details data={ local.user } />
-            <List
-               header={ 'Your Devices' }
-               error={ 'No devices found' }
-               url={ 'http://localhost:3000/devices/' }
-               data={ local.collection }
-            />
-         </Fragment>
+         <div id={ 'split' }>
+            <div>
+               <List
+                  header={ 'userprofile' }
+                  data={ local.user }
+               />
+            </div>
+            <div>
+               <Links
+                  header={ 'registered devices' }
+                  error={ 'No devices found' }
+                  url={ 'http://localhost:3000/devices/' }
+                  data={ local.collection }
+               />
+            </div>
+         </div>
       )}
 
       // USER NOT FOUND
@@ -88,33 +96,6 @@ function User({ match }) {
       // LOADING
       default: { return (
          <div>Loading..</div>
-      )}
-   }
-}
-
-// PRESENT USER DETAILS
-function Details({ data }) { return (
-   <div>
-      <div>Name: { data.name }</div>
-      <div>Reputation: { data.reputation }</div>
-      <div>Joined: { data.joined }</div>
-   </div>
-)}
-
-// PRESENT DEVICES
-function Devices({ data }) {
-   switch(data.length) {
-
-      // NO DEVICES
-      case 0: { return (
-         <div>No registered devices found</div>
-      )}
-
-      // LIST DEVICES
-      default: { return (
-         data.map((hash, index) => 
-            <div key={ index }>{ hash }</div>
-         )
       )}
    }
 }

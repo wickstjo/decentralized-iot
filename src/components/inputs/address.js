@@ -42,14 +42,13 @@ function Address({ value, placeholder, update, id }) {
    }
 
    return (
-      <div className={ style }>
-         <input
-            type={ 'text' }
-            placeholder={ placeholder }
-            value={ value }
-            onChange={ event => { validate(event.target.value) }}
-         />
-      </div>
+      <input
+         type={ 'text' }
+         className={ style }
+         placeholder={ placeholder }
+         value={ value }
+         onChange={ event => { validate(event.target.value) }}
+      />
    )
 }
 

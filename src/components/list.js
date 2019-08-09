@@ -1,35 +1,28 @@
-import React, { Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function List({ header, error, data, url }) { return (
-   <Fragment>
-      <div>{ header }</div>
-      <Items
-         data={ data }
-         error={ error }
-         url={ url }
-      />
-   </Fragment>
-)}
+import { shorten } from '../funcs/misc';
+import Box from './box';
 
-function Items({ data, error, url }) {
-   switch(data.length) {
+function List({ data, header }) {
 
-      // NO ITEMS
-      case 0: { return (
-         <div>{ error }</div>
-      )}
+   // LOCAL STATE
+   const [keys, set_keys] = useState([]);
 
-      // OTHERWISE
-      default: { return (
-         <div>
-            { data.map((item, index) =>
-               <div key={ index }>
-                  <a href={ url + item } target={ '_blank' } rel={ 'noopener noreferrer' }>{ item }</a>
-               </div>
-            )}
-         </div>
-      )}
-   }
+   // ON LOAD, FISH OUT KEYS
+   useEffect(() => {
+      set_keys(Object.keys(data))
+   }, [])
+
+   return (
+      <Box header={ header }>
+         { keys.map((key, index) => 
+            <div className={ 'row' } id={ 'split' } key={ index }>
+               <div>{ key }</div>
+               <div>{ shorten(data[key]) }</div>
+            </div>
+         )}
+      </Box>
+   )
 }
 
 export default List;

@@ -1,15 +1,32 @@
 #innerbody {
    padding: 10px;
 
+   #split {
+      display: flex;
+
+      > div {
+         flex: 1;
+      }
+
+      > div:nth-child(1) {
+         padding-right: 5px;
+      }
+
+      > div:nth-child(2) {
+         padding-left: 5px;
+      }
+   }
+
    input {
-      background: rgba(58, 130, 163, 0.87);
       border: 0px solid black;
-      border-bottom: 2px solid rgba(52, 119, 150, 0.87);
       font: inherit;
-      padding: 5px 8px;
+      padding: 6px 9px;
       width: 100%;
       color: white;
       outline: none;
+      text-shadow: 1px 1px #292929;
+      margin-bottom: 4px;
+      transition: background 0.2s;
    }
    
    input::placeholder {
@@ -18,24 +35,27 @@
    }
 
    .bad-input, .good-input {
-      border-left: 4px solid rgb(206, 77, 77);
-      width: 400px;
-      margin-bottom: 5px;
-      padding-left: 1px;
-      transition-property: background, border;
-      transition-duration: 0.2s, 0.2s;
+      background: rgb(177, 103, 103);
+      border-bottom: 2px solid rgb(165, 81, 81);
    }
 
    .good-input {
-      border-left: 4px solid rgb(91, 129, 76);
+      background: rgb(120, 156, 106);
+      border-bottom: 2px solid rgb(110, 139, 98);
+   }
+   
+   .button-container {
+      display: inline-block;
+      background: #F1F1F1;
+      border: 1px solid rgb(224, 224, 224);
+      padding: 4px;
+      margin-bottom: 5px;
    }
    
    .bad-button, .good-button {
       background: rgb(177, 103, 103);
       border-bottom: 2px solid rgb(153, 81, 81);
       padding: 5px 8px;
-      margin-right: 5px;
-      margin-bottom: 5px;
       display: inline-block;
       cursor: pointer;
       color: white;
@@ -46,5 +66,55 @@
    .good-button {
       background: rgb(102, 153, 82);
       border-bottom: 2px solid rgb(81, 134, 68);
+   }
+
+   .box {
+      background: #F1F1F1;
+      border: 1px solid rgb(224, 224, 224);
+      padding: 4px;
+      padding-bottom: 2px;
+      margin-bottom: 5px;
+
+      #header, #form-header, .row {
+         background: rgb(70, 135, 179);
+         padding: 7px 9px;
+         margin-bottom: 2px;
+         color: white;
+         text-shadow: 1px 1px #292929;
+      }
+
+      #header, #form-header {
+         text-transform: uppercase;
+      }
+
+      #form-header {
+         margin-bottom: 4px;
+      }
+
+      .row {
+         background: rgb(209, 209, 209);
+         color: rgb(34, 34, 34);
+         text-shadow: 1px 1px rgb(235, 235, 235);
+      }
+
+      .row:nth-child(even) {
+         background: rgb(195, 211, 185);
+      }
+
+      #split {
+         display: flex;
+   
+         div {
+            flex: 1;
+         }
+
+         div:nth-child(1) {
+            text-transform: capitalize;
+         }
+
+         div:nth-child(2) {
+            text-align: right;
+         }
+      }
    }
 }

@@ -44,8 +44,10 @@ function Button({ header, func, require }) {
    }
 
    return (
-      <span className={ style } onClick={ execute }>
-         { header }
+      <span className={ 'button-container' }>
+         <span className={ style } onClick={ execute }>
+            { header }
+         </span>
       </span>
    )
 }

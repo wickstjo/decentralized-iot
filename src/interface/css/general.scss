@@ -14,8 +14,13 @@ body {
 }
 
 a {
-   color: red;
+   color: rgb(34, 34, 34);
    text-decoration: none;
+}
+
+a:hover {
+   color: red;
+   transition: 0.2s;
 }
 
 #wrapper {
