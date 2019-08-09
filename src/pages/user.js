@@ -1,37 +1,67 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useReducer, useEffect, Fragment } from 'react';
 import { Context } from '../context';
+import { values, reducer } from '../states/user';
+
 import { details } from '../contracts/user';
+import { collection } from '../contracts/device';
+
+import List from '../components/list';
 
 function User({ match }) {
 
-   // GLOBAL STATE
-   const { state } = useContext(Context);
-
-   // LOCAL STATE
-   const [local, set_local] = useState({
-      found: null,
-      data: {}
-   })
+   // GLOBAL & LOCAL STATES
+   const { state, dispatch } = useContext(Context);
+   const [local, set_local] = useReducer(reducer, values);
 
    // FETCH DETAILS
    useEffect(() => {
-      details(match.params.address, state).then(result => {
-         if (result.success) {
 
-            // ON SUCCESS
-            set_local({
-               found: true,
-               data: result.data
-            })
-         } else {
+      // MAKE SURE QUERY IS AN ADDRESS
+      if (state.web3.utils.isAddress(match.params.address)) {
+         
+         // FETCH DETAILS
+         details(match.params.address, state).then(result => {
+            if (result.success) {
+
+               // ON SUCCESS
+               set_local({
+                  type: 'user',
+                  payload: result.data
+               })
+
+               // FETCH DEVICE COLLECTION
+               collection(match.params.address, state).then(result => {
+                  if (result.success) {
+
+                     // ON SUCCESS
+                     set_local({
+                        type: 'collection',
+                        payload: result.data
+                     })
+                  
+                  // ON ERROR
+                  } else { set_local({ type: 'failure' }) }
+               })
 
             // ON ERROR
-            set_local({
-               ...local,
-               found: false
-            })
-         }
-      })
+            } else { set_local({ type: 'failure' }) }
+         })
+
+      // OTHERWISE, LOG ERROR
+      } else {
+
+         // SET LOCAL STATE
+         set_local({ type: 'failure' })
+
+         // SEND MESSAGE
+         dispatch({
+            type: 'add-message',
+            payload: {
+               type: 'bad',
+               text: 'not a valid address'
+            }
+         })
+      }
    }, [])
 
    // RENDER CONTENT
@@ -39,7 +69,15 @@ function User({ match }) {
 
       // USER FOUND
       case true: { return (
-         <Details data={ local.data } />
+         <Fragment>
+            <Details data={ local.user } />
+            <List
+               header={ 'Your Devices' }
+               error={ 'No devices found' }
+               url={ 'http://localhost:3000/devices/' }
+               data={ local.collection }
+            />
+         </Fragment>
       )}
 
       // USER NOT FOUND
@@ -62,5 +100,23 @@ function Details({ data }) { return (
       <div>Joined: { data.joined }</div>
    </div>
 )}
+
+// PRESENT DEVICES
+function Devices({ data }) {
+   switch(data.length) {
+
+      // NO DEVICES
+      case 0: { return (
+         <div>No registered devices found</div>
+      )}
+
+      // LIST DEVICES
+      default: { return (
+         data.map((hash, index) => 
+            <div key={ index }>{ hash }</div>
+         )
+      )}
+   }
+}
 
 export default User;

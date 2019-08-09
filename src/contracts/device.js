@@ -19,6 +19,16 @@ function add(hash, state) {
 }
 
 // FETCH DEVICE CONTRACT
+function collection(user, state) {
+    return call({
+        query: state.contracts.devices.methods.collection(user),
+        callback: (response) => {
+            return response;
+        }
+    })
+}
+
+// FETCH DEVICE CONTRACT
 function status(device, state) {
     
     // GENERATE REFERENCE
@@ -85,6 +95,7 @@ function assign(device, task, state) {
 export {
     fetch,
     add,
+    collection,
     status,
     toggle,
     task,

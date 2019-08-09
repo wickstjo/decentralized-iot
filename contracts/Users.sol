@@ -7,6 +7,7 @@ contract Users {
 
     // USER & TOKEN MAPS
     mapping (address => User) public users;
+    address[] public all;
 
     // CHECK IF USER EXISTS
     function exists(address user) public view returns(bool) {
@@ -39,10 +40,16 @@ contract Users {
     // ADD ENTRY TO HASHMAP
     function add(string memory name) public {
 
-        // CONDITIONS
+        // CONDITION
         require(!exists(msg.sender), 'user already exists');
 
-        // PUSH NEW USER
+        // PUSH IT TO BOTH CONTAINERS
         users[msg.sender] = new User(name, block.timestamp);
+        all.push(msg.sender);
+    }
+
+    // FETCH OWNER DEVICE COLLECTION
+    function collection() public view returns(address[] memory) {
+        return all;
     }
 }

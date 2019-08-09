@@ -1,12 +1,14 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 // IMPORT DEVICE CONTRACT
 import { Device } from './Device.sol';
 
 contract Devices {
 
-    // HASHMAP OF DEVICES
+    // STORAGE HASHMAPS
     mapping (string => Device) devices;
+    mapping (address => string[]) collections;
 
     // CHECK IF DEVICE EXISTS
     function exists(string memory id) public view returns(bool) {
@@ -37,11 +39,19 @@ contract Devices {
         return devices[id];
     }
 
+    // FETCH OWNER DEVICE COLLECTION
+    function collection(address sender) public view returns(string[] memory) {
+        return collections[sender];
+    }
+
     // CREATE NEW DEVICE INSTANCE
     function add(string memory id) public {
 
-        // IF THE ID DOES NOT EXIST, INSTANTIATE & PUSH NEW DEVICE
+        // IF THE ID DOES NOT EXIST
         require(!exists(id), 'device already exist');
+
+        // PUSH NEW DEVICE & ADD TO OWNERS COLLECTION
         devices[id] = new Device(msg.sender);
+        collections[msg.sender].push(id);
     }
 }

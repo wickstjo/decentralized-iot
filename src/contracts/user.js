@@ -1,6 +1,16 @@
 import { transaction, call } from '../funcs/blockchain';
 
 // FETCH USER
+function collection(state) {
+    return call({
+        query: state.contracts.users.methods.collection(),
+        callback: (response) => {
+            return response;
+        }
+    })
+}
+
+// FETCH USER
 function details(user, state) {
     return call({
         query: state.contracts.users.methods.details(user),
@@ -23,6 +33,7 @@ function add(name, state) {
 }
 
 export {
+    collection,
     details,
     add
 }

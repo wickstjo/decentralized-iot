@@ -1,10 +1,12 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useReducer, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-import { details, add } from '../contracts/user';
 import reducer from '../states/input';
+
+import { collection, details, add } from '../contracts/user';
 import { keys } from '../resources/settings.json';
 import { assess } from '../funcs/blockchain';
 
+import List from '../components/list';
 import Button from '../components/inputs/button';
 import Address from '../components/inputs/address';
 import Text from '../components/inputs/text';
@@ -23,8 +25,24 @@ function Users() {
       address: {
          value: keys.public,
          status: null
-      }
+      },
+      collection: []
    })
+
+   // FETCH ALL USERS
+   useEffect(() => {
+      collection(state).then(result => {
+         if (result.success) {
+            set_local({
+               type: 'field',
+               payload: {
+                  name: 'collection',
+                  value: result.data
+               }
+            })
+         }
+      })
+   }, [])
 
    // SET USER INPUT
    function update(response, id) {
@@ -60,6 +78,12 @@ function Users() {
    
    return (
       <div>
+         <List
+            header={ 'Users' }
+            error={ 'No registered users' }
+            url={ 'http://localhost:3000/users/' }
+            data={ local.collection }
+         />
          <Button
             header={ 'Add User' }
             func={ Add }
@@ -85,6 +109,28 @@ function Users() {
          />
       </div>
    )
+}
+
+function Collection({ data }) {
+   switch(data.length) {
+
+      // NO USERS
+      case 0: { return (
+         <div>No registered users.</div>
+      )}
+
+      // NO USERS
+      default: { return (
+         <Fragment>
+            <div>Users</div>
+            { data.map((user, index) => 
+               <div key={ index }>
+                  <a href={ 'http://localhost:3000/users/' + user } target={ '_blank' } rel={ 'noopener noreferrer'}>{ user }</a>
+               </div>
+            )}
+         </Fragment>
+      )}
+   }
 }
 
 export default Users;
