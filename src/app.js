@@ -12,8 +12,10 @@ function App() { return (
    <BrowserRouter>
       <Provider>
          <Init />
-         <Menu />
-         <Pages />
+         <div id={ 'wrapper' }>
+            <Menu />
+            <Pages />
+         </div>
          <Prompt />
          <Messages />
       </Provider>

@@ -1,6 +1,5 @@
-import React, { useContext, useReducer, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-import { values, reducer } from '../states/user';
 
 import { details } from '../contracts/user';
 import { collection } from '../contracts/device';
@@ -10,9 +9,15 @@ import Links from '../components/links';
 
 function User({ match }) {
 
-   // GLOBAL & LOCAL STATES
+   // GLOBAL STATE
    const { state, dispatch } = useContext(Context);
-   const [local, set_local] = useReducer(reducer, values);
+   
+   // LOCAL STATES
+   const [local, set_local] = useState({
+      user: {},
+      devices: [],
+      found: false
+   })
 
    // FETCH DETAILS
    useEffect(() => {
@@ -24,11 +29,8 @@ function User({ match }) {
          details(match.params.address, state).then(result => {
             if (result.success) {
 
-               // ON SUCCESS
-               set_local({
-                  type: 'user',
-                  payload: result.data
-               })
+               // USER DATA
+               const user = result.data;
 
                // FETCH DEVICE COLLECTION
                collection(match.params.address, state).then(result => {
@@ -36,16 +38,34 @@ function User({ match }) {
 
                      // ON SUCCESS
                      set_local({
-                        type: 'collection',
-                        payload: result.data
+                        ...local,
+                        user: user,
+                        devices: result.data,
+                        found: true
                      })
                   
                   // ON ERROR
-                  } else { set_local({ type: 'failure' }) }
+                  } else {
+                     dispatch({
+                        type: 'add-message',
+                        payload: {
+                           type: 'bad',
+                           text: 'could not fetch devices'
+                        }
+                     })
+                  }
                })
 
             // ON ERROR
-            } else { set_local({ type: 'failure' }) }
+            } else {
+               dispatch({
+                  type: 'add-message',
+                  payload: {
+                     type: 'bad',
+                     text: 'could not fetch user data'
+                  }
+               })
+            }
          })
 
       // OTHERWISE, LOG ERROR
@@ -70,7 +90,7 @@ function User({ match }) {
 
       // USER FOUND
       case true: { return (
-         <div id={ 'split' }>
+         <Fragment>
             <div>
                <List
                   header={ 'userprofile' }
@@ -79,23 +99,18 @@ function User({ match }) {
             </div>
             <div>
                <Links
-                  header={ 'registered devices' }
+                  header={ 'owned devices' }
                   error={ 'No devices found' }
                   url={ 'http://localhost:3000/devices/' }
-                  data={ local.collection }
+                  data={ local.devices }
                />
             </div>
-         </div>
+         </Fragment>
       )}
 
-      // USER NOT FOUND
-      case false: { return (
-         <div>User was not found!</div>
-      )}
-
-      // LOADING
+      // OTHERWISE
       default: { return (
-         <div>Loading..</div>
+         <div>User was not found!</div>
       )}
    }
 }

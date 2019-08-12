@@ -39,17 +39,6 @@ function User() {
       }
    })
 
-   // SET USER INPUT
-   function update(response, id) {
-      set_local({
-         type: 'field',
-         payload: {
-            name: id,
-            value: response
-         }
-      })
-   }
-
    // INITIALIZE TOKENinitS
    function token() {
       init_token(local.price.value, local.tasks.value, state).then(result => {
@@ -82,13 +71,13 @@ function User() {
             placeholder={ 'Token Price' }
             value={ local.price.value }
             range={[ 1000, 100000 ]}
-            update={ update }
+            update={ set_local }
             id={ 'price' }
          />
          <Address
             placeholder={ 'Tasks Contract' }
             value={ local.tasks.value }
-            update={ update }
+            update={ set_local }
             id={ 'tasks' }
          />
          <Button
@@ -103,19 +92,19 @@ function User() {
          <Address
             placeholder={ 'Devices Contract' }
             value={ local.devices.value }
-            update={ update }
+            update={ set_local }
             id={ 'devices' }
          />
          <Address
             placeholder={ 'Users Contract' }
             value={ local.users.value }
-            update={ update }
+            update={ set_local }
             id={ 'users' }
          />
          <Address
             placeholder={ 'Token Contract' }
             value={ local.token.value }
-            update={ update }
+            update={ set_local }
             id={ 'token' }
          />
       </div>

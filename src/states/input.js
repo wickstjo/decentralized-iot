@@ -1,4 +1,4 @@
-function input(local, action) {
+function reducer(local, action) {
    switch (action.type) {
 
       // UPDATE NAME
@@ -16,4 +16,4 @@ function input(local, action) {
    }
 }
 
-export default input;
+export default reducer;

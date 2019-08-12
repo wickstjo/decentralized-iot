@@ -18,7 +18,7 @@ function Items({ data, error, url }) {
 
       // NO ITEMS
       case 0: { return (
-         <div id={ 'row' }>{ error }</div>
+         <div className={ 'row' }>{ error }</div>
       )}
 
       // OTHERWISE

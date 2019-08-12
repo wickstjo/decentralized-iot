@@ -1,6 +1,5 @@
-import React, { useContext, useReducer, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-import reducer from '../states/input';
 
 import { collection } from '../contracts/user';
 
@@ -10,26 +9,27 @@ import UserForm from '../components/forms/user';
 function Users() {
 
    // GLOBAL STATE
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useReducer(reducer, {
-      name: {
-         value: '',
-         status: null
-      },
-      collection: []
-   })
+   const [local, set_local] = useState([])
 
    // FETCH ALL USERS
    useEffect(() => {
       collection(state).then(result => {
          if (result.success) {
-            set_local({
-               type: 'field',
+
+            // ON SUCCESS
+            set_local(result.data)
+         
+         } else {
+
+            // ON ERROR
+            dispatch({
+               type: 'add-message',
                payload: {
-                  name: 'collection',
-                  value: result.data
+                  type: 'bad',
+                  text: 'could not fetch users'
                }
             })
          }
@@ -37,19 +37,19 @@ function Users() {
    }, [])
    
    return (
-      <div id={ 'split' }>
+      <Fragment>
          <div>
             <Links
                header={ 'registered users' }
                error={ 'No registered users' }
                url={ 'http://localhost:3000/users/' }
-               data={ local.collection }
+               data={ local }
             />
          </div>
          <div>
             <UserForm />
          </div>
-      </div>
+      </Fragment>
    )
 }
 

@@ -37,9 +37,15 @@ function Text({ value, placeholder, range, update, id }) {
 
       // UPDATE PARENT STATE
       update({
-         value: input,
-         status: result
-      }, id)
+         type: 'field',
+         payload: {
+            name: id,
+            value: {
+               value: input,
+               status: result
+            }
+         }
+      })
    }
 
    return (

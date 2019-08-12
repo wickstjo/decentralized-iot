@@ -2,56 +2,56 @@ import React, { useContext, useReducer, Fragment } from 'react';
 import { Context } from '../../context';
 import reducer from '../../states/input';
 
-import { add } from '../../contracts/user';
+import { add } from '../../contracts/device';
 import { assess } from '../../funcs/blockchain';
 
 import Form from '../form';
-import Text from '../inputs/text';
 import Button from '../inputs/button';
+import Text from '../inputs/text';
 
-function User() {
+function Device() {
 
    // GLOBAL STATE
    const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
-      name: {
-         value: '',
+      hash: {
+         value: 'cdbde0df13a59633a2a55ee9342d9b31650ae27c0a3c0d80bab4b1561f4df16e',
          status: null
       }
    })
 
-   // ADD USER
+   // ADD DEVICE
    function Add() {
-      add(local.name.value, state).then(result => {
+      add(local.hash.value, state).then(result => {
          assess({
-            msg: 'user added'
+            msg: 'device added successful'
          }, result, dispatch)
       })
    }
 
    return (
       <Fragment>
-         <Form header={ 'register' }>
-            <Text 
-               placeholder={ 'What is your name?' }
-               value={ local.name.value }
-               range={[ 3, 15 ]}
+         <Form header={ 'register device' }>
+            <Text
+               placeholder={ 'Device Hash' }
+               value={ local.hash.value }
+               range={[ 64, 64 ]}
                update={ set_local }
-               id={ 'name' }
+               id={ 'hash' }
             />
          </Form>
          <div style={{ textAlign: 'right' }}>
             <Button
-               header={ 'Add User' }
+               header={ 'Add' }
                func={ Add }
-               require={[ local.name.status ]}
+               require={[ local.hash.status ]}
             />
          </div>
       </Fragment>
    )
 }
 
-export default User;
+export default Device;
 

@@ -4,14 +4,23 @@ import { Context } from './context';
 
 import './interface/css/general.scss';
 import './interface/css/innerbody.scss';
+import './interface/css/input.scss';
 
-import Home from './pages/home';
+// USERS
 import Users from './pages/users';
 import User from './pages/user';
-import Token from './pages/tokens';
+
+// DEVICES
 import Devices from './pages/devices';
 import Device from './pages/device';
+
+// TASKS
+import Tasks from './pages/tasks';
 import Task from './pages/task';
+
+// OTHER
+import Home from './pages/home';
+import Token from './pages/tokens';
 import Initialize from './pages/initialize';
 import Error from './pages/error';
 
@@ -31,7 +40,8 @@ function Pages() {
                     <Route exact path="/tokens" component={ Token } />
                     <Route exact path="/devices" component={ Devices } />
                     <Route exact path="/devices/:hash" component={ Device } />
-                    <Route exact path="/task" component={ Task } />
+                    <Route exact path="/tasks" component={ Tasks } />
+                    <Route exact path="/tasks/:address" component={ Task } />
                     <Route exact path="/initialize" component={ Initialize } />
                     <Route component={ Error } />
                 </Switch>

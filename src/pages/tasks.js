@@ -1,54 +1,55 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-
-import { collection } from '../contracts/device';
-import { keys } from '../resources/settings.json';
+import { fetch } from '../contracts/task';
 
 import Links from '../components/links';
-import DeviceForm from '../components/forms/device';
+import TaskForm from '../components/forms/task';
 
-function Device() {
+function Tasks() {
 
-   // GLOBAL STATE
+   // GLOBAL STATE 
    const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useState([])
 
-   // FETCH DETAILS
+   // FETCH ALL TASKS
    useEffect(() => {
-      collection(keys.public, state).then(result => {
+      fetch(state).then(result => {
          if (result.success) {
 
             // ON SUCCESS
             set_local(result.data)
-         
+            
          } else {
 
             // ON ERROR
             dispatch({
                type: 'add-message',
-               text: result.reason
+               payload: {
+                  type: 'bad',
+                  text: result.reason
+               }
             })
          }
       })
    }, [])
-
+   
    return (
       <Fragment>
          <div>
             <Links
-               header={ 'your devices' }
-               error={ 'no devices found' }
+               header={ 'available tasks' }
+               error={ 'No tasks found.' }
                data={ local }
-               url={ 'http://localhost:3000/devices/' }
+               url={ 'http://localhost:3000/tasks/' }
             />
          </div>
          <div>
-            <DeviceForm />
+            <TaskForm />
          </div>
       </Fragment>
    )
 }
 
-export default Device;
+export default Tasks;

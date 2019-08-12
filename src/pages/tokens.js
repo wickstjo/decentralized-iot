@@ -1,137 +1,82 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-import { price, check, buy, transfer } from '../contracts/token';
-import reducer from '../states/input';
+
+import { price, check } from '../contracts/token';
 import { keys } from '../resources/settings.json';
-import { assess } from '../funcs/blockchain';
 
-import Button from '../components/inputs/button';
-import Address from '../components/inputs/address';
-import Number from '../components/inputs/number';
+import TokenForm from '../components/forms/token';
+import List from '../components/list';
 
-function Token() {
+function Tokens() {
 
    // GLOBAL STATE
    const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useReducer(reducer, {
-      user: {
-         value: keys.public,
-         status: null
-      },
-      amount: {
-         value: '',
-         status: null
-      },
-      recipient: {
-         value: '',
-         status: null
-      }
+   const [local, set_local] = useState({
+      price: 'Not Available',
+      balance: 'Not Available'
    })
 
-   // SET USER INPUT
-   function update(response, id) {
-      set_local({
-         type: 'field',
-         payload: {
-            name: id,
-            value: response
+   // FETCH THE TOKEN PRICE & USER BALANCE
+   useEffect(() => {
+      price(state).then(result => {
+         if (result.success) {
+
+            // TOKEN PRICE
+            const price = result.data;
+
+            check(keys.public, state).then(result => {
+               if (result.success) {
+                  
+                  // SET LOCAL STATE
+                  set_local({
+                     ...local,
+                     price: price,
+                     balance: result.data
+                  })
+
+               // OTHERWISE
+               } else {
+                  dispatch({
+                     type: 'add-message',
+                     payload: {
+                        type: 'bad',
+                        text: result.reason
+                     }
+                  })
+               }
+            })
+
+         // OTHERWISE
+         } else {
+            dispatch({
+               type: 'add-message',
+               payload: {
+                  type: 'bad',
+                  text: result.reason
+               }
+            })
          }
       })
-   }
+   }, [])
 
-   // CHECK TOKEN PRICE
-   function Price() {
-      price(state).then(result => {
-         assess({
-            msg: 'fetched successfully',
-            func: (data) => {
-               console.log(data)
-            }
-         }, result, dispatch)
-      })
-   }
-
-   // CHECK CURRENT TOKEN BALANCE
-   function Balance() {
-      check(local.user.value, state).then(result => {
-         assess({
-            msg: 'fetched successfully',
-            func: (data) => {
-               console.log(data)
-            }
-         }, result, dispatch)
-      })
-   }
-
-   // CHECK CURRENT TOKEN STATUS
-   function Buy() {
-      buy(local.amount.value, state).then(result => {
-         assess({
-            msg: 'purchase successful'
-         }, result, dispatch)
-      })
-   }
-
-   // CHECK CURRENT TOKEN STATUS
-   function Transfer() {
-      transfer(local.amount.value, local.recipient.value, state).then(result => {
-         assess({
-            msg: 'transfer successful'
-         }, result, dispatch)
-      })
-   }
-   
    return (
-      <div>
-         <Button
-            header={ 'Check Price' }
-            func={ Price }
-         />
-         <Button
-            header={ 'Balance' }
-            func={ Balance }
-            require={[ local.user.status ]}
-         />
-         <Button
-            header={ 'Buy' }
-            func={ Buy }
-            require={[
-               local.user.status,
-               local.amount.status
-            ]}
-         />
-         <Button
-            header={ 'Transfer' }
-            func={ Transfer }
-            require={[
-               local.user.status,
-               local.amount.status,
-               local.recipient.status
-            ]}
-         />
-         <Address
-            placeholder={ 'Your Address' }
-            value={ local.user.value }
-            update={ update }
-            id={ 'user' }
-         />
-         <Number
-            placeholder={ 'Amount of tokens' }
-            value={ local.amount.value }
-            range={[ 1, 100 ]}
-            update={ update }
-            id={ 'amount' }
-         />
-         <Address
-            placeholder={ 'recipients Address' }
-            value={ local.recipient.value }
-            update={ update }
-            id={ 'recipient' }
-         />
-      </div>
+      <Fragment>
+         <div>
+            <List
+               header={ 'token statistics' }
+               data={{
+                  "token price": local.price,
+                  "your balance": local.balance
+               }}
+            />
+         </div>
+         <div>
+            <TokenForm />
+         </div>
+      </Fragment>
    )
 }
 
-export default Token;
+export default Tokens;

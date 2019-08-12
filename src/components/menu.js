@@ -23,8 +23,8 @@ function Menu() { return (
             header={ 'Devices' }
          />
          <Item
-            to={ '/task' }
-            header={ 'Task' }
+            to={ '/tasks' }
+            header={ 'Tasks' }
          />
       </div>
       <div>
