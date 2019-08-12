@@ -22,6 +22,15 @@ contract Token {
         initialized = true;
     }
 
+    // FETCH TOKEN PRICE
+    function fetch() public view returns(uint) {
+
+        // CONDITION
+        require(initialized, 'contract has not been initialized');
+
+        return price;
+    }
+
     // CHECK USER TOKEN AMOUNT
     function check(address user) public view returns(uint) {
         return tokens[user];

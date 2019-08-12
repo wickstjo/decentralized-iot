@@ -11,7 +11,7 @@ function init(price, tasks, state) {
 // CHECK LICENCE STATUS
 function price(state) {
    return call({
-      query: state.contracts.token.methods.price(),
+      query: state.contracts.token.methods.fetch(),
       callback: (response) => {
          return response;
       }

@@ -39,7 +39,7 @@ function Device() {
          <div>
             <Links
                header={ 'your devices' }
-               error={ 'no devices found' }
+               error={ 'No devices found' }
                data={ local }
                url={ 'http://localhost:3000/devices/' }
             />

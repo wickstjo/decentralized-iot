@@ -71,9 +71,6 @@ function User({ match }) {
       // OTHERWISE, LOG ERROR
       } else {
 
-         // SET LOCAL STATE
-         set_local({ type: 'failure' })
-
          // SEND MESSAGE
          dispatch({
             type: 'add-message',
@@ -93,7 +90,7 @@ function User({ match }) {
          <Fragment>
             <div>
                <List
-                  header={ 'userprofile' }
+                  header={ 'details' }
                   data={ local.user }
                />
             </div>

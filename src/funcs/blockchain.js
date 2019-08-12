@@ -126,7 +126,7 @@ function prune(error) {
 // ASSEMBLE SINGLE CONTRACT REFERENCE
 function assemble({ address, contract }, state) {
    return new state.web3.eth.Contract(
-      state.interface[contract],
+      state.interfaces[contract],
       address
    )
 }

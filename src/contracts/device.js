@@ -1,5 +1,13 @@
 import { transaction, call, assemble } from '../funcs/blockchain';
 
+// INITIALIZE TOKEN CONTRACT
+function init(users, state) {
+    return transaction({
+       query: state.contracts.devices.methods.init(users),
+       contract: state.contracts.devices._address,
+    }, state)
+ }
+
 // FETCH DEVICE CONTRACT
 function fetch(hash, state) {
     return call({
@@ -24,6 +32,26 @@ function collection(user, state) {
         query: state.contracts.devices.methods.collection(user),
         callback: (response) => {
             return response;
+        }
+    })
+}
+
+// FETCH DEVICE DETAILS
+function details(device, state) {
+    
+    // GENERATE REFERENCE
+    const contract = assemble({
+        address: device,
+        contract: 'device'
+    }, state);
+
+    return call({
+        query: contract.methods.details(),
+        callback: (response) => {
+            return {
+                "owner": response[0],
+                "status": response[1]
+            }
         }
     })
 }
@@ -93,9 +121,11 @@ function assign(device, task, state) {
 }
 
 export {
+    init,
     fetch,
     add,
     collection,
+    details,
     status,
     toggle,
     task,

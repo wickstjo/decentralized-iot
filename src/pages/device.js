@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../context';
-import { fetch } from '../contracts/device';
+import { fetch, details } from '../contracts/device';
+import List from '../components/list';
 
 function Device({ match }) {
 
@@ -9,26 +10,26 @@ function Device({ match }) {
 
    // LOCAL STATE
    const [local, set_local] = useState({
-      found: null,
-      address: ''
+      found: false,
+      data: {}
    })
 
    // FETCH DETAILS
    useEffect(() => {
       fetch(match.params.hash, state).then(result => {
          if (result.success) {
+            
+            // DEVICE ADDRESS
+            const device = result.data;
 
-            // ON SUCCESS
-            set_local({
-               found: true,
-               data: result.data
-            })
-         } else {
-
-            // ON ERROR
-            set_local({
-               ...local,
-               found: false
+            // FETCH DETAILS
+            details(device, state).then(result => {
+               
+               // ON SUCCESS
+               set_local({
+                  found: true,
+                  data: result.data
+               })
             })
          }
       })
@@ -39,17 +40,20 @@ function Device({ match }) {
 
       // USER FOUND
       case true: { return (
-         <div>Device Found</div>
+         <div>
+            <List
+               header={ 'device details' }
+               data={{
+                  "owner": local.data.owner,
+                  "enabled": local.data.status ? 'True' : 'False'
+               }}
+            />
+         </div>
       )}
 
-      // USER NOT FOUND
-      case false: { return (
-         <div>Device was NOT Found</div>
-      )}
-
-      // LOADING
+      // OTHERWISE
       default: { return (
-         <div>Loading..</div>
+         <div>Device was NOT Found</div>
       )}
    }
 }

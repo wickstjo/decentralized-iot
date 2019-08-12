@@ -42,8 +42,7 @@ contract Tasks {
     function fetch() public view returns(Task[] memory) {
 
         // CONDITIONS
-        require(initialized, 'helper contracts have not been initialized');
-        require(tasks.length > 0, 'no tasks have been posted');
+        require(initialized, 'contracts have not been initialized');
 
         return tasks;
     }
@@ -56,7 +55,7 @@ contract Tasks {
     ) public payable {
 
         // CONDITIONS
-        require(initialized, 'helper contracts have not been initialized');
+        require(initialized, 'contracts have not been initialized');
         require(users.exists(msg.sender), 'you are not a registered user');
         require(token.check(msg.sender) >= 1, 'you do not have the tokens to do this');
 

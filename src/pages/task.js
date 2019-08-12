@@ -1,5 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../context';
+import { details } from '../contracts/task';
+
+import List from '../components/list';
 
 function Task({ match }) {
 
@@ -9,7 +12,7 @@ function Task({ match }) {
    // LOCAL STATE
    const [local, set_local] = useState({
       found: false,
-      address: ''
+      data: {}
    })
 
    // FETCH DETAILS
@@ -17,12 +20,18 @@ function Task({ match }) {
 
       // MAKE SURE QUERY IS AN ADDRESS
       if (state.web3.utils.isAddress(match.params.address)) {
-         
-         // SET LOCAL STATE
-         set_local({
-            ...local,
-            found: true,
-            address: match.params.address
+
+         // CHECK IF TASK EXISTS
+         details(match.params.address, state).then(result => {
+            if (result.success) {
+
+               // SET LOCAL STATE
+               set_local({
+                  ...local,
+                  found: true,
+                  data: result.data
+               })
+            }
          })
 
       // OTHERWISE, LOG ERROR
@@ -42,7 +51,18 @@ function Task({ match }) {
 
       // USER FOUND
       case true: { return (
-         <div>Task Found</div>
+         <div>
+            <List
+               header={ 'task details' }
+               data={{
+                  "expiration date": local.data.expires,
+                  "locked": local.data.locked ? 'True' : 'False',
+                  "required reputation": local.data.reputation,
+                  "reward in wei": local.data.reward,
+                  "public encryption key": local.data.encryption
+               }}
+            />
+         </div>
       )}
 
       // USER NOT FOUND

@@ -34,20 +34,12 @@ contract Device {
         status = !status;
     }
 
-    // DESTROY THE CONTRACT & SEND ETH BACK
-    function nuke() public {
-
-        // CONDITIONS
-        require(msg.sender == owner, 'you are not the owner');
-        selfdestruct(owner);
-    }
-
-    // FETCH LATEST ASSIGNED TASK
-    function task() public view returns(address) {
-
-        // CONDITIONS
-        require(address(latest) != 0x0000000000000000000000000000000000000000, 'no assigned task found');
-        return latest;
+    // FETCH DETAILS
+    function details() public view returns(address, bool) {
+        return (
+            owner,
+            status
+        );
     }
 
     // ASSIGN TASK TO DEVICE

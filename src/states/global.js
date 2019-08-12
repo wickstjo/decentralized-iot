@@ -2,7 +2,7 @@
 const values = {
    web3: undefined,
    contracts: undefined,
-   interface: undefined,
+   interfaces: undefined,
    prompt: {
       show: false,
       content: null
@@ -19,7 +19,7 @@ function reducer(state, { type, payload }) {
          ...state,
          web3: payload.web3,
          contracts: payload.contracts,
-         interface: payload.interface
+         interfaces: payload.interfaces
       }}
 
       // CLOSE PROMPT

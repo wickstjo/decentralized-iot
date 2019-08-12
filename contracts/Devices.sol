@@ -3,12 +3,30 @@ pragma experimental ABIEncoderV2;
 
 // IMPORT DEVICE CONTRACT
 import { Device } from './Device.sol';
+import { Users } from './Users.sol';
 
 contract Devices {
 
     // STORAGE HASHMAPS
     mapping (string => Device) devices;
     mapping (address => string[]) collections;
+
+    // INITIALIZED STATUS
+    bool initialized = false;
+
+    // HELPER CONTRACT
+    Users users;
+
+    // INITIALIZE PARAMS
+    function init(Users _users) public {
+
+        // CONDITION
+        require(!initialized, 'contract has already been initialized');
+
+        // SET PARAMS
+        users = _users;
+        initialized = true;
+    }
 
     // CHECK IF DEVICE EXISTS
     function exists(string memory id) public view returns(bool) {
@@ -48,7 +66,9 @@ contract Devices {
     function add(string memory id) public {
 
         // IF THE ID DOES NOT EXIST
+        require(initialized, 'contract has not been initialized');
         require(!exists(id), 'device already exist');
+        require(users.exists(msg.sender), 'you are not a registered user');
 
         // PUSH NEW DEVICE & ADD TO OWNERS COLLECTION
         devices[id] = new Device(msg.sender);
