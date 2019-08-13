@@ -32,8 +32,14 @@ function add(name, state) {
     }, state)
 }
 
+// USER ADDED EVENT
+function event(state) {
+    return state.contracts.users.events.Update();
+}
+
 export {
     collection,
     details,
-    add
+    add,
+    event
 }

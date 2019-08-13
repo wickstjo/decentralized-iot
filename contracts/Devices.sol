@@ -17,6 +17,9 @@ contract Devices {
     // HELPER CONTRACT
     Users users;
 
+    // DEVICE ADDED EVENT
+    event Update(address user, string[] devices);
+
     // INITIALIZE PARAMS
     function init(Users _users) public {
 
@@ -70,8 +73,9 @@ contract Devices {
         require(!exists(id), 'device already exist');
         require(users.exists(msg.sender), 'you are not a registered user');
 
-        // PUSH NEW DEVICE & ADD TO OWNERS COLLECTION
+        // PUSH NEW DEVICE & ADD TO OWNERS COLLECTION & EMIT EVENT
         devices[id] = new Device(msg.sender);
         collections[msg.sender].push(id);
+        emit Update(msg.sender, collections[msg.sender]);
     }
 }

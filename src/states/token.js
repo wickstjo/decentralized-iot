@@ -1,8 +1,7 @@
 // DEFAULT VALUES
 const values = {
-   found: null,
-   user: {},
-   collection: []
+   price: 'Not Available',
+   balance: 'Not Available'
 }
 
 // FUNCTION TYPES
@@ -10,22 +9,15 @@ function reducer(state, action) {
    switch (action.type) {
        
       // SET USER DATA
-      case 'user': { return {
+      case 'price': { return {
          ...state,
-         user: action.payload
+         price: action.payload
       }}
 
       // SET COLLECTION DATA
-      case 'collection': { return {
+      case 'balance': { return {
          ...state,
-         found: true,
-         collection: action.payload
-      }}
-
-      // USER NOT FOUND
-      case 'failure': { return {
-         ...state,
-         found: false
+         balance: action.payload
       }}
 
       default: {

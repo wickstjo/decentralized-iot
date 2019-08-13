@@ -120,6 +120,11 @@ function release(task, state) {
     }, state)
 }
 
+// TASK ADDED EVENT
+function event(state) {
+    return state.contracts.tasks.events.Update();
+}
+
 export {
     check,
     init,
@@ -128,5 +133,6 @@ export {
     details,
     accept,
     submit,
-    release
+    release,
+    event
 }

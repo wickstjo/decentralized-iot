@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
-import { collection } from '../contracts/user';
+import { collection, event } from '../contracts/user';
 
 import Links from '../components/links';
 import UserForm from '../components/forms/user';
@@ -34,6 +34,19 @@ function Users() {
             })
          }
       })
+
+      // USER ADDED EVENT
+      const foo = event(state);
+
+      // SUBSCRIBE
+      foo.on('data', event => {
+         set_local(event.returnValues.users)
+      })
+
+      // UNSUBSCRIBE
+      return () => {
+         foo.unsubscribe();
+      }
    }, [])
    
    return (

@@ -58,10 +58,16 @@ function transfer(amount, recipient, state) {
    }, state)
 }
 
+// TOKEN AMOUNT CHANGED EVENT
+function event(state) {
+   return state.contracts.token.events.Update();
+}
+
 export {
    init,
    price,
    check,
    buy,
-   transfer
+   transfer,
+   event
 }

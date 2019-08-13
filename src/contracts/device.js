@@ -120,6 +120,11 @@ function assign(device, task, state) {
     }, state)
 }
 
+// DEVICE ADDED EVENT
+function event(state) {
+    return state.contracts.devices.events.Update();
+}
+
 export {
     init,
     fetch,
@@ -129,5 +134,6 @@ export {
     status,
     toggle,
     task,
-    assign
+    assign,
+    event
 }

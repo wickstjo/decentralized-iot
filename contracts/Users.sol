@@ -9,6 +9,9 @@ contract Users {
     mapping (address => User) public users;
     address[] public all;
 
+    // USER ADDED EVENT
+    event Update(address[] users);
+
     // CHECK IF USER EXISTS
     function exists(address user) public view returns(bool) {
         if (address(users[user]) != 0x0000000000000000000000000000000000000000) {
@@ -46,6 +49,9 @@ contract Users {
         // PUSH IT TO BOTH CONTAINERS
         users[msg.sender] = new User(name, block.timestamp);
         all.push(msg.sender);
+
+        // EMIT EVENT
+        emit Update(all);
     }
 
     // FETCH OWNER DEVICE COLLECTION

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-import { fetch } from '../contracts/task';
+import { fetch, event } from '../contracts/task';
 
 import Links from '../components/links';
 import TaskForm from '../components/forms/task';
@@ -33,6 +33,19 @@ function Tasks() {
             })
          }
       })
+
+      // USER ADDED EVENT
+      const foo = event(state);
+
+      // SUBSCRIBE
+      foo.on('data', event => {
+         set_local(event.returnValues.tasks)
+      })
+
+      // UNSUBSCRIBE
+      return () => {
+         foo.unsubscribe();
+      }
    }, [])
    
    return (

@@ -19,6 +19,9 @@ contract Tasks {
     // HAS CONTRACT BEEN INITIALIZED
     bool public initialized = false;
 
+    // TASK ADDED EVENT
+    event Update(Task[] tasks);
+
     // INITIALIZE HELPER CONTRACTS
     function init(
         Devices _devices,
@@ -72,7 +75,8 @@ contract Tasks {
             users
         );
 
-        // TRANSFER REWARD & PUSH TO LIST
+        // PUSH TO LIST & EMIT EVENT
         tasks.push(task);
+        emit Update(tasks);
     }
 }

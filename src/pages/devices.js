@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
-import { collection } from '../contracts/device';
+import { collection, event } from '../contracts/device';
 import { keys } from '../resources/settings.json';
 
 import Links from '../components/links';
@@ -32,6 +32,28 @@ function Device() {
             })
          }
       })
+
+      // DEVICE ADDED EVENT
+      const foo = event(state);
+
+      // SUBSCRIBE
+      foo.on('data', event => {
+         
+         // DECONSTRUCT VALUES
+         const { user, devices } = event.returnValues;
+
+         // IF THE EVENT WAS USER RELATED
+         if (user === keys.public) {
+
+            // SET BALANCE
+            set_local(devices)
+         }
+      })
+
+      // UNSUBSCRIBE
+      return () => {
+         foo.unsubscribe();
+      }
    }, [])
 
    return (
