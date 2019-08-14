@@ -19,9 +19,9 @@ function fetch(hash, state) {
 }
 
 // ADD DEVICE
-function add(hash, state) {
+function add(hash, name, state) {
     return transaction({
-        query: state.contracts.devices.methods.add(hash),
+        query: state.contracts.devices.methods.add(hash, name),
         contract: state.contracts.devices._address,
     }, state)
 }
@@ -49,8 +49,9 @@ function details(device, state) {
         query: contract.methods.details(),
         callback: (response) => {
             return {
-                "owner": response[0],
-                "status": response[1]
+                "name": response[0],
+                "owner": response[1],
+                "status": response[2]
             }
         }
     })

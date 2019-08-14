@@ -2,8 +2,9 @@ pragma solidity ^0.5.0;
 
 contract Device {
 
-    // DEVICE OWNER
+    // DEVICE PARAMS
     address payable public owner;
+    string name;
 
     // LATEST ASSIGNED TASK
     address public latest;
@@ -13,10 +14,11 @@ contract Device {
     bool public isset;
 
     // WHEN CONTRACT IS FIRST BUILT
-    constructor(address payable _owner) public {
+    constructor(address payable _owner, string memory _name) public {
 
-        // SET DEVICE OWNER
+        // SET PARAMS
         owner = _owner;
+        name = _name;
 
         // SET BOOLS
         status = true;
@@ -35,8 +37,9 @@ contract Device {
     }
 
     // FETCH DETAILS
-    function details() public view returns(address, bool) {
+    function details() public view returns(string memory, address, bool) {
         return (
+            name,
             owner,
             status
         );

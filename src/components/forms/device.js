@@ -16,6 +16,10 @@ function Device() {
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
+      name: {
+         value: '',
+         status: null
+      },
       hash: {
          value: 'cdbde0df13a59633a2a55ee9342d9b31650ae27c0a3c0d80bab4b1561f4df16e',
          status: null
@@ -24,7 +28,7 @@ function Device() {
 
    // ADD DEVICE
    function Add() {
-      add(local.hash.value, state).then(result => {
+      add(local.hash.value, local.name.value, state).then(result => {
          assess({
             msg: 'device added successful'
          }, result, dispatch)
@@ -34,6 +38,13 @@ function Device() {
    return (
       <Fragment>
          <Form header={ 'register device' }>
+            <Text
+               placeholder={ 'Device Nickname' }
+               value={ local.name.value }
+               range={[ 3, 15 ]}
+               update={ set_local }
+               id={ 'name' }
+            />
             <Text
                placeholder={ 'Device Hash' }
                value={ local.hash.value }

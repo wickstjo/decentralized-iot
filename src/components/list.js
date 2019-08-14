@@ -17,7 +17,7 @@ function List({ data, header }) {
       <Box header={ header }>
          { keys.map((key, index) => 
             <div className={ 'row' } id={ 'split' } key={ index }>
-               <div>{ key }</div>
+               <div>{ key }:</div>
                <div>{ shorten(data[key]) }</div>
             </div>
          )}

@@ -66,7 +66,7 @@ contract Devices {
     }
 
     // CREATE NEW DEVICE INSTANCE
-    function add(string memory id) public {
+    function add(string memory id, string memory name) public {
 
         // IF THE ID DOES NOT EXIST
         require(initialized, 'contract has not been initialized');
@@ -74,7 +74,7 @@ contract Devices {
         require(users.exists(msg.sender), 'you are not a registered user');
 
         // PUSH NEW DEVICE & ADD TO OWNERS COLLECTION & EMIT EVENT
-        devices[id] = new Device(msg.sender);
+        devices[id] = new Device(msg.sender, name);
         collections[msg.sender].push(id);
         emit Update(msg.sender, collections[msg.sender]);
     }

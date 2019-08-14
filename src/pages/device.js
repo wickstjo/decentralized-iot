@@ -28,7 +28,10 @@ function Device({ match }) {
                // ON SUCCESS
                set_local({
                   found: true,
-                  data: result.data
+                  data: {
+                     ...result.data,
+                     address: device
+                  }
                })
             })
          }
@@ -44,7 +47,9 @@ function Device({ match }) {
             <List
                header={ 'device details' }
                data={{
+                  "name": local.data.name,
                   "owner": local.data.owner,
+                  "address": local.data.address,
                   "enabled": local.data.status ? 'True' : 'False'
                }}
             />
