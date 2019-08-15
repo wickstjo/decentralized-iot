@@ -2,7 +2,7 @@ import React, { useContext, useReducer, Fragment } from 'react';
 import { Context } from '../../context';
 import reducer from '../../states/input';
 
-import { accept } from '../../contracts/task';
+import { details, accept } from '../../contracts/task';
 import { assess } from '../../funcs/blockchain';
 
 import Form from '../form';
@@ -24,9 +24,20 @@ function Accept({ task }) {
 
    // ACCEPT TASK
    function Accept() {
-      accept(task, local.device.value, state).then(result => {
+
+      // FETCH TASK REWARD
+      details(task, state).then(result => {
          assess({
-            msg: 'task assigned'
+            next: (data) => {
+               console.log(data)
+
+               // ACCEPT THE TASK
+               accept(task, local.device.value, data.reward, state).then(result => {
+                  assess({
+                     msg: 'task assigned'
+                  }, result, dispatch)
+               })
+            }
          }, result, dispatch)
       })
    }

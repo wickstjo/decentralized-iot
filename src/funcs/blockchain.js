@@ -65,9 +65,9 @@ function transaction({ query, contract, payable }, state) {
       data: query.encodeABI()
    }
 
-   // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION
+   // IF PAYABLE WAS DEFINED, ADD VALUE PROP TO TRANSACTION -- ROUND UP
    if (payable !== undefined) {
-      tx.value = payable;
+      tx.value = Math.ceil(payable);
    }
 
    // ESTIMATE GAS PRICE
@@ -132,24 +132,27 @@ function assemble({ address, contract }, state) {
 }
 
 // ASSESS METHOD RESPONSE
-function assess({ msg, func }, result, dispatch) {
+function assess({ msg, next }, result, dispatch) {
    switch(result.success) {
 
       // ON SUCCESS
       case true:
 
-         // IF A FUNCTION WAS PROVIDED, EXECUTE IT
-         if (func !== undefined) {
-            func(result.data)
+         // IF PROVIDED, SEND MESSAGE
+         if (msg !== undefined) {
+            dispatch({
+               type: 'add-message',
+               payload: {
+                  text: msg,
+                  type: 'good'
+               }
+            })
          }
 
-         dispatch({
-            type: 'add-message',
-            payload: {
-               text: msg,
-               type: 'good'
-            }
-         })
+         // IF PROVIDED, EXECUTE FOLLOW-UP FUNCTION
+         if (next !== undefined) {
+            next(result.data)
+         }
       break;
 
       // ON ERROR

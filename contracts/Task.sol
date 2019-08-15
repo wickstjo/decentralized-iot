@@ -67,7 +67,7 @@ contract Task {
 
         // CONDITIONS
         require(!locked, 'the contract is locked');
-        require(msg.value == reward / 2, 'insufficient funds given');
+        require(msg.value >= reward / 2, 'insufficient funds given');
 
         // CHECK THAT USER & DEVICE ARE REGISTERED
         require(users.exists(msg.sender), 'you are not a registered user');
@@ -83,7 +83,7 @@ contract Task {
         locked = true;
 
         // SEND ALERT
-        devices.fetch(id).assign(address(this));
+        devices.fetch(id).assign(address(this), msg.sender);
     }
 
     // SUBMIT DATA
@@ -91,8 +91,6 @@ contract Task {
 
         // CONDITIONS
         require(msg.sender == seller, 'you are not the seller');
-
-        // !!! SUBMIT TO BUYER USER CONTRACT
 
         // PUSH IPFS HASH TO CONTAINER & MARK TASK AS COMPLETED
         data.push(ipfs);

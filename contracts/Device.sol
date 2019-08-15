@@ -37,7 +37,7 @@ contract Device {
     }
 
     // FETCH DETAILS
-    function details() public view returns(string memory, address, bool) {
+    function details() public view returns(string memory, address payable, bool) {
         return (
             name,
             owner,
@@ -46,10 +46,10 @@ contract Device {
     }
 
     // ASSIGN TASK TO DEVICE
-    function assign(address _task) public {
+    function assign(address _task, address payable sender) public {
 
         // CONDITIONS
-        //require(msg.sender == owner, 'you are not the owner');    --------------------- CAUSES ISSUE WHEN ACCEPTING TASK
+        require(sender == owner, 'you are not the owner');
         require(status, 'device is out of commission');
 
         // ASSIGN TASK & SEND EVENT
