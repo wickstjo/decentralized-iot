@@ -1,8 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 import { details } from '../contracts/task';
 
 import List from '../components/list';
+import AcceptForm from '../components/forms/accept';
 
 function Task({ match }) {
 
@@ -51,18 +52,23 @@ function Task({ match }) {
 
       // USER FOUND
       case true: { return (
-         <div>
-            <List
-               header={ 'task details' }
-               data={{
-                  "expiration date": local.data.expires,
-                  "locked": local.data.locked ? 'True' : 'False',
-                  "required reputation": local.data.reputation,
-                  "reward in wei": local.data.reward,
-                  "public encryption key": local.data.encryption
-               }}
-            />
-         </div>
+         <Fragment>
+            <div>
+               <List
+                  header={ 'task details' }
+                  data={{
+                     "expiration date": local.data.expires,
+                     "locked": local.data.locked ? 'True' : 'False',
+                     "required reputation": local.data.reputation,
+                     "reward in wei": local.data.reward,
+                     "public encryption key": local.data.encryption
+                  }}
+               />
+            </div>
+            <div>
+               <AcceptForm task={ match.params.address } />
+            </div>
+         </Fragment>
       )}
 
       // USER NOT FOUND

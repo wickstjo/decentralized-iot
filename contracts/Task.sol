@@ -81,6 +81,9 @@ contract Task {
         // SET SELLER & LOCK THE CONTRACT
         seller = msg.sender;
         locked = true;
+
+        // SEND ALERT
+        devices.fetch(id).assign(address(this));
     }
 
     // SUBMIT DATA

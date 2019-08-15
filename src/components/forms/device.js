@@ -57,7 +57,10 @@ function Device() {
             <Button
                header={ 'Add' }
                func={ Add }
-               require={[ local.hash.status ]}
+               require={[
+                  local.name.status,
+                  local.hash.status
+               ]}
             />
          </div>
       </Fragment>

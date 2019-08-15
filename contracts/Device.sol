@@ -49,7 +49,7 @@ contract Device {
     function assign(address _task) public {
 
         // CONDITIONS
-        require(msg.sender == owner, 'you are not the owner');
+        //require(msg.sender == owner, 'you are not the owner');    --------------------- CAUSES ISSUE WHEN ACCEPTING TASK
         require(status, 'device is out of commission');
 
         // ASSIGN TASK & SEND EVENT

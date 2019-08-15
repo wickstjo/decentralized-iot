@@ -71,8 +71,8 @@ function details(task, state) {
 
 // ACCEPT TASK
 function accept(task, device, state) {
-    return details(task, state).then(({ success, data }) => {
-        if (success) {
+    return details(task, state).then(result => {
+        if (result.success) {
 
             // GENERATE REFERENCE
             const contract = assemble({
@@ -83,10 +83,14 @@ function accept(task, device, state) {
             return transaction({
                 query: contract.methods.accept(device),
                 contract: task,
-                payable: data.reward / 2,
+                payable: result.data.reward / 2,
                 gas: 5000000
             }, state)
-        }
+        
+        // ON ERROR
+        } else { return {
+            reason: 'Could not find task reward!'
+        }}
     })
 }
 
