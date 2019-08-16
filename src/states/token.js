@@ -1,25 +1,26 @@
 // DEFAULT VALUES
 const values = {
-   price: 'Not Available',
-   balance: 'Not Available'
+   price: 0,
+   balance: 0
 }
 
 // FUNCTION TYPES
 function reducer(state, action) {
    switch (action.type) {
-       
-      // SET USER DATA
+
+      // SET PRICE
       case 'price': { return {
          ...state,
          price: action.payload
       }}
 
-      // SET COLLECTION DATA
+      // SET BALANCE
       case 'balance': { return {
          ...state,
          balance: action.payload
       }}
 
+      // FALLBACK
       default: {
          return state;
       }

@@ -3,10 +3,12 @@ import { Context } from '../context';
 
 import { details } from '../contracts/user';
 import { collection } from '../contracts/device';
+import { assess } from '../funcs/blockchain';
 
 import List from '../components/list';
 import Links from '../components/links';
 import ResultForm from '../components/forms/result';
+import Error from '../components/error';
 
 function User({ match }) {
 
@@ -22,63 +24,30 @@ function User({ match }) {
 
    // FETCH DETAILS
    useEffect(() => {
-
-      // MAKE SURE QUERY IS AN ADDRESS
       if (state.web3.utils.isAddress(match.params.address)) {
          
-         // FETCH DETAILS
+         // FETCH USER DETAILS
          details(match.params.address, state).then(result => {
-            if (result.success) {
-
-               // USER DATA
-               const user = result.data;
-
-               // FETCH DEVICE COLLECTION
-               collection(match.params.address, state).then(result => {
-                  if (result.success) {
-
-                     // ON SUCCESS
-                     set_local({
-                        ...local,
-                        user: user,
-                        devices: result.data,
-                        found: true
-                     })
-                  
-                  // ON ERROR
-                  } else {
-                     dispatch({
-                        type: 'add-message',
-                        payload: {
-                           type: 'bad',
-                           text: 'could not fetch devices'
+            assess({
+               next: (user) => {
+            
+                  // FETCH DEVICE COLLECTION
+                  collection(match.params.address, state).then(result => {
+                     assess({
+                        next: (devices) => {
+                     
+                           // SET STATE
+                           set_local({
+                              ...local,
+                              user: user,
+                              devices: devices,
+                              found: true
+                           })
                         }
-                     })
-                  }
-               })
-
-            // ON ERROR
-            } else {
-               dispatch({
-                  type: 'add-message',
-                  payload: {
-                     type: 'bad',
-                     text: 'could not fetch user data'
-                  }
-               })
-            }
-         })
-
-      // OTHERWISE, LOG ERROR
-      } else {
-
-         // SEND MESSAGE
-         dispatch({
-            type: 'add-message',
-            payload: {
-               type: 'bad',
-               text: 'not a valid address'
-            }
+                     }, result, dispatch)
+                  })
+               }
+            }, result, dispatch)
          })
       }
    }, [])
@@ -94,14 +63,14 @@ function User({ match }) {
                   header={ 'details' }
                   data={ local.user }
                />
-            </div>
-            <div>
                <Links
                   header={ 'owned devices' }
                   error={ 'No devices found' }
                   url={ 'http://localhost:3000/devices/' }
                   data={ local.devices }
                />
+            </div>
+            <div>
                <ResultForm user={ match.params.address } />
             </div>
          </Fragment>
@@ -109,7 +78,7 @@ function User({ match }) {
 
       // OTHERWISE
       default: { return (
-         <div>User was not found!</div>
+         <Error reason={ 'User does not exist!' } />
       )}
    }
 }

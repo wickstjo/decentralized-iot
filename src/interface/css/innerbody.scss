@@ -68,4 +68,21 @@
          }
       }
    }
+
+   #error {
+      background: #F1F1F1;
+      padding: 2px;
+
+      #header {
+         background: rgb(165, 53, 53);
+         border-bottom: 2px solid #F1F1F1;
+         padding: 7px 9px;
+         color: white;
+      }
+
+      #content {
+         background: rgb(192, 192, 192);
+         padding: 7px 9px;
+      }
+   }
 }

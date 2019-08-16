@@ -1,12 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../context';
+
 import { fetch, details } from '../contracts/device';
+import { assess } from '../funcs/blockchain';
+
 import List from '../components/list';
+import Error from '../components/error';
 
 function Device({ match }) {
 
    // GLOBAL STATE
-   const { state } = useContext(Context);
+   const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useState({
@@ -16,25 +20,30 @@ function Device({ match }) {
 
    // FETCH DETAILS
    useEffect(() => {
-      fetch(match.params.hash, state).then(result => {
-         if (result.success) {
-            
-            // DEVICE ADDRESS
-            const device = result.data;
 
-            // FETCH DETAILS
-            details(device, state).then(result => {
-               
-               // ON SUCCESS
-               set_local({
-                  found: true,
-                  data: {
-                     ...result.data,
-                     address: device
-                  }
+      // FETCH DEVICE CONTRACT
+      fetch(match.params.hash, state).then(result => {
+         assess({
+            next: (device) => {
+         
+               // FETCH DEVICE DETAILS
+               details(device, state).then(result => {
+                  assess({
+                     next: (details) => {
+                  
+                        // SET STATE
+                        set_local({
+                           found: true,
+                           data: {
+                              ...details,
+                              address: device
+                           }
+                        })
+                     }
+                  }, result, dispatch)
                })
-            })
-         }
+            }
+         }, result, dispatch)
       })
    }, [])
 
@@ -58,7 +67,7 @@ function Device({ match }) {
 
       // OTHERWISE
       default: { return (
-         <div>Device was NOT Found</div>
+         <Error reason={ 'Device does not exist!' } />
       )}
    }
 }

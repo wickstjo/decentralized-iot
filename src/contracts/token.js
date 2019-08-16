@@ -11,20 +11,14 @@ function init(price, tasks, state) {
 // CHECK LICENCE STATUS
 function price(state) {
    return call({
-      query: state.contracts.token.methods.fetch(),
-      callback: (response) => {
-         return response;
-      }
+      query: state.contracts.token.methods.fetch()
    })
 }
 
-// CHECK LICENCE STATUS
+// CHECK BALANCE
 function check(user, state) {
    return call({
-      query: state.contracts.token.methods.check(user),
-      callback: (response) => {
-         return response;
-      }
+      query: state.contracts.token.methods.check(user)
    })
 }
 

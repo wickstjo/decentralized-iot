@@ -101,11 +101,21 @@ function transaction({ query, contract, payable }, state) {
 }
 
 // CALL SC METHOD
-function call({ query, callback }) {
+function call({ query, modify }) {
    return query.call().then(response => {
-      return {
-         success: true,
-         data: callback(response)
+      switch(modify) {
+
+         // UNMODIFIED
+         case undefined: { return {
+            success: true,
+            data: response
+         }}
+
+         // MODIFIED
+         default: { return {
+            success: true,
+            data: modify(response)
+         }}
       }
    }).catch(error => {
       return {

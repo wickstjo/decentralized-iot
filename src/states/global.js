@@ -11,15 +11,15 @@ const values = {
 }
 
 // FUNCTION TYPES
-function reducer(state, { type, payload }) {
-   switch (type) {
+function reducer(state, action) {
+   switch (action.type) {
 
       // CONNECT WITH BLOCKCHAIN GATEWAY
       case 'connect': { return {
          ...state,
-         web3: payload.web3,
-         contracts: payload.contracts,
-         interfaces: payload.interfaces
+         web3: action.payload.web3,
+         contracts: action.payload.contracts,
+         interfaces: action.payload.interfaces
       }}
 
       // CLOSE PROMPT
@@ -36,7 +36,7 @@ function reducer(state, { type, payload }) {
          ...state,
          messages: [
             ...state.messages,
-            payload
+            action.payload
          ]
       }}
 

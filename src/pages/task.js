@@ -1,9 +1,12 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
+
 import { details } from '../contracts/task';
+import { assess } from '../funcs/blockchain';
 
 import List from '../components/list';
 import AcceptForm from '../components/forms/accept';
+import Error from '../components/error';
 
 function Task({ match }) {
 
@@ -16,33 +19,23 @@ function Task({ match }) {
       data: {}
    })
 
-   // FETCH DETAILS
+   // ON LOAD
    useEffect(() => {
-
-      // MAKE SURE QUERY IS AN ADDRESS
       if (state.web3.utils.isAddress(match.params.address)) {
 
-         // CHECK IF TASK EXISTS
+         // FETCH TASK DETAILS
          details(match.params.address, state).then(result => {
-            if (result.success) {
-
-               // SET LOCAL STATE
-               set_local({
-                  ...local,
-                  found: true,
-                  data: result.data
-               })
-            }
-         })
-
-      // OTHERWISE, LOG ERROR
-      } else {
-         dispatch({
-            type: 'add-message',
-            payload: {
-               type: 'bad',
-               text: 'not a valid address'
-            }
+            assess({
+               next: (details) => {
+            
+                  // SET LOCAL STATE
+                  set_local({
+                     ...local,
+                     found: true,
+                     data: details
+                  })
+               }
+            }, result, dispatch)
          })
       }
    }, [])
@@ -72,7 +65,7 @@ function Task({ match }) {
 
       // USER NOT FOUND
       default: { return (
-         <div>Task was NOT found!</div>
+         <Error reason={ 'Task does not exist!' } />
       )}
    }
 }

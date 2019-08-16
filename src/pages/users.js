@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
 import { collection, event } from '../contracts/user';
+import { assess } from '../funcs/blockchain';
 
 import Links from '../components/links';
 import UserForm from '../components/forms/user';
@@ -17,35 +18,26 @@ function Users() {
    // FETCH ALL USERS
    useEffect(() => {
       collection(state).then(result => {
-         if (result.success) {
+         assess({
+            next: (users) => {
 
-            // ON SUCCESS
-            set_local(result.data)
-         
-         } else {
-
-            // ON ERROR
-            dispatch({
-               type: 'add-message',
-               payload: {
-                  type: 'bad',
-                  text: 'could not fetch users'
-               }
-            })
-         }
+               // SET STATE
+               set_local(users)
+            }
+         }, result, dispatch)
       })
 
       // USER ADDED EVENT
-      const foo = event(state);
+      const addition = event(state);
 
       // SUBSCRIBE
-      foo.on('data', event => {
+      addition.on('data', event => {
          set_local(event.returnValues.users)
       })
 
       // UNSUBSCRIBE
       return () => {
-         foo.unsubscribe();
+         addition.unsubscribe();
       }
    }, [])
    

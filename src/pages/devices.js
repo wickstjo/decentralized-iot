@@ -3,41 +3,34 @@ import { Context } from '../context';
 
 import { collection, event } from '../contracts/device';
 import { keys } from '../resources/settings.json';
+import { assess } from '../funcs/blockchain';
 
 import Links from '../components/links';
 import DeviceForm from '../components/forms/device';
 
 function Device() {
 
-   // GLOBAL STATE
+   // STATES
    const { state, dispatch } = useContext(Context);
-
-   // LOCAL STATE
-   const [local, set_local] = useState([])
+   const [ local, set_local ] = useState([])
 
    // FETCH DETAILS
    useEffect(() => {
       collection(keys.public, state).then(result => {
-         if (result.success) {
-
-            // ON SUCCESS
-            set_local(result.data)
+         assess({
+            next: (devices) => {
          
-         } else {
-
-            // ON ERROR
-            dispatch({
-               type: 'add-message',
-               text: result.reason
-            })
-         }
+               // SET STATE
+               set_local(devices)
+            }
+         }, result, dispatch)
       })
 
       // DEVICE ADDED EVENT
-      const foo = event(state);
+      const addition = event(state);
 
       // SUBSCRIBE
-      foo.on('data', event => {
+      addition.on('data', event => {
          
          // DECONSTRUCT VALUES
          const { user, devices } = event.returnValues;
@@ -52,7 +45,7 @@ function Device() {
 
       // UNSUBSCRIBE
       return () => {
-         foo.unsubscribe();
+         addition.unsubscribe();
       }
    }, [])
 

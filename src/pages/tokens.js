@@ -3,6 +3,7 @@ import { Context } from '../context';
 import { reducer, values } from '../states/token';
 
 import { price, check, event } from '../contracts/token';
+import { assess } from '../funcs/blockchain';
 import { keys } from '../resources/settings.json';
 
 import TokenForm from '../components/forms/token';
@@ -16,50 +17,33 @@ function Tokens() {
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, values)
 
-   // FETCH THE TOKEN PRICE & USER BALANCE
+   // ON LOAD
    useEffect(() => {
       price(state).then(result => {
-         if (result.success) {
+         assess({
+            next: (price) => {
 
-            // SET PRICE
-            set_local({
-               type: 'price',
-               payload: result.data
-            })
-
-            check(keys.public, state).then(result => {
-               if (result.success) {
-
-                  // SET BALANCE
-                  set_local({
-                     type: 'balance',
-                     payload: result.data
-                  })
-
-               // OTHERWISE
-               } else {
-                  dispatch({
-                     type: 'add-message',
-                     payload: {
-                        type: 'bad',
-                        text: result.reason
+               // SET PRICE
+               set_local({
+                  type: 'price',
+                  payload: price
+               })
+         
+               // CHECK USER BALANCE
+               check(keys.public, state).then(result => {
+                  assess({
+                     next: (balance) => {
+                  
+                        // SET BALANCE
+                        set_local({
+                           type: 'balance',
+                           payload: balance
+                        })
                      }
-                  })
-               }
-
-
-            })
-
-         // OTHERWISE
-         } else {
-            dispatch({
-               type: 'add-message',
-               payload: {
-                  type: 'bad',
-                  text: result.reason
-               }
-            })
-         }
+                  }, result, dispatch)
+               })
+            }
+         }, result, dispatch)
       })
 
       // USER ADDED EVENT

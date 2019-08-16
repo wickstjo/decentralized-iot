@@ -3,10 +3,7 @@ import { transaction, call, assemble } from '../funcs/blockchain';
 // CHECK INITIALIZED STATUS
 function check(state) {
     return call({
-        query: state.contracts.tasks.methods.initialized(),
-        callback: (response) => {
-            return response;
-        }
+        query: state.contracts.tasks.methods.initialized()
     })
 }
 
@@ -25,10 +22,7 @@ function init(devices, users, token, state) {
 // FETCH ALL TASKS
 function fetch(state) {
     return call({
-        query: state.contracts.tasks.methods.fetch(),
-        callback: (response) => {
-            return response;
-        }
+        query: state.contracts.tasks.methods.fetch()
     })
 }
 
@@ -56,7 +50,7 @@ function details(task, state) {
     
     return call({
         query: contract.methods.details(),
-        callback: (response) => {
+        modify: (response) => {
             return {
                 reputation: response[0],
                 reward: response[1],

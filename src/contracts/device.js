@@ -11,10 +11,7 @@ function init(users, state) {
 // FETCH DEVICE CONTRACT
 function fetch(hash, state) {
     return call({
-        query: state.contracts.devices.methods.fetch(hash),
-        callback: (response) => {
-            return response;
-        }
+        query: state.contracts.devices.methods.fetch(hash)
     })
 }
 
@@ -29,10 +26,7 @@ function add(hash, name, state) {
 // FETCH DEVICE CONTRACT
 function collection(user, state) {
     return call({
-        query: state.contracts.devices.methods.collection(user),
-        callback: (response) => {
-            return response;
-        }
+        query: state.contracts.devices.methods.collection(user)
     })
 }
 
@@ -47,7 +41,7 @@ function details(device, state) {
 
     return call({
         query: contract.methods.details(),
-        callback: (response) => {
+        modify: (response) => {
             return {
                 "name": response[0],
                 "owner": response[1],
@@ -67,10 +61,7 @@ function status(device, state) {
     }, state);
 
     return call({
-        query: contract.methods.status(),
-        callback: (response) => {
-            return response;
-        }
+        query: contract.methods.status()
     })
 }
 
@@ -99,10 +90,7 @@ function task(device, state) {
     }, state);
     
     return call({
-        query: contract.methods.task(),
-        callback: (response) => {
-            return response;
-        }
+        query: contract.methods.task()
     })
 }
 

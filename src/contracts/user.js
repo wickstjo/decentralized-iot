@@ -3,10 +3,7 @@ import { transaction, call, assemble } from '../funcs/blockchain';
 // FETCH USER
 function collection(state) {
     return call({
-        query: state.contracts.users.methods.collection(),
-        callback: (response) => {
-            return response;
-        }
+        query: state.contracts.users.methods.collection()
     })
 }
 
@@ -14,7 +11,7 @@ function collection(state) {
 function details(user, state) {
     return call({
         query: state.contracts.users.methods.details(user),
-        callback: (response) => {
+        modify: (response) => {
             return {
                 name: response[0],
                 joined: response[1],
@@ -39,10 +36,7 @@ function event(state) {
 
 function fetch(user, state) {
     return call({
-        query: state.contracts.users.methods.fetch(user),
-        callback: (response) => {
-            return response;
-        }
+        query: state.contracts.users.methods.fetch(user)
     })
 }
 
@@ -56,10 +50,7 @@ function check(task, user, state) {
     }, state);
 
     return call({
-        query: contract.methods.fetch(task),
-        callback: (response) => {
-            return response;
-        }
+        query: contract.methods.fetch(task)
     })
 }
 
