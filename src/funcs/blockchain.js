@@ -19,7 +19,8 @@ function init() {
       ], web3),
       interfaces: interfaces([
          'device',
-         'task'
+         'task',
+         'user'
       ])
    }
 }

@@ -37,7 +37,7 @@ contract Users {
         // CONDITION
         require(exists(user), 'user does not exist');
 
-        return users[user].fetch();
+        return users[user].details();
     }
 
     // ADD ENTRY TO HASHMAP

@@ -10,12 +10,7 @@ contract Task {
     address payable public buyer;
     address payable public seller;
 
-    // RESPONSE CONTAINER & COMPLETED STATUS
-    string[] public data;
-    bool public completed;
-
     // TASK PARAMS
-    string public expires;
     uint public reputation;
     string public encryption;
     uint public reward;
@@ -28,20 +23,15 @@ contract Task {
     // WHEN THE CONTRACT IS CREATED
     constructor(
         address payable _buyer,
-        string memory _expires,
         uint _reputation,
         string memory _encryption,
         Devices _devices,
         Users _users
     ) public payable {
 
-        // SET BUYER & STATUS VARS
-        buyer = _buyer;
-        completed = false;
-        locked = false;
-
         // SET PARAMS
-        expires = _expires;
+        buyer = _buyer;
+        locked = false;
         reputation = _reputation;
         encryption = _encryption;
         reward = msg.value;
@@ -52,9 +42,8 @@ contract Task {
     }
 
     // FETCH TASK DETAILS
-    function details() public view returns (string memory, uint, uint, string memory, bool) {
+    function details() public view returns (uint, uint, string memory, bool) {
         return (
-            expires,
             reputation,
             reward,
             encryption,
@@ -92,24 +81,19 @@ contract Task {
         // CONDITIONS
         require(msg.sender == seller, 'you are not the seller');
 
-        // PUSH IPFS HASH TO CONTAINER & MARK TASK AS COMPLETED
-        data.push(ipfs);
-        completed = true;
+        // ADD RESPONSE TO BUYER & SELF DESTRUCT
+        users.fetch(buyer).add(ipfs);
+        selfdestruct(seller);
     }
 
     // DESTROY THE CONTRACT & PAY PARTICIPANTS
     function release() public {
 
         // CONDITIONS
-        require(locked, 'task has not been accepted yet');
+        require(msg.sender == buyer, 'You are not the creator');
+        require(!locked, 'Task has already been accepted');
 
-        // IF THE SELLER HAS FULFILLED HIS TASK, SEND ETH TO HIM
-        if (completed) {
-            selfdestruct(seller);
-
-        // OTHERWISE, SEND BUYER THE REMAINING ETH
-        } else {
-            selfdestruct(buyer);
-        }
+        // SELF DESTRUCT
+        selfdestruct(buyer);
     }
 }

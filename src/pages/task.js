@@ -57,7 +57,6 @@ function Task({ match }) {
                <List
                   header={ 'task details' }
                   data={{
-                     "expiration date": local.data.expires,
                      "locked": local.data.locked ? 'True' : 'False',
                      "required reputation": local.data.reputation,
                      "reward in wei": local.data.reward,

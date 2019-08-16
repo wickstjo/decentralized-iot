@@ -11,7 +11,8 @@ run([
    'Token',
    'Task',
    'Tasks',
-   'Users'
+   'Users',
+   'User'
 ]);
 
 // RUN THE TRANSFER

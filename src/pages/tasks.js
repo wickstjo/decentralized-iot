@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-import { fetch, event } from '../contracts/task';
+import { fetch, event, filter } from '../contracts/task';
+import { assess } from '../funcs/blockchain';
 
 import Links from '../components/links';
 import TaskForm from '../components/forms/task';
@@ -16,35 +17,30 @@ function Tasks() {
    // FETCH ALL TASKS
    useEffect(() => {
       fetch(state).then(result => {
-         if (result.success) {
+         assess({
+            next: () => {
 
-            // ON SUCCESS
-            set_local(result.data)
-            
-         } else {
-
-            // ON ERROR
-            dispatch({
-               type: 'add-message',
-               payload: {
-                  type: 'bad',
-                  text: result.reason
-               }
-            })
-         }
+               // FILTER OUT COMPLETED & SET
+               filter(result.data, state).then(results => {
+                  set_local(results)
+               })
+            }
+         }, result, dispatch)
       })
 
       // USER ADDED EVENT
-      const foo = event(state);
+      const additions = event(state);
 
       // SUBSCRIBE
-      foo.on('data', event => {
-         set_local(event.returnValues.tasks)
+      additions.on('data', event => {
+         filter(event.returnValues.tasks, state).then(results => {
+            set_local(results)
+         })
       })
 
       // UNSUBSCRIBE
       return () => {
-         foo.unsubscribe();
+         additions.unsubscribe();
       }
    }, [])
    

@@ -33,10 +33,9 @@ function fetch(state) {
 }
 
 // LIST A TASK
-function add({ expires, reputation, reward, encryption }, state) {
+function add({ reputation, reward, encryption }, state) {
     return transaction({
         query: state.contracts.tasks.methods.add(
-            expires.toString(),
             reputation,
             encryption
         ),
@@ -59,11 +58,10 @@ function details(task, state) {
         query: contract.methods.details(),
         callback: (response) => {
             return {
-                expires: response[0],
-                reputation: response[1],
-                reward: response[2],
-                encryption: response[3],
-                locked: response[4]
+                reputation: response[0],
+                reward: response[1],
+                encryption: response[2],
+                locked: response[3]
             }
         }
     })
@@ -121,6 +119,32 @@ function event(state) {
     return state.contracts.tasks.events.Update();
 }
 
+// FILTER COMPLETED TASKS
+function filter(tasks, state) {
+
+    // PLACEHOLDER
+    const promises = [];
+    const container = [];
+
+    // CREATE PROMISES
+    tasks.forEach(task => {
+        promises.push(details(task, state));
+    })
+
+    // WAIT FOR ALL OF THEM TO RESOLVE, THEN LOOP THROUGH
+    return Promise.all(promises).then(results => {
+        results.forEach((result, index) => {
+
+            // PUSH ACTIVE TASKS
+            if (result.success && !result.data.locked) {
+                container.push(tasks[index])
+            }
+        })
+
+        return container;
+    })
+}
+
 export {
     check,
     init,
@@ -130,5 +154,6 @@ export {
     accept,
     submit,
     release,
-    event
+    event,
+    filter
 }

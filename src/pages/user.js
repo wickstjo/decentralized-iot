@@ -6,6 +6,7 @@ import { collection } from '../contracts/device';
 
 import List from '../components/list';
 import Links from '../components/links';
+import ResultForm from '../components/forms/result';
 
 function User({ match }) {
 
@@ -101,6 +102,7 @@ function User({ match }) {
                   url={ 'http://localhost:3000/devices/' }
                   data={ local.devices }
                />
+               <ResultForm user={ match.params.address } />
             </div>
          </Fragment>
       )}

@@ -52,7 +52,6 @@ contract Tasks {
 
     // ADD TASK ENTRY
     function add (
-        string memory expires,
         uint reputation,
         string memory encryption
     ) public payable {
@@ -68,7 +67,6 @@ contract Tasks {
         // INSTANTIATE NEW TASK
         Task task = (new Task).value(msg.value)(
             msg.sender,
-            expires,
             reputation,
             encryption,
             devices,

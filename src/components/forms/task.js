@@ -17,10 +17,6 @@ function Task() {
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
-      expires: {
-         value: Date.now() + 200000,
-         status: null
-      },
       reputation: {
          value: '',
          status: null
@@ -38,7 +34,6 @@ function Task() {
    // ADD TASK
    function Add() {
       add({
-         expires: local.expires.value,
          reputation: local.reputation.value,
          reward: local.reward.value,
          encryption: local.encryption.value
@@ -52,13 +47,6 @@ function Task() {
    return (
       <Fragment>
          <Form header={ 'create task' }>
-            <Number
-               placeholder={ 'Expiration Date' }
-               value={ local.expires.value }
-               range={[ Date.now(), Infinity ]}
-               update={ set_local }
-               id={ 'expires' }
-            />
             <Number
                placeholder={ 'Minimum Reputation' }
                value={ local.reputation.value }
@@ -86,7 +74,6 @@ function Task() {
                header={ 'Create' }
                func={ Add }
                require={[
-                  local.expires.status,
                   local.reputation.status,
                   local.encryption.status,
                   local.reward.status
