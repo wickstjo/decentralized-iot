@@ -4,25 +4,27 @@ import references from '../resources/latest.json';
 
 // INITIALIZE SC & WEB3
 function init() {
+   return new Promise((resolve, reject) => {
 
-   // ESTABLISH WEB3 CONNECTION
-   const web3 = new Web3('ws://' + gateways.blockchain.host + ':' + gateways.blockchain.port);
+      // ESTABLISH WEB3 CONNECTION
+      const web3 = new Web3('ws://' + gateways.blockchain.host + ':' + gateways.blockchain.port);
 
-   // RETURN REFERENCES
-   return {
-      web3: web3,
-      contracts: contracts([
-         'devices',
-         'token',
-         'tasks',
-         'users'
-      ], web3),
-      interfaces: interfaces([
-         'device',
-         'task',
-         'user'
-      ])
-   }
+      // RESOLVE WITH REFERENCES
+      resolve({
+         web3: web3,
+         contracts: contracts([
+            'devices',
+            'token',
+            'tasks',
+            'users'
+         ], web3),
+         interfaces: interfaces([
+            'device',
+            'task',
+            'user'
+         ])
+      })
+   })
 }
 
 // CONSTRUCT SMART CONTRACT REFERENCE
