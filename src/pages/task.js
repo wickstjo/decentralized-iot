@@ -6,6 +6,7 @@ import { assess } from '../funcs/blockchain';
 
 import List from '../components/list';
 import AcceptForm from '../components/forms/accept';
+import TaskActions from '../components/actions/task';
 import Error from '../components/error';
 
 function Task({ match }) {
@@ -50,12 +51,13 @@ function Task({ match }) {
                <List
                   header={ 'task details' }
                   data={{
-                     "locked": local.data.locked ? 'True' : 'False',
-                     "required reputation": local.data.reputation,
-                     "reward in wei": local.data.reward,
-                     "public encryption key": local.data.encryption
+                     'locked': local.data.locked ? 'True' : 'False',
+                     'required reputation': local.data.reputation,
+                     'reward in wei': local.data.reward,
+                     'public encryption key': local.data.encryption
                   }}
                />
+               <TaskActions location={ match.params.address } />
             </div>
             <div>
                <AcceptForm task={ match.params.address } />

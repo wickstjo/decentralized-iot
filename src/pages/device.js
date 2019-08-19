@@ -1,11 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useReducer, useEffect } from 'react';
 import { Context } from '../context';
 
-import { fetch, details } from '../contracts/device';
+import { fetch, details, event } from '../contracts/device';
 import { assess } from '../funcs/blockchain';
+import { reducer, values } from '../states/device';
 
 import List from '../components/list';
 import Error from '../components/error';
+import DeviceActions from '../components/actions/device';
 
 function Device({ match }) {
 
@@ -13,10 +15,7 @@ function Device({ match }) {
    const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useState({
-      found: false,
-      data: {}
-   })
+   const [local, set_local] = useReducer(reducer, values);
 
    // FETCH DETAILS
    useEffect(() => {
@@ -24,21 +23,43 @@ function Device({ match }) {
       // FETCH DEVICE CONTRACT
       fetch(match.params.hash, state).then(result => {
          assess({
-            next: (device) => {
+            next: (location) => {
+
+               // SET LOCATION
+               set_local({
+                  type: 'location',
+                  payload: location
+               })
          
                // FETCH DEVICE DETAILS
-               details(device, state).then(result => {
+               details(location, state).then(result => {
                   assess({
                      next: (details) => {
                   
-                        // SET STATE
+                        // SET DETAILS
                         set_local({
-                           found: true,
-                           data: {
-                              ...details,
-                              address: device
-                           }
+                           type: 'details',
+                           payload: details
                         })
+
+                        // SUBSCRIBE TO STATUS TOGGLES
+                        const toggles = event({
+                           device: location,
+                           name: 'Toggled',
+                           action: (values) => {
+                              
+                              // SET STATUS
+                              set_local({
+                                 type: 'toggle',
+                                 payload: values.status
+                              })
+                           }
+                        }, state)
+
+                        // UNSUBSCRIBE
+                        return () => {
+                           toggles.unsubscribe();
+                        }
                      }
                   }, result, dispatch)
                })
@@ -56,12 +77,13 @@ function Device({ match }) {
             <List
                header={ 'device details' }
                data={{
-                  "name": local.data.name,
-                  "owner": local.data.owner,
-                  "address": local.data.address,
-                  "enabled": local.data.status ? 'True' : 'False'
+                  "name": local.details.name,
+                  "owner": local.details.owner,
+                  "address": local.location,
+                  "enabled": local.details.status ? 'True' : 'False'
                }}
             />
+            <DeviceActions location={ local.location } />
          </div>
       )}
 

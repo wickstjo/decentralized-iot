@@ -2,11 +2,9 @@ import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
 import { details } from '../contracts/user';
-import { collection } from '../contracts/device';
 import { assess } from '../funcs/blockchain';
 
 import List from '../components/list';
-import Links from '../components/links';
 import ResultForm from '../components/forms/result';
 import Error from '../components/error';
 
@@ -17,8 +15,7 @@ function User({ match }) {
    
    // LOCAL STATES
    const [local, set_local] = useState({
-      user: {},
-      devices: [],
+      details: {},
       found: false
    })
 
@@ -29,22 +26,13 @@ function User({ match }) {
          // FETCH USER DETAILS
          details(match.params.address, state).then(result => {
             assess({
-               next: (user) => {
+               next: (details) => {
             
-                  // FETCH DEVICE COLLECTION
-                  collection(match.params.address, state).then(result => {
-                     assess({
-                        next: (devices) => {
-                     
-                           // SET STATE
-                           set_local({
-                              ...local,
-                              user: user,
-                              devices: devices,
-                              found: true
-                           })
-                        }
-                     }, result, dispatch)
+                  // SET STATE
+                  set_local({
+                     ...local,
+                     details: details,
+                     found: true
                   })
                }
             }, result, dispatch)
@@ -61,13 +49,7 @@ function User({ match }) {
             <div>
                <List
                   header={ 'details' }
-                  data={ local.user }
-               />
-               <Links
-                  header={ 'owned devices' }
-                  error={ 'No devices found' }
-                  url={ 'http://localhost:3000/devices/' }
-                  data={ local.devices }
+                  data={ local.details }
                />
             </div>
             <div>

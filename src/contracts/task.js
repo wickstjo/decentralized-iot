@@ -108,9 +108,18 @@ function release(task, state) {
     }, state)
 }
 
-// TASK ADDED EVENT
-function event(state) {
-    return state.contracts.tasks.events.Update();
+// DEVICE ADDED EVENT
+function event({ name, action }, state) {
+
+    // STATUS CHANGED EVENT
+    const event = state.contracts.tasks.events[name]();
+
+    // SUBSCRIBE
+    event.on('data', event => {
+        action(event.returnValues)
+    })
+
+    return event;
 }
 
 // FILTER COMPLETED TASKS
@@ -139,6 +148,13 @@ function filter(tasks, state) {
     })
 }
 
+// FETCH ALL TASKS
+function collection(user, state) {
+    return call({
+        query: state.contracts.tasks.methods.collection(user)
+    })
+}
+
 export {
     check,
     init,
@@ -149,5 +165,6 @@ export {
     submit,
     release,
     event,
-    filter
+    filter,
+    collection
 }

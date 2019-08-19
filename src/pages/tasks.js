@@ -1,7 +1,10 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react';
+import React, { useContext, useReducer, useEffect, Fragment } from 'react';
 import { Context } from '../context';
-import { fetch, event, filter } from '../contracts/task';
+import { reducer, values } from '../states/tasks';
+
+import { fetch, collection, event, filter } from '../contracts/task';
 import { assess } from '../funcs/blockchain';
+import { keys } from '../resources/settings';
 
 import Links from '../components/links';
 import TaskForm from '../components/forms/task';
@@ -12,31 +15,59 @@ function Tasks() {
    const { state, dispatch } = useContext(Context);
 
    // LOCAL STATE
-   const [local, set_local] = useState([])
+   const [local, set_local] = useReducer(reducer, values);
 
-   // FETCH ALL TASKS
+   // ON LOAD
    useEffect(() => {
+
+      // FETCH ALL TASKS
       fetch(state).then(result => {
          assess({
-            next: () => {
+            next: (all) => {
 
                // FILTER OUT COMPLETED & SET
-               filter(result.data, state).then(results => {
-                  set_local(results)
+               filter(all, state).then(filtered => {
+                  
+                  // SET ALL TASKS
+                  set_local({
+                     type: 'all',
+                     payload: filtered
+                  })
+               })
+
+               // FETCH USER TASKS
+               collection(keys.public, state).then(result => {
+                  assess({
+                     next: (user) => {
+
+                        // SET USER TASKS
+                        set_local({
+                           type: 'user',
+                           payload: user
+                        })
+                     }
+                  }, result, dispatch)
                })
             }
          }, result, dispatch)
       })
 
       // USER ADDED EVENT
-      const additions = event(state);
+      const additions = event({
+         name: 'Update',
+         action: (values) => {
 
-      // SUBSCRIBE
-      additions.on('data', event => {
-         filter(event.returnValues.tasks, state).then(results => {
-            set_local(results)
-         })
-      })
+            // FILTER ALL TASKS
+            filter(values.tasks, state).then(filtered => {
+
+               // SET ALL
+               set_local({
+                  type: 'all',
+                  payload: filtered
+               })
+            })
+         }
+      }, state)
 
       // UNSUBSCRIBE
       return () => {
@@ -48,13 +79,19 @@ function Tasks() {
       <Fragment>
          <div>
             <Links
-               header={ 'available tasks' }
+               header={ 'your tasks' }
                error={ 'No tasks found.' }
-               data={ local }
+               data={ local.user }
                url={ 'http://localhost:3000/tasks/' }
             />
          </div>
          <div>
+            <Links
+               header={ 'available tasks' }
+               error={ 'No tasks found.' }
+               data={ local.all }
+               url={ 'http://localhost:3000/tasks/' }
+            />
             <TaskForm />
          </div>
       </Fragment>

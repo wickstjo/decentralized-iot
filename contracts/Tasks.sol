@@ -10,6 +10,7 @@ contract Tasks {
 
     // LIST OF OPEN TASKS
     Task[] tasks;
+    mapping(address => Task[]) collections;
 
     // HELPER CONTRACTS
     Devices devices;
@@ -75,6 +76,12 @@ contract Tasks {
 
         // PUSH TO LIST & EMIT EVENT
         tasks.push(task);
+        collections[msg.sender].push(task);
         emit Update(tasks);
+    }
+
+    // FETCH USER TASK COLLECTION
+    function collection(address user) public view returns(Task[] memory) {
+        return collections[user];
     }
 }

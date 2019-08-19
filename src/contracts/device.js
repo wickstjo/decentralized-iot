@@ -110,8 +110,42 @@ function assign(device, task, state) {
 }
 
 // DEVICE ADDED EVENT
-function event(state) {
+function added(state) {
     return state.contracts.devices.events.Update();
+}
+
+// DEVICE ADDED EVENT
+function event({ device, name, action }, state) {
+
+    // PLACEHOLDER
+    let contract = null;
+
+    // FETCH CORRECT CONTRACT
+    switch (device) {
+
+        // NO DEVICE WAS SPECIFIED
+        case undefined:
+            contract = state.contracts.devices;
+        break;
+
+        // OTHERWISE
+        default:
+            contract = assemble({
+                address: device,
+                contract: 'device'
+            }, state);
+        break;
+    }
+
+    // STATUS CHANGED EVENT
+    const event = contract.events[name]();
+
+    // SUBSCRIBE
+    event.on('data', event => {
+        action(event.returnValues)
+    })
+
+    return event;
 }
 
 export {
@@ -124,5 +158,6 @@ export {
     toggle,
     task,
     assign,
+    added,
     event
 }

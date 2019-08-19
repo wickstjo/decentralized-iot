@@ -25,15 +25,19 @@ contract Device {
         isset = true;
     }
 
-    // TASK ASSIGNMENT EVENT
+    // EVENTS
     event Assignment(address task);
+    event Toggled(bool status);
 
     // TOGGLE CONTRACT STATUS
     function toggle() public {
 
         // CONDITIONS
         require(msg.sender == owner, 'you are not the owner');
+
+        // EXECUTE & EMIT EVENT
         status = !status;
+        emit Toggled(status);
     }
 
     // FETCH DETAILS

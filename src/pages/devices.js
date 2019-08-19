@@ -27,25 +27,22 @@ function Device() {
       })
 
       // DEVICE ADDED EVENT
-      const addition = event(state);
-
-      // SUBSCRIBE
-      addition.on('data', event => {
-         
-         // DECONSTRUCT VALUES
-         const { user, devices } = event.returnValues;
-
-         // IF THE EVENT WAS USER RELATED
-         if (user === keys.public) {
+      const added = event({
+         name: 'Update',
+         action: (values) => {
 
             // SET BALANCE
-            set_local(devices)
+            if (values.user === keys.public) {
+
+               // SET BALANCE
+               set_local(values.devices)
+            }
          }
-      })
+      }, state)
 
       // UNSUBSCRIBE
       return () => {
-         addition.unsubscribe();
+         added.unsubscribe();
       }
    }, [])
 
