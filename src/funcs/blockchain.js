@@ -1,30 +1,28 @@
 import Web3 from 'web3';
-import { gateways, keys } from '../resources/settings.json';
+import { gateways } from '../resources/settings.json';
 import references from '../resources/latest.json';
 
 // INITIALIZE SC & WEB3
 function init() {
-   return new Promise((resolve, reject) => {
 
-      // ESTABLISH WEB3 CONNECTION
-      const web3 = new Web3('ws://' + gateways.blockchain.host + ':' + gateways.blockchain.port);
+   // ESTABLISH WEB3 CONNECTION
+   const web3 = new Web3('ws://' + gateways.blockchain.host + ':' + gateways.blockchain.port);
 
-      // RESOLVE WITH REFERENCES
-      resolve({
-         web3: web3,
-         contracts: contracts([
-            'devices',
-            'token',
-            'tasks',
-            'users'
-         ], web3),
-         interfaces: interfaces([
-            'device',
-            'task',
-            'user'
-         ])
-      })
-   })
+   // RESOLVE WITH REFERENCES
+   return {
+      web3: web3,
+      contracts: contracts([
+         'devices',
+         'token',
+         'tasks',
+         'users'
+      ], web3),
+      interfaces: interfaces([
+         'device',
+         'task',
+         'user'
+      ])
+   }
 }
 
 // CONSTRUCT SMART CONTRACT REFERENCE
@@ -63,7 +61,7 @@ function transaction({ query, contract, payable }, state) {
 
    // TRANSACTION OUTLINE
    const tx = {
-      from: keys.public,
+      from: state.keys.public,
       to: contract,
       data: query.encodeABI()
    }
@@ -80,7 +78,7 @@ function transaction({ query, contract, payable }, state) {
       tx.gas = price;
 
       // SIGN IT & EXECUTE
-      return state.web3.eth.accounts.signTransaction(tx, keys.private).then(signed => {
+      return state.web3.eth.accounts.signTransaction(tx, state.keys.private).then(signed => {
          return state.web3.eth.sendSignedTransaction(signed.rawTransaction).then(() => {
             return {
                success: true

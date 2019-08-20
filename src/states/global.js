@@ -2,28 +2,32 @@ import { keys } from '../resources/settings';
 
 // DEFAULT VALUES
 const values = {
-   web3: undefined,
-   contracts: undefined,
-   interfaces: undefined,
-   prompt: {
-      show: false,
-      content: null
-   },
-   messages: [],
+   
+   // USER KEYS
    keys: {
       public: keys.public,
       private: keys.private
    },
-   devices: [],
-   tasks: []
+
+   // APP TOOLS
+   web3: undefined,
+   contracts: undefined,
+   interfaces: undefined,
+
+   // PROMPT & MESSAGES
+   prompt: {
+      show: false,
+      content: null
+   },
+   messages: []
 }
 
 // FUNCTION TYPES
 function reducer(state, action) {
    switch (action.type) {
 
-      // CONNECT WITH BLOCKCHAIN GATEWAY
-      case 'init': { return {
+      // SET TOOLS
+      case 'tools': { return {
          ...state,
          ...action.payload
       }}

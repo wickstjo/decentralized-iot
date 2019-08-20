@@ -9,7 +9,7 @@
     "react-dom": "^16.8.2",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.5",
-    "web3": "^1.0.0-beta.37"
+    "web3": "^1.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -17,8 +17,7 @@
     "push": "bash scripts/push.sh",
     "ganache": "bash scripts/ganache.sh",
     "truffle": "bash scripts/truffle.sh",
-    "ipfs": "bash scripts/ipfs.sh",
-    "install": "bash scripts/install.sh"
+    "ipfs": "bash scripts/ipfs.sh"
   },
   "eslintConfig": {
     "extends": "react-app"
