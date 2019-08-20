@@ -19,10 +19,17 @@ function init(devices, users, token, state) {
     }, state)
 }
 
-// FETCH ALL TASKS
-function fetch(state) {
+// FETCH ALL OPEN TASKS
+function tasks(state) {
     return call({
-        query: state.contracts.tasks.methods.fetch()
+        query: state.contracts.tasks.methods.tasks()
+    })
+}
+
+// FETCH USER HISTORY TASKS
+function history(state) {
+    return call({
+        query: state.contracts.tasks.methods.history(state.keys.public)
     })
 }
 
@@ -148,23 +155,16 @@ function filter(tasks, state) {
     })
 }
 
-// FETCH ALL TASKS
-function collection(user, state) {
-    return call({
-        query: state.contracts.tasks.methods.collection(user)
-    })
-}
-
 export {
     check,
     init,
-    fetch,
+    tasks,
+    history,
     add,
     details,
     accept,
     submit,
     release,
     event,
-    filter,
-    collection
+    filter
 }

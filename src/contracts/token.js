@@ -11,14 +11,14 @@ function init(price, tasks, state) {
 // CHECK LICENCE STATUS
 function price(state) {
    return call({
-      query: state.contracts.token.methods.fetch()
+      query: state.contracts.token.methods.price()
    })
 }
 
 // CHECK BALANCE
-function check(user, state) {
+function balance(user, state) {
    return call({
-      query: state.contracts.token.methods.check(user)
+      query: state.contracts.token.methods.balance(user)
    })
 }
 
@@ -52,15 +52,24 @@ function transfer(amount, recipient, state) {
    }, state)
 }
 
-// TOKEN AMOUNT CHANGED EVENT
-function event(state) {
-   return state.contracts.token.events.Update();
+// DEVICE ADDED EVENT
+function event({ name, action }, state) {
+
+   // STATUS CHANGED EVENT
+   const event = state.contracts.token.events[name]();
+
+   // SUBSCRIBE
+   event.on('data', event => {
+      action(event.returnValues)
+   })
+
+   return event;
 }
 
 export {
    init,
    price,
-   check,
+   balance,
    buy,
    transfer,
    event

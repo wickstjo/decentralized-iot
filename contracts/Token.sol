@@ -2,16 +2,19 @@ pragma solidity ^0.5.0;
 
 contract Token {
 
-    // TOKEN OWNERSHIP MAP
+    // TOKEN OWNERSHIP & PRICE
     mapping (address => uint) public tokens;
+    uint public Price;
 
-    // HELPER PARAMS
-    uint public price;
-    address public tasks;
+    // INIT STATUS & TASKS ADDRESS
     bool public initialized = false;
+    address public tasks;
 
     // TOKEN AMOUNT CHANGED EVENT
-    event Update(address user, uint amount);
+    event Update(
+        address user,
+        uint amount
+    );
 
     // INITIALIZE PARAMS
     function init(uint _price, address _tasks) public {
@@ -20,22 +23,18 @@ contract Token {
         require(!initialized, 'contract has already been initialized');
 
         // SET PARAMS
-        price = _price;
+        Price = _price;
         tasks = _tasks;
         initialized = true;
     }
 
     // FETCH TOKEN PRICE
-    function fetch() public view returns(uint) {
-
-        // CONDITION
-        require(initialized, 'contract has not been initialized');
-
-        return price;
+    function price() public view returns(uint) {
+        return Price;
     }
 
-    // CHECK USER TOKEN AMOUNT
-    function check(address user) public view returns(uint) {
+    // FETCH USER BALANCE
+    function balance(address user) public view returns(uint) {
         return tokens[user];
     }
 
@@ -44,10 +43,12 @@ contract Token {
 
         // CONDITIONS
         require(initialized, 'contract has not been initialized');
-        require(msg.value == amount * price, 'insufficient funds');
+        require(msg.value == amount * Price, 'insufficient funds');
 
-        // INCREASE TOKEN COUNT FOR SENDER & EMIT EVENT
+        // INCREASE TOKEN COUNT FOR SENDER
         tokens[msg.sender] += amount;
+
+        // SEND EVENT
         emit Update(msg.sender, tokens[msg.sender]);
     }
 
@@ -56,11 +57,13 @@ contract Token {
 
         // CONDITIONS
         require(initialized, 'contract has not been initialized');
-        require(msg.sender == tasks, 'bad caller');
+        require(msg.sender == tasks, 'you cannot call this method');
         require(tokens[user] >= amount, 'user token count exceeded');
 
-        // DECREASE TOKEN COUNT FOR USER & EMIT EVENT
+        // DECREASE TOKEN COUNT FOR USER
         tokens[user] -= amount;
+
+        // SEND EVENT
         emit Update(user, tokens[user]);
     }
 
@@ -69,13 +72,13 @@ contract Token {
 
         // CONDITIONS
         require(initialized, 'contract has not been initialized');
-        require(tokens[msg.sender] >= amount, 'you dont have that amount of tokens');
+        require(tokens[msg.sender] >= amount, 'user token count exceeded');
 
         // REDUCE TOKENS FROM SENDER, INCREASE THEM FOR USER
         tokens[msg.sender] -= amount;
         tokens[user] += amount;
 
-        // EMIT EVENT FOR BOTH USERS
+        // SEND EVENT TO BOTH USERS
         emit Update(msg.sender, tokens[msg.sender]);
         emit Update(user, tokens[user]);
     }

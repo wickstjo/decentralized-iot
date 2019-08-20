@@ -1,7 +1,7 @@
 // DEFAULT VALUES
 const values = {
-   user: [],
-   all: []
+   history: [],
+   open: []
 }
 
 // FUNCTION TYPES
@@ -9,15 +9,15 @@ function reducer(state, action) {
    switch (action.type) {
 
       // SET USER TASKS
-      case 'user': { return {
+      case 'history': { return {
          ...state,
-         user: action.payload
+         history: action.payload
       }}
 
       // SET ALL TASKS
-      case 'all': { return {
+      case 'open': { return {
          ...state,
-         all: action.payload
+         open: action.payload
       }}
 
       // FALLBACK

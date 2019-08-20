@@ -2,73 +2,65 @@ import React, { useContext, useReducer, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 import { reducer, values } from '../states/token';
 
-import { price, check, event } from '../contracts/token';
+import { price, balance, event } from '../contracts/token';
 import { assess } from '../funcs/blockchain';
-import { keys } from '../resources/settings.json';
 
 import TokenForm from '../components/forms/token';
 import List from '../components/list';
 
 function Tokens() {
 
-   // GLOBAL STATE
+   // STATES
    const { state, dispatch } = useContext(Context);
-
-   // LOCAL STATE
-   const [local, set_local] = useReducer(reducer, values)
+   const [ local, set_local ] = useReducer(reducer, values)
 
    // ON LOAD
    useEffect(() => {
-      price(state).then(result => {
-         assess({
-            next: (price) => {
 
-               // SET PRICE
+      // FETCH TOKEN PRICE
+      price(state).then(result => { assess({
+         next: (price) => {
+
+            // SET PRICE
+            set_local({
+               type: 'price',
+               payload: price
+            })
+      
+            // FETCH USER BALANCE
+            balance(state.keys.public, state).then(result => { assess({
+               next: (balance) => {
+            
+                  // SET BALANCE
+                  set_local({
+                     type: 'balance',
+                     payload: balance
+                  })
+               }
+            }, result, dispatch) })
+         }
+      }, result, dispatch) })
+
+      // BALANCE CHANGE EVENT
+      const changes = event({
+         name: 'Update',
+         action: (values) => {
+
+            // IF ITS USER RELATED
+            if (values.user === state.keys.public) {
+
+               // RESET BALANCE
                set_local({
-                  type: 'price',
-                  payload: price
-               })
-         
-               // CHECK USER BALANCE
-               check(keys.public, state).then(result => {
-                  assess({
-                     next: (balance) => {
-                  
-                        // SET BALANCE
-                        set_local({
-                           type: 'balance',
-                           payload: balance
-                        })
-                     }
-                  }, result, dispatch)
+                  type: 'balance',
+                  payload: values.amount
                })
             }
-         }, result, dispatch)
-      })
-
-      // USER ADDED EVENT
-      const foo = event(state);
-
-      // SUBSCRIBE
-      foo.on('data', event => {
-         
-         // DECONSTRUCT VALUES
-         const { user, amount } = event.returnValues;
-
-         // IF THE EVENT WAS USER RELATED
-         if (user === keys.public) {
-
-            // SET BALANCE
-            set_local({
-               type: 'balance',
-               payload: amount
-            })
          }
-      })
+      }, state);
 
       // UNSUBSCRIBE
       return () => {
-         foo.unsubscribe();
+         changes.unsubscribe();
       }
    }, [])
 

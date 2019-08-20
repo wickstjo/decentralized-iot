@@ -8,27 +8,27 @@ import { Token } from './Token.sol';
 
 contract Tasks {
 
-    // LIST OF OPEN TASKS
-    Task[] tasks;
-    mapping(address => Task[]) collections;
+    // ALL TASKS & USER HISTORY
+    Task[] public all;
+    mapping(address => Task[]) History;
 
-    // HELPER CONTRACTS
+    // INIT STATUS
+    bool public initialized = false;
+
+    // APP CONTRACTS
     Devices devices;
     Users users;
     Token token;
 
-    // HAS CONTRACT BEEN INITIALIZED
-    bool public initialized = false;
-
     // TASK ADDED EVENT
-    event Update(Task[] tasks);
+    event Update (
+        Task[] tasks,
+        address user,
+        Task[] history
+    );
 
     // INITIALIZE HELPER CONTRACTS
-    function init(
-        Devices _devices,
-        Users _users,
-        Token _token
-    ) public {
+    function init(Devices _devices, Users _users, Token _token) public {
 
         // CONDITION
         require(!initialized, 'contract has already been initialized');
@@ -43,24 +43,22 @@ contract Tasks {
     }
 
     // FETCH ALL OPEN TASKS
-    function fetch() public view returns(Task[] memory) {
+    function tasks() public view returns(Task[] memory) {
+        return all;
+    }
 
-        // CONDITIONS
-        require(initialized, 'contracts have not been initialized');
-
-        return tasks;
+    // FETCH USER HISTORY
+    function history(address user) public view returns(Task[] memory) {
+        return History[user];
     }
 
     // ADD TASK ENTRY
-    function add (
-        uint reputation,
-        string memory encryption
-    ) public payable {
+    function add(uint reputation, string memory encryption) public payable {
 
         // CONDITIONS
         require(initialized, 'contracts have not been initialized');
         require(users.exists(msg.sender), 'you are not a registered user');
-        require(token.check(msg.sender) >= 1, 'you do not have the tokens to do this');
+        require(token.balance(msg.sender) >= 1, 'you do not have the tokens to do this');
 
         // REMOVE A TOKEN FROM SENDER
         token.remove(1, msg.sender);
@@ -74,14 +72,15 @@ contract Tasks {
             users
         );
 
-        // PUSH TO LIST & EMIT EVENT
-        tasks.push(task);
-        collections[msg.sender].push(task);
-        emit Update(tasks);
-    }
+        // PUSH TO OPEN LIST & USER HISTORY
+        all.push(task);
+        History[msg.sender].push(task);
 
-    // FETCH USER TASK COLLECTION
-    function collection(address user) public view returns(Task[] memory) {
-        return collections[user];
+        // SEND EVENT
+        emit Update(
+            all,
+            msg.sender,
+            History[msg.sender]
+        );
     }
 }

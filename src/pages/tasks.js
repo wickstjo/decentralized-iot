@@ -2,70 +2,73 @@ import React, { useContext, useReducer, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 import { reducer, values } from '../states/tasks';
 
-import { fetch, collection, event, filter } from '../contracts/task';
+import { tasks, history, event, filter } from '../contracts/task';
 import { assess } from '../funcs/blockchain';
-import { keys } from '../resources/settings';
 
 import Links from '../components/links';
 import TaskForm from '../components/forms/task';
 
 function Tasks() {
 
-   // GLOBAL STATE 
+   // STATES
    const { state, dispatch } = useContext(Context);
-
-   // LOCAL STATE
-   const [local, set_local] = useReducer(reducer, values);
+   const [ local, set_local ] = useReducer(reducer, values);
 
    // ON LOAD
    useEffect(() => {
 
-      // FETCH ALL TASKS
-      fetch(state).then(result => {
-         assess({
-            next: (all) => {
+      // FETCH ALL OPEN TASKS
+      tasks(state).then(result => { assess({
+         next: (tasks) => {
 
-               // FILTER OUT COMPLETED & SET
-               filter(all, state).then(filtered => {
-                  
-                  // SET ALL TASKS
+            // FILTER OUT COMPLETED & SET
+            filter(tasks, state).then(filtered => {
+               
+               // SET OPEN
+               set_local({
+                  type: 'open',
+                  payload: filtered
+               })
+            })
+
+            // FETCH USER HISTORY
+            history(state).then(result => { assess({
+               next: (history) => {
+
+                  // SET HISTORY
                   set_local({
-                     type: 'all',
-                     payload: filtered
+                     type: 'history',
+                     payload: history
                   })
-               })
+               }
+            }, result, dispatch) })
+         }
+      }, result, dispatch) })
 
-               // FETCH USER TASKS
-               collection(keys.public, state).then(result => {
-                  assess({
-                     next: (user) => {
-
-                        // SET USER TASKS
-                        set_local({
-                           type: 'user',
-                           payload: user
-                        })
-                     }
-                  }, result, dispatch)
-               })
-            }
-         }, result, dispatch)
-      })
-
-      // USER ADDED EVENT
+      // TASK ADDED EVENT
       const additions = event({
          name: 'Update',
          action: (values) => {
 
-            // FILTER ALL TASKS
+            // FILTER OUT COMPLETED
             filter(values.tasks, state).then(filtered => {
 
-               // SET ALL
+               // SET OPEN
                set_local({
-                  type: 'all',
+                  type: 'open',
                   payload: filtered
                })
             })
+
+            // IF RELATED TO THE USER
+            if (values.user === state.keys.public) {
+
+               // SET HISTORY
+               set_local({
+                  type: 'history',
+                  payload: values.history
+               })
+            }
          }
       }, state)
 
@@ -81,7 +84,7 @@ function Tasks() {
             <Links
                header={ 'your tasks' }
                error={ 'No tasks found.' }
-               data={ local.user }
+               data={ local.history }
                url={ 'http://localhost:3000/tasks/' }
             />
          </div>
@@ -89,7 +92,7 @@ function Tasks() {
             <Links
                header={ 'available tasks' }
                error={ 'No tasks found.' }
-               data={ local.all }
+               data={ local.open }
                url={ 'http://localhost:3000/tasks/' }
             />
             <TaskForm />
