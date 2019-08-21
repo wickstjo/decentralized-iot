@@ -20,29 +20,22 @@ function init(devices, users, token, state) {
 }
 
 // FETCH ALL OPEN TASKS
-function tasks(state) {
+function fetch(state) {
     return call({
-        query: state.contracts.tasks.methods.tasks()
-    })
-}
-
-// FETCH USER HISTORY TASKS
-function history(state) {
-    return call({
-        query: state.contracts.tasks.methods.history(state.keys.public)
+        query: state.contracts.tasks.methods.fetch()
     })
 }
 
 // LIST A TASK
-function add({ reputation, reward, encryption }, state) {
+function add({ name, reputation, reward, encryption }, state) {
     return transaction({
         query: state.contracts.tasks.methods.add(
+            name,
             reputation,
             encryption
         ),
         contract: state.contracts.tasks._address,
-        payable: reward,
-        gas: 5000000
+        payable: reward
     }, state)
 }
 
@@ -59,10 +52,11 @@ function details(task, state) {
         query: contract.methods.details(),
         modify: (response) => {
             return {
-                reputation: response[0],
-                reward: response[1],
-                encryption: response[2],
-                locked: response[3]
+                name: response[0],
+                reputation: response[1],
+                reward: response[2],
+                encryption: response[3],
+                locked: response[4]
             }
         }
     })
@@ -80,8 +74,7 @@ function accept(task, device, reward, state) {
     return transaction({
         query: contract.methods.accept(device),
         contract: task,
-        payable: reward / 2,
-        gas: 5000000
+        payable: reward / 2
     }, state)
 }
 
@@ -130,36 +123,23 @@ function event({ name, action }, state) {
 }
 
 // FILTER COMPLETED TASKS
-function filter(tasks, state) {
-
-    // PLACEHOLDER
-    const promises = [];
+function filter(tasks) {
     const container = [];
 
     // CREATE PROMISES
     tasks.forEach(task => {
-        promises.push(details(task, state));
+        if (task !== '0x0000000000000000000000000000000000000000') {
+            container.push(task);
+        }
     })
 
-    // WAIT FOR ALL OF THEM TO RESOLVE, THEN LOOP THROUGH
-    return Promise.all(promises).then(results => {
-        results.forEach((result, index) => {
-
-            // PUSH ACTIVE TASKS
-            if (result.success && !result.data.locked) {
-                container.push(tasks[index])
-            }
-        })
-
-        return container;
-    })
+    return container;
 }
 
 export {
     check,
     init,
-    tasks,
-    history,
+    fetch,
     add,
     details,
     accept,

@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
 import { collection, event } from '../contracts/device';
-import { keys } from '../resources/settings.json';
 import { assess } from '../funcs/blockchain';
 
 import Links from '../components/links';
@@ -16,23 +15,21 @@ function Device() {
 
    // FETCH DETAILS
    useEffect(() => {
-      collection(keys.public, state).then(result => {
-         assess({
-            next: (devices) => {
-         
-               // SET STATE
-               set_local(devices)
-            }
-         }, result, dispatch)
-      })
+      collection(state.keys.public, state).then(result => { assess({
+         next: (devices) => {
+      
+            // SET STATE
+            set_local(devices)
+         }
+      }, result, dispatch) })
 
       // DEVICE ADDED EVENT
       const added = event({
          name: 'Update',
          action: (values) => {
 
-            // SET BALANCE
-            if (values.user === keys.public) {
+            // IF ITS USER RELATED
+            if (values.user === state.keys.public) {
 
                // SET BALANCE
                set_local(values.devices)

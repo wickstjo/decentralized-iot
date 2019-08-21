@@ -9,8 +9,7 @@ import { Token } from './Token.sol';
 contract Tasks {
 
     // ALL TASKS & USER HISTORY
-    Task[] public all;
-    mapping(address => Task[]) History;
+    Task[] public tasks;
 
     // INIT STATUS
     bool public initialized = false;
@@ -21,11 +20,7 @@ contract Tasks {
     Token token;
 
     // TASK ADDED EVENT
-    event Update (
-        Task[] tasks,
-        address user,
-        Task[] history
-    );
+    event Update (Task[] tasks);
 
     // INITIALIZE HELPER CONTRACTS
     function init(Devices _devices, Users _users, Token _token) public {
@@ -43,17 +38,12 @@ contract Tasks {
     }
 
     // FETCH ALL OPEN TASKS
-    function tasks() public view returns(Task[] memory) {
-        return all;
-    }
-
-    // FETCH USER HISTORY
-    function history(address user) public view returns(Task[] memory) {
-        return History[user];
+    function fetch() public view returns(Task[] memory) {
+        return tasks;
     }
 
     // ADD TASK ENTRY
-    function add(uint reputation, string memory encryption) public payable {
+    function add(string memory name, uint reputation, string memory encryption) public payable {
 
         // CONDITIONS
         require(initialized, 'contracts have not been initialized');
@@ -66,21 +56,27 @@ contract Tasks {
         // INSTANTIATE NEW TASK
         Task task = (new Task).value(msg.value)(
             msg.sender,
+            name,
             reputation,
             encryption,
+            tasks.length,
             devices,
             users
         );
 
-        // PUSH TO OPEN LIST & USER HISTORY
-        all.push(task);
-        History[msg.sender].push(task);
+        // PUSH TO OPEN LIST & SEND EVENT
+        tasks.push(task);
+        emit Update(tasks);
+    }
 
-        // SEND EVENT
-        emit Update(
-            all,
-            msg.sender,
-            History[msg.sender]
-        );
+    // REMOVE TASK
+    function remove(uint index) public {
+
+        // CONDITION
+        require(tasks[index] == Task(msg.sender), 'you are not permitted to call this');
+
+        // DELETE & SEND EVENT
+        delete tasks[index];
+        emit Update(tasks);
     }
 }

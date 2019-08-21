@@ -1,11 +1,10 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
-import { details } from '../contracts/user';
+import { fetch, details, results } from '../contracts/user';
 import { assess } from '../funcs/blockchain';
 
 import List from '../components/list';
-import ResultForm from '../components/forms/result';
 import Error from '../components/error';
 
 function User({ match }) {
@@ -22,21 +21,33 @@ function User({ match }) {
    // FETCH DETAILS
    useEffect(() => {
       if (state.web3.utils.isAddress(match.params.address)) {
+
+         // FETCH USER LOCATION
+         fetch(match.params.address, state).then(result => { assess({
+            next: (location) => {
          
-         // FETCH USER DETAILS
-         details(match.params.address, state).then(result => {
-            assess({
-               next: (details) => {
-            
-                  // SET STATE
-                  set_local({
-                     ...local,
-                     details: details,
-                     found: true
-                  })
-               }
-            }, result, dispatch)
-         })
+               // FETCH USER DETAILS
+               details(location, state).then(result => { assess({
+                  next: (details) => {
+               
+                     // SET STATE
+                     set_local({
+                        ...local,
+                        details: details,
+                        found: true
+                     })
+
+                     // FETCH TASK RESULTS
+                     results(location, state).then(result => { assess({
+                        next: (foo) => {
+                     
+                           console.log(foo)
+                        }
+                     }, result, dispatch) })
+                  }
+               }, result, dispatch) })
+            }
+         }, result, dispatch) })
       }
    }, [])
 
@@ -48,12 +59,12 @@ function User({ match }) {
          <Fragment>
             <div>
                <List
-                  header={ 'details' }
+                  header={ 'user details' }
                   data={ local.details }
                />
             </div>
             <div>
-               <ResultForm user={ match.params.address } />
+               
             </div>
          </Fragment>
       )}

@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 contract User {
 
@@ -8,8 +9,16 @@ contract User {
     uint public reputation;
     bool public isset;
 
+    // ANSWER STRUCT
+    struct answer {
+        address location;
+        string name;
+        string ipfs;
+        uint index;
+    }
+
     // TASK RESULTS
-    mapping(address => string) results;
+    answer[] Results;
 
     constructor(string memory _name, uint256 _joined) public {
         name = _name;
@@ -20,19 +29,38 @@ contract User {
 
     // FETCH USER DETAILS
     function details() public view returns(string memory, uint256, uint) {
-        return (name, joined, reputation);
+        return (
+            name,
+            joined,
+            reputation
+        );
     }
 
-    // ADD TASK RESULT
-    function add(string memory ipfs) public {
-        results[msg.sender] = ipfs;
+    // FETCH ALL RESULTS
+    function results() public view returns(answer[] memory) {
+        return Results;
     }
 
-    // FETCH TASK RESULT
-    function fetch(address task) public view returns (string memory) {
+    // ADD RESULT
+    function add(string memory _name, string memory _ipfs) public {
+
+        // CONSTRUCT TEMP ANSWER
+        answer memory temp = answer({
+            location: msg.sender,
+            name: _name,
+            ipfs: _ipfs,
+            index: Results.length
+        });
+
+        // PUSH
+        Results.push(temp);
+    }
+
+    // FETCH SPECIFIC RESULT
+    function result(uint index) public view returns (answer memory) {
 
         // CONDITION
-        require(bytes(results[task]).length != 0, 'No response found');
-        return results[task];
+        require(Results.length >= 0 && Results.length <= index, 'not in range');
+        return Results[index];
     }
 }

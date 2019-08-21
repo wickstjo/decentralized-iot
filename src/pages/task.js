@@ -17,7 +17,7 @@ function Task({ match }) {
    // LOCAL STATE
    const [local, set_local] = useState({
       found: false,
-      data: {}
+      details: {}
    })
 
    // ON LOAD
@@ -25,19 +25,17 @@ function Task({ match }) {
       if (state.web3.utils.isAddress(match.params.address)) {
 
          // FETCH TASK DETAILS
-         details(match.params.address, state).then(result => {
-            assess({
-               next: (details) => {
-            
-                  // SET LOCAL STATE
-                  set_local({
-                     ...local,
-                     found: true,
-                     data: details
-                  })
-               }
-            }, result, dispatch)
-         })
+         details(match.params.address, state).then(result => { assess({
+            next: (details) => {
+         
+               // SET DETAILS
+               set_local({
+                  ...local,
+                  found: true,
+                  details: details
+               })
+            }
+         }, result, dispatch) })
       }
    }, [])
 
@@ -51,10 +49,11 @@ function Task({ match }) {
                <List
                   header={ 'task details' }
                   data={{
-                     'locked': local.data.locked ? 'True' : 'False',
-                     'required reputation': local.data.reputation,
-                     'reward in wei': local.data.reward,
-                     'public encryption key': local.data.encryption
+                     'name': local.details.name,
+                     'required reputation': local.details.reputation,
+                     'reward in wei': local.details.reward,
+                     'public encryption key': local.details.encryption,
+                     'locked': local.details.locked ? 'True' : 'False',
                   }}
                />
                <TaskActions location={ match.params.address } />

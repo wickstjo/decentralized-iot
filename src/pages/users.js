@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
-import { collection, event } from '../contracts/user';
+import { all, event } from '../contracts/user';
 import { assess } from '../funcs/blockchain';
 
 import Links from '../components/links';
@@ -17,7 +17,7 @@ function Users() {
 
    // FETCH ALL USERS
    useEffect(() => {
-      collection(state).then(result => {
+      all(state).then(result => {
          assess({
             next: (users) => {
 

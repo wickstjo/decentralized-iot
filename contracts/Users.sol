@@ -7,7 +7,7 @@ contract Users {
 
     // USER & TOKEN MAPS
     mapping (address => User) public users;
-    address[] public all;
+    address[] public All;
 
     // USER ADDED EVENT
     event Update(address[] users);
@@ -21,7 +21,7 @@ contract Users {
         return false;
     }
 
-    // FETCH USER CONTRACT ADDRESS
+    // FETCH USER
     function fetch(address user) public view returns(User) {
 
         // CONDITION
@@ -29,15 +29,6 @@ contract Users {
 
         // FETCH DETAILS
         return users[user];
-    }
-
-    // FETCH USER DETAILS
-    function details(address user) public view returns(string memory, uint256, uint) {
-
-        // CONDITION
-        require(exists(user), 'user does not exist');
-
-        return users[user].details();
     }
 
     // ADD ENTRY TO HASHMAP
@@ -48,14 +39,14 @@ contract Users {
 
         // PUSH IT TO BOTH CONTAINERS
         users[msg.sender] = new User(name, block.timestamp);
-        all.push(msg.sender);
+        All.push(msg.sender);
 
         // EMIT EVENT
-        emit Update(all);
+        emit Update(All);
     }
 
     // FETCH OWNER DEVICE COLLECTION
-    function collection() public view returns(address[] memory) {
-        return all;
+    function all() public view returns(address[] memory) {
+        return All;
     }
 }

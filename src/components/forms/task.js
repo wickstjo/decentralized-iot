@@ -17,6 +17,10 @@ function Task() {
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
+      name: {
+         value: '',
+         status: null
+      },
       reputation: {
          value: '',
          status: null
@@ -34,6 +38,7 @@ function Task() {
    // ADD TASK
    function Add() {
       add({
+         name: local.name.value,
          reputation: local.reputation.value,
          reward: local.reward.value,
          encryption: local.encryption.value
@@ -47,6 +52,13 @@ function Task() {
    return (
       <Fragment>
          <Form header={ 'create task' }>
+            <Text
+               placeholder={ 'Task Name' }
+               value={ local.name.value }
+               range={[ 5, 30 ]}
+               update={ set_local }
+               id={ 'name' }
+            />
             <Number
                placeholder={ 'Minimum Reputation' }
                value={ local.reputation.value }
@@ -74,6 +86,7 @@ function Task() {
                header={ 'Create' }
                func={ Add }
                require={[
+                  local.name.status,
                   local.reputation.status,
                   local.encryption.status,
                   local.reward.status

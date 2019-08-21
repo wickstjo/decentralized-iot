@@ -9,16 +9,17 @@ contract Devices {
 
     // STORAGE HASHMAPS
     mapping (string => Device) devices;
-    mapping (address => string[]) collections;
+    mapping (address => string[]) owners;
 
-    // INITIALIZED STATUS
+    // INIT STATUS & HELPER CONTRACT
     bool initialized = false;
-
-    // HELPER CONTRACT
     Users users;
 
     // DEVICE ADDED EVENT
-    event Update(address user, string[] devices);
+    event Update(
+        address user,
+        string[] devices
+    );
 
     // INITIALIZE PARAMS
     function init(Users _users) public {
@@ -42,10 +43,8 @@ contract Devices {
 
     // CHECK IF SENDER IS DEVICE OWNER
     function isOwner(string memory id, address sender) public view returns(bool) {
-        if (exists(id)) {
-            if (devices[id].owner() == sender) {
-                return true;
-            }
+        if (exists(id) && devices[id].owner() == sender) {
+            return true;
         }
 
         return false;
@@ -62,7 +61,7 @@ contract Devices {
 
     // FETCH OWNER DEVICE COLLECTION
     function collection(address sender) public view returns(string[] memory) {
-        return collections[sender];
+        return owners[sender];
     }
 
     // CREATE NEW DEVICE INSTANCE
@@ -73,9 +72,14 @@ contract Devices {
         require(!exists(id), 'device already exist');
         require(users.exists(msg.sender), 'you are not a registered user');
 
-        // PUSH NEW DEVICE & ADD TO OWNERS COLLECTION & EMIT EVENT
+        // PUSH NEW DEVICE & ADD TO OWNERS COLLECTION
         devices[id] = new Device(msg.sender, name);
-        collections[msg.sender].push(id);
-        emit Update(msg.sender, collections[msg.sender]);
+        owners[msg.sender].push(id);
+
+        // SEND EVENT
+        emit Update(
+            msg.sender,
+            owners[msg.sender]
+        );
     }
 }

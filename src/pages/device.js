@@ -21,51 +21,47 @@ function Device({ match }) {
    useEffect(() => {
 
       // FETCH DEVICE CONTRACT
-      fetch(match.params.hash, state).then(result => {
-         assess({
-            next: (location) => {
+      fetch(match.params.hash, state).then(result => { assess({
+         next: (location) => {
 
-               // SET LOCATION
-               set_local({
-                  type: 'location',
-                  payload: location
-               })
-         
-               // FETCH DEVICE DETAILS
-               details(location, state).then(result => {
-                  assess({
-                     next: (details) => {
-                  
-                        // SET DETAILS
+            // SET LOCATION
+            set_local({
+               type: 'location',
+               payload: location
+            })
+      
+            // FETCH DEVICE DETAILS
+            details(location, state).then(result => { assess({
+               next: (details) => {
+            
+                  // SET DETAILS
+                  set_local({
+                     type: 'details',
+                     payload: details
+                  })
+
+                  // SUBSCRIBE TO STATUS TOGGLES
+                  const toggles = event({
+                     device: location,
+                     name: 'Toggled',
+                     action: (values) => {
+                        
+                        // SET STATUS
                         set_local({
-                           type: 'details',
-                           payload: details
+                           type: 'toggle',
+                           payload: values.status
                         })
-
-                        // SUBSCRIBE TO STATUS TOGGLES
-                        const toggles = event({
-                           device: location,
-                           name: 'Toggled',
-                           action: (values) => {
-                              
-                              // SET STATUS
-                              set_local({
-                                 type: 'toggle',
-                                 payload: values.status
-                              })
-                           }
-                        }, state)
-
-                        // UNSUBSCRIBE
-                        return () => {
-                           toggles.unsubscribe();
-                        }
                      }
-                  }, result, dispatch)
-               })
-            }
-         }, result, dispatch)
-      })
+                  }, state)
+
+                  // UNSUBSCRIBE
+                  return () => {
+                     toggles.unsubscribe();
+                  }
+               }
+            }, result, dispatch) })
+         }
+      }, result, dispatch) })
    }, [])
 
    // RENDER CONTENT

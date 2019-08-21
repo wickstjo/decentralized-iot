@@ -1,23 +1,16 @@
 import { transaction, call, assemble } from '../funcs/blockchain';
 
-// FETCH USER
-function collection(state) {
+// FETCH ALL USERS
+function all(state) {
     return call({
-        query: state.contracts.users.methods.collection()
+        query: state.contracts.users.methods.all()
     })
 }
 
-// FETCH USER
-function details(user, state) {
+// FETCH USER ADDRESS
+function fetch(user, state) {
     return call({
-        query: state.contracts.users.methods.details(user),
-        modify: (response) => {
-            return {
-                name: response[0],
-                joined: response[1],
-                reputation: response[2],
-            }
-        }
+        query: state.contracts.users.methods.fetch(user)
     })
 }
 
@@ -34,31 +27,46 @@ function event(state) {
     return state.contracts.users.events.Update();
 }
 
-function fetch(user, state) {
-    return call({
-        query: state.contracts.users.methods.fetch(user)
-    })
-}
-
-// TASK TASK RESULT
-function check(task, user, state) {
+// FETCH USER DETAILS
+function details(location, state) {
 
     // GENERATE REFERENCE
     const contract = assemble({
-        address: user,
+        address: location,
         contract: 'user'
     }, state);
 
     return call({
-        query: contract.methods.fetch(task)
+        query: contract.methods.details(),
+        modify: (response) => {
+            return {
+                name: response[0],
+                joined: response[1],
+                reputation: response[2]
+            }
+        }
+    })
+}
+
+// FETCH USER TASK RESULTS
+function results(location, state) {
+
+    // GENERATE REFERENCE
+    const contract = assemble({
+        address: location,
+        contract: 'user'
+    }, state);
+
+    return call({
+        query: contract.methods.results()
     })
 }
 
 export {
-    collection,
-    details,
+    all,
+    fetch,
     add,
     event,
-    fetch,
-    check
+    details,
+    results
 }

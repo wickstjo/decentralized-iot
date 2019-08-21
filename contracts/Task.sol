@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 // IMPORT HELPER CONTRACT INTERFACES
 import { Devices } from './Devices.sol';
 import { Users } from './Users.sol';
+import { Tasks } from './Tasks.sol';
 
 contract Task {
 
@@ -11,39 +12,51 @@ contract Task {
     address payable public seller;
 
     // TASK PARAMS
+    string public name;
     uint public reputation;
     string public encryption;
     uint public reward;
     bool public locked;
 
+    // TASK INDEX
+    uint position;
+
     // HELPER CONTRACTS
     Devices public devices;
     Users public users;
+    Tasks public tasks;
 
     // WHEN THE CONTRACT IS CREATED
     constructor(
         address payable _buyer,
+        string memory _name,
         uint _reputation,
         string memory _encryption,
+        uint _position,
         Devices _devices,
         Users _users
     ) public payable {
 
         // SET PARAMS
-        buyer = _buyer;
-        locked = false;
+        name = _name;
         reputation = _reputation;
         encryption = _encryption;
+        position = _position;
+
+        buyer = _buyer;
+        locked = false;
         reward = msg.value;
 
         // SET CONTRACTS
         devices = _devices;
         users = _users;
+        tasks = Tasks(msg.sender);
     }
 
     // FETCH TASK DETAILS
-    function details() public view returns (uint, uint, string memory, bool) {
+    function details() public view returns (string memory, uint, uint, string memory, bool) {
         return (
+            name,
             reputation,
             reward,
             encryption,
@@ -54,11 +67,11 @@ contract Task {
     // ACCEPT TASK
     function accept(string memory id) public payable {
 
-        // CONDITIONS
+        // CHECK LOCKED STATUS & FUNDS
         require(!locked, 'the contract is locked');
         require(msg.value >= reward / 2, 'insufficient funds given');
 
-        // CHECK THAT USER & DEVICE ARE REGISTERED
+        // CHECK REGISTERATION STATUS
         require(users.exists(msg.sender), 'you are not a registered user');
         require(devices.exists(id), 'the device is not registered');
 
@@ -81,8 +94,11 @@ contract Task {
         // CONDITIONS
         require(msg.sender == seller, 'you are not the seller');
 
-        // ADD RESPONSE TO BUYER & SELF DESTRUCT
-        users.fetch(buyer).add(ipfs);
+        // ADD RESPONSE TO BUYER
+        users.fetch(buyer).add(name, ipfs);
+
+        // REMOVE TASK & SELF DESTRUCT
+        tasks.remove(position);
         selfdestruct(seller);
     }
 
@@ -93,7 +109,8 @@ contract Task {
         require(msg.sender == buyer, 'You are not the creator');
         require(!locked, 'Task has already been accepted');
 
-        // SELF DESTRUCT
+        // REMOVE TASK & SELF DESTRUCT
+        tasks.remove(position);
         selfdestruct(buyer);
     }
 }

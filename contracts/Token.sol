@@ -6,7 +6,7 @@ contract Token {
     mapping (address => uint) public tokens;
     uint public Price;
 
-    // INIT STATUS & TASKS ADDRESS
+    // INIT STATUS & HELPER CONTRACT
     bool public initialized = false;
     address public tasks;
 
