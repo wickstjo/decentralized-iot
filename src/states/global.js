@@ -13,11 +13,12 @@ const values = {
    web3: undefined,
    contracts: undefined,
    interfaces: undefined,
+   ipfs: undefined,
 
    // PROMPT & MESSAGES
    prompt: {
       show: false,
-      content: null
+      content: {}
    },
    messages: []
 }
@@ -38,6 +39,17 @@ function reducer(state, action) {
          prompt: {
             ...state.prompt,
             show: false
+         }
+      }}
+
+      case 'show-prompt': { return {
+         ...state,
+         prompt: {
+            content: {
+               type: action.payload.type,
+               param: action.payload.param
+            },
+            show: true
          }
       }}
 

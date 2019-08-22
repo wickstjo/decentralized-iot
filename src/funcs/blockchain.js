@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import IPFS from 'ipfs-http-client';
 import { gateways } from '../resources/settings.json';
 import references from '../resources/latest.json';
 
@@ -21,7 +22,11 @@ function init() {
          'device',
          'task',
          'user'
-      ])
+      ]),
+      ipfs: IPFS({
+         host: gateways.ipfs.host,
+         port: gateways.ipfs.port,
+     })
    }
 }
 

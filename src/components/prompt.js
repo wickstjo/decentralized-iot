@@ -5,6 +5,8 @@ import { values, reducer } from '../states/prompt';
 import '../interface/css/prompt.scss';
 import { sleep } from '../funcs/misc';
 
+import Ipfs from './prompt/ipfs';
+
 function Prompt() {
 
     // GLOBAL STATE
@@ -60,7 +62,9 @@ function Prompt() {
     return (
         <div id={ 'prompt' } style={ style }>
             <div id={ 'inner' }>
-                foobar
+                <Content
+                    type={ state.prompt.content.type }
+                />
             </div>
             <span
                 id={ 'close' }
@@ -68,6 +72,21 @@ function Prompt() {
             />
         </div>
     )
+}
+
+function Content({ type }) {
+    switch(type) {
+
+        // IPFS WINDOW
+        case 'ipfs': {
+            return <Ipfs />
+        }
+
+        // FALLBACK
+        default: {
+            return null;
+        }
+    }
 }
 
 export default Prompt;
