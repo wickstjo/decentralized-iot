@@ -20,6 +20,9 @@ contract User {
     // TASK RESULTS
     answer[] Results;
 
+    // TASK COMPLETED EVENT
+    event Finish(answer[] results);
+
     constructor(string memory _name, uint256 _joined) public {
         name = _name;
         joined = _joined;
@@ -52,8 +55,9 @@ contract User {
             index: Results.length
         });
 
-        // PUSH
+        // PUSH RESULT & SEND EVENT
         Results.push(temp);
+        emit Finish(Results);
     }
 
     // FETCH SPECIFIC RESULT

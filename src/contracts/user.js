@@ -22,11 +22,6 @@ function add(name, state) {
     }, state)
 }
 
-// USER ADDED EVENT
-function event(state) {
-    return state.contracts.users.events.Update();
-}
-
 // FETCH USER DETAILS
 function details(location, state) {
 
@@ -60,6 +55,40 @@ function results(location, state) {
     return call({
         query: contract.methods.results()
     })
+}
+
+// USER EVENTS
+function event({ location, name, action }, state) {
+
+    // PLACEHOLDER
+    let contract = null;
+
+    // FETCH CORRECT CONTRACT
+    switch (location) {
+
+        // NO DEVICE WAS SPECIFIED
+        case undefined:
+            contract = state.contracts.users;
+        break;
+
+        // OTHERWISE
+        default:
+            contract = assemble({
+                address: location,
+                contract: 'user'
+            }, state);
+        break;
+    }
+
+    // STATUS CHANGED EVENT
+    const event = contract.events[name]();
+
+    // SUBSCRIBE
+    event.on('data', event => {
+        action(event.returnValues)
+    })
+
+    return event;
 }
 
 export {

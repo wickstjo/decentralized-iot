@@ -110,11 +110,6 @@ function assign(device, task, state) {
 }
 
 // DEVICE ADDED EVENT
-function added(state) {
-    return state.contracts.devices.events.Update();
-}
-
-// DEVICE ADDED EVENT
 function event({ device, name, action }, state) {
 
     // PLACEHOLDER
@@ -158,6 +153,5 @@ export {
     toggle,
     task,
     assign,
-    added,
     event
 }

@@ -1,22 +1,19 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react';
+import React, { useContext, useReducer, useEffect, Fragment } from 'react';
 import { Context } from '../context';
+import { reducer, values } from '../states/user';
 
-import { fetch, details, results } from '../contracts/user';
+import { fetch, details, results, event } from '../contracts/user';
 import { assess } from '../funcs/blockchain';
 
 import List from '../components/list';
+import Inspector from '../components/inspector';
 import Error from '../components/error';
 
 function User({ match }) {
 
-   // GLOBAL STATE
+   // STATES
    const { state, dispatch } = useContext(Context);
-   
-   // LOCAL STATES
-   const [local, set_local] = useState({
-      details: {},
-      found: false
-   })
+   const [ local, set_local ] = useReducer(reducer, values);
 
    // FETCH DETAILS
    useEffect(() => {
@@ -30,18 +27,40 @@ function User({ match }) {
                details(location, state).then(result => { assess({
                   next: (details) => {
                
-                     // SET STATE
+                     // SET DETAILS
                      set_local({
-                        ...local,
-                        details: details,
-                        found: true
+                        type: 'details',
+                        payload: details
                      })
 
                      // FETCH TASK RESULTS
                      results(location, state).then(result => { assess({
-                        next: (foo) => {
-                     
-                           console.log(foo)
+                        next: (results) => {
+
+                           // SET RESULTS
+                           set_local({
+                              type: 'results',
+                              payload: results
+                           })
+
+                           // TASK COMPLETED EVENT
+                           const finished = event({
+                              name: 'Finish',
+                              location: location,
+                              action: (values) => {
+
+                                 // SET RESULTS
+                                 set_local({
+                                    type: 'results',
+                                    payload: values.results
+                                 })
+                              }
+                           }, state);
+
+                           // UNSUBSCRIBE
+                           return () => {
+                              finished.unsubscribe();
+                           }
                         }
                      }, result, dispatch) })
                   }
@@ -64,7 +83,11 @@ function User({ match }) {
                />
             </div>
             <div>
-               
+               <Inspector
+                  header={ 'task results' }
+                  error={ 'No results found.' }
+                  data={ local.results }
+               />
             </div>
          </Fragment>
       )}

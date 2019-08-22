@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { shorten } from '../funcs/misc';
 import Box from './box';
 
-function Inspector({ data, header }) {
+function Inspector({ data, header, error }) {
+   switch (data.length) {
 
-   // LOCAL STATE
-   const [keys, set_keys] = useState([]);
+      case 0: { return (
+         <Box header={ header }>
+            <div className={ 'row' }>{ error }</div>
+         </Box>
+      )}
 
-   // ON LOAD, FISH OUT KEYS
-   useEffect(() => {
-      set_keys(Object.keys(data))
-   }, [])
-
-   return (
-      <Box header={ header }>
-         { keys.map((key, index) => 
-            <div className={ 'row' } id={ 'split' } key={ index }>
-               <div>{ key }:</div>
-               <div>{ shorten(data[key]) }</div>
-            </div>
-         )}
-      </Box>
-   )
+      default: { return (
+         <Box header={ header }>
+            { data.map((item, index) => 
+               <div className={ 'row' } id={ 'split' } key={ index }>
+                  <div>{ item.name }:</div>
+                  <div>{ shorten(item.ipfs) }</div>
+               </div>
+            )}
+         </Box>
+      )}
+   }
 }
 
 export default Inspector;

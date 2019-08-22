@@ -28,16 +28,18 @@ function Users() {
       })
 
       // USER ADDED EVENT
-      const addition = event(state);
+      const added = event({
+         name: 'Update',
+         action: (values) => {
 
-      // SUBSCRIBE
-      addition.on('data', event => {
-         set_local(event.returnValues.users)
-      })
+            // SET LOCAL
+            set_local(values.users)
+         }
+      }, state);
 
       // UNSUBSCRIBE
       return () => {
-         addition.unsubscribe();
+         added.unsubscribe();
       }
    }, [])
    
