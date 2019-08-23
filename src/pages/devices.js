@@ -29,7 +29,7 @@ function Device() {
          action: (values) => {
 
             // IF ITS USER RELATED
-            if (values.user === state.keys.public) {
+            if (values.user.toLowerCase() === state.keys.public) {
 
                // SET BALANCE
                set_local(values.devices)

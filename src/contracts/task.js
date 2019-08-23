@@ -109,10 +109,30 @@ function release(task, state) {
 }
 
 // DEVICE ADDED EVENT
-function event({ name, action }, state) {
+function event({ task, name, action }, state) {
+
+    // PLACEHOLDER
+    let contract = null;
+
+    // FETCH CORRECT CONTRACT
+    switch (task) {
+
+        // NO DEVICE WAS SPECIFIED
+        case undefined:
+            contract = state.contracts.tasks;
+        break;
+
+        // OTHERWISE
+        default:
+            contract = assemble({
+                address: task,
+                contract: 'task'
+            }, state);
+        break;
+    }
 
     // STATUS CHANGED EVENT
-    const event = state.contracts.tasks.events[name]();
+    const event = contract.events[name]();
 
     // SUBSCRIBE
     event.on('data', event => {

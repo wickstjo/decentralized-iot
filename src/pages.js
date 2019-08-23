@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { Context } from './context';
 
 import './interface/css/general.scss';
@@ -19,7 +19,6 @@ import Tasks from './pages/tasks';
 import Task from './pages/task';
 
 // OTHER
-import Home from './pages/home';
 import Token from './pages/tokens';
 import Initialize from './pages/initialize';
 import Error from './pages/error';
@@ -34,15 +33,15 @@ function Pages() {
         return (
             <div id={ 'innerbody' }>
                 <Switch>
-                    <Route exact path="/" component={ Home } />
+                    <Route exact path="/" component={() => <Redirect to={ '/users' } /> } />
                     <Route exact path="/users" component={ Users } />
-                    <Route exact path="/users/:address" component={ User } />
-                    <Route exact path="/tokens" component={ Token } />
+                    <Route path="/users/:address" component={ User } />
+                    <Route path="/tokens" component={ Token } />
                     <Route exact path="/devices" component={ Devices } />
-                    <Route exact path="/devices/:hash" component={ Device } />
+                    <Route path="/devices/:hash" component={ Device } />
                     <Route exact path="/tasks" component={ Tasks } />
-                    <Route exact path="/tasks/:address" component={ Task } />
-                    <Route exact path="/initialize" component={ Initialize } />
+                    <Route path="/tasks/:address" component={ Task } />
+                    <Route path="/initialize" component={ Initialize } />
                     <Route component={ Error } />
                 </Switch>
             </div>

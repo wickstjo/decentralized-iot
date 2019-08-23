@@ -28,10 +28,11 @@ input::placeholder {
 .button-container {
    display: inline-block;
    background: #F1F1F1;
-   border: 1px solid rgb(224, 224, 224);
+   border: 1px solid rgb(190, 190, 190);
    padding: 2px;
    margin-left: 5px;
    margin-bottom: 5px;
+   text-shadow: 1px 1px #292929af;
 }
 
 .bad-button, .good-button {

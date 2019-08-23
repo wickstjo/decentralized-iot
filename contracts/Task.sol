@@ -26,6 +26,9 @@ contract Task {
     Users public users;
     Tasks public tasks;
 
+    // SELF DESTRUCT EVENT
+    event Boom();
+
     // WHEN THE CONTRACT IS CREATED
     constructor(
         address payable _buyer,
@@ -97,8 +100,9 @@ contract Task {
         // ADD RESPONSE TO BUYER
         users.fetch(buyer).add(name, ipfs);
 
-        // REMOVE TASK & SELF DESTRUCT
+        // REMOVE TASK, SEND EVENT & SELF DESTRUCT
         tasks.remove(position);
+        emit Boom();
         selfdestruct(seller);
     }
 
@@ -109,8 +113,9 @@ contract Task {
         require(msg.sender == buyer, 'You are not the creator');
         require(!locked, 'Task has already been accepted');
 
-        // REMOVE TASK & SELF DESTRUCT
+        // REMOVE TASK, SEND EVENT & SELF DESTRUCT
         tasks.remove(position);
+        emit Boom();
         selfdestruct(buyer);
     }
 }

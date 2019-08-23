@@ -8,8 +8,8 @@ function Ipfs() {
    const { state } = useContext(Context);
    const [ url, set_url ] = useState(null);
    const [ dimensions ] = useState({
-      width: 3280 * 0.15,
-      height: 2464 * 0.15
+      width: 3280 * 0.18,
+      height: 2464 * 0.18
    })
 
    // GENERATE IMAGE BLOB

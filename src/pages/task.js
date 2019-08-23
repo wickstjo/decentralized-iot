@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
+import { Redirect } from 'react-router-dom';
 
-import { details } from '../contracts/task';
+import { details, event } from '../contracts/task';
 import { assess } from '../funcs/blockchain';
 
 import List from '../components/list';
@@ -20,6 +21,9 @@ function Task({ match }) {
       details: {}
    })
 
+   // REDIRECT?
+   const [redirect, set_redirect] = useState(false)
+
    // ON LOAD
    useEffect(() => {
       if (state.web3.utils.isAddress(match.params.address)) {
@@ -34,6 +38,31 @@ function Task({ match }) {
                   found: true,
                   details: details
                })
+
+               // SELF DESTRUCT EVENT
+               const destroyed = event({
+                  name: 'Boom',
+                  task: match.params.address,
+                  action: () => {
+
+                     // SEND MSG
+                     dispatch({
+                        type: 'add-message',
+                        payload: {
+                           text: 'the contract has concluded',
+                           type: 'good'
+                        }
+                     })
+
+                     // REDIRECT TO TASKS
+                     set_redirect(true);
+                  }
+               }, state);
+
+               // UNSUBSCRIBE
+               return () => {
+                  destroyed.unsubscribe();
+               }
             }
          }, result, dispatch) })
       }
@@ -60,6 +89,7 @@ function Task({ match }) {
             </div>
             <div>
                <AcceptForm task={ match.params.address } />
+               { redirect ? <Redirect to={ '/tasks' } /> : null }
             </div>
          </Fragment>
       )}

@@ -35,25 +35,33 @@ function User({ match }) {
 
                      // FETCH TASK RESULTS
                      results(location, state).then(result => { assess({
-                        next: (results) => {
+                        next: (response) => {
 
                            // SET RESULTS
                            set_local({
                               type: 'results',
-                              payload: results
+                              payload: response
                            })
 
                            // TASK COMPLETED EVENT
                            const finished = event({
                               name: 'Finish',
                               location: location,
-                              action: (values) => {
+                              action: () => {
 
-                                 // SET RESULTS
-                                 set_local({
-                                    type: 'results',
-                                    payload: values.results
-                                 })
+                                 // STRUCT SENDING IS BUGGY -- TEMP FIX
+                              
+                                 // FETCH TASK RESULTS
+                                 results(location, state).then(result => { assess({
+                                    next: (response) => {
+
+                                       // SET RESULTS
+                                       set_local({
+                                          type: 'results',
+                                          payload: response
+                                       })
+                                    }
+                                 }, result, dispatch) })
                               }
                            }, state);
 

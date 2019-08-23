@@ -2,7 +2,6 @@
    flex: 1;
    display: flex;
    height: 100%;
-   border-top: 1px solid rgb(190, 190, 190);
 
    > div {
       flex: 1;
@@ -10,24 +9,24 @@
    }
 
    > div:nth-child(1) {
-      background: rgb(156, 156, 156);
+      background: rgba(73, 73, 73, 0.055);
    }
 
    > div:nth-child(2) {
-      background: rgb(139, 139, 139);
+      background: rgba(73, 73, 73, 0.123);
       border-left: 1px solid rgb(190, 190, 190);
    }
  
    // DATA CONTAINER
    .box {
-      background: #F1F1F1;
-      border: 1px solid rgb(224, 224, 224);
+      background: rgb(255, 255, 255);
+      border: 1px solid rgb(190, 190, 190);
       padding: 2px;
       padding-bottom: 0px;
       margin-bottom: 5px;
 
       #header, #form-header, .row {
-         background: rgb(70, 135, 179);
+         background: rgba(32, 78, 109, 0.863);
          padding: 7px 9px;
          margin-bottom: 2px;
          color: white;
@@ -36,6 +35,19 @@
 
       #header, #form-header {
          text-transform: uppercase;
+         position: relative;
+         padding: 10px 12px;
+      }
+
+      #header:after, #form-header:after {
+         content: "";
+         background: url('../images/1.png');
+         opacity: 0.2;
+         top: 0;
+         left: 0;
+         bottom: 0;
+         right: 0;
+         position: absolute;
       }
 
       #form-header {
@@ -43,9 +55,10 @@
       }
 
       .row {
-         background: rgb(209, 209, 209);
+         background: rgba(26, 119, 126, 0.397);
+         border-bottom: 2px solid rgba(26, 119, 126, 0.205);
          color: rgb(34, 34, 34);
-         text-shadow: 1px 1px rgb(235, 235, 235);
+         text-shadow: 1px 1px rgb(215, 220, 223);
       }
 
       .row:nth-child(even) {

@@ -46,8 +46,8 @@ function Tokens() {
          name: 'Update',
          action: (values) => {
 
-            // IF ITS USER RELATED
-            if (values.user === state.keys.public) {
+            // IF ITS USER RELATED -- FORCE LOWERCASE ON USER ADDRESS
+            if (values.user.toLowerCase() === state.keys.public) {
 
                // RESET BALANCE
                set_local({
