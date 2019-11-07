@@ -17,7 +17,6 @@
     "build": "react-scripts build",
     "push": "bash scripts/push.sh",
     "ganache": "bash scripts/ganache.sh",
-    "truffle": "bash scripts/truffle.sh",
     "ipfs": "bash scripts/ipfs.sh"
   },
   "eslintConfig": {

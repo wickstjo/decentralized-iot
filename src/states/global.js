@@ -11,7 +11,7 @@ const values = {
 
    // APP TOOLS
    web3: undefined,
-   contracts: undefined,
+   managers: undefined,
    interfaces: undefined,
    ipfs: undefined,
 

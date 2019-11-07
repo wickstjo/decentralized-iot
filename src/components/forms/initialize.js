@@ -2,9 +2,11 @@ import React, { useContext, useReducer, Fragment } from 'react';
 import { Context } from '../../context';
 import reducer from '../../states/input';
 
-import { init as init_tasks } from '../../contracts/task';
-import { init as init_token } from '../../contracts/token';
-import { init as init_devices } from '../../contracts/device';
+import { init as init_user_manager } from '../../contracts/user';
+import { init as init_device_manager } from '../../contracts/device';
+import { init as init_task_manager } from '../../contracts/task';
+import { init as init_token_manager } from '../../contracts/token';
+
 import { assess } from '../../funcs/blockchain';
 import latest from '../../resources/latest.json';
 
@@ -20,48 +22,55 @@ function Initialize() {
 
    // LOCAL STATE
    const [local, set_local] = useReducer(reducer, {
-      price: {
+      user_manager: {
+         value: latest.usermanager.address,
+         status: null
+      },
+      device_manager: {
+         value: latest.devicemanager.address,
+         status: null
+      },
+      task_manager: {
+         value: latest.taskmanager.address,
+         status: null
+      },
+      token_manager: {
+         value: latest.tokenmanager.address,
+         status: null
+      },
+      token_price: {
          value: '',
          status: null
       },
-      tasks: {
-         value: latest.tasks.address,
-         status: null
-      },
-      devices: {
-         value: latest.devices.address,
-         status: null
-      },
-      users: {
-         value: latest.users.address,
-         status: null
-      },
-      token: {
-         value: latest.token.address,
-         status: null
-      }
    })
 
    // INITIALIZE ALL
    function run() {
 
-      // INITIATE TOKENS
-      init_token(local.price.value, local.tasks.value, state).then(result => {
+      // INITIATE TOKEN MANAGER
+      init_token_manager(local.token_price.value, local.task_manager.value, state).then(result => {
          assess({
-            msg: 'token contract initiated'
+            msg: 'token manager initiated'
          }, result, dispatch)
 
-         // INITIATE TASKS
-         init_tasks(local.devices.value, local.users.value, local.token.value, state).then(result => {
+         // INITIATE TASK MANAGER
+         init_task_manager(local.user_manager.value, local.device_manager.value, local.token_manager.value, state).then(result => {
             assess({
-               msg: 'tasks contract initiated'
+               msg: 'task manager initiated'
             }, result, dispatch)
 
-            // INITIATE DEVICES
-            init_devices(local.users.value, state).then(result => {
+            // INITIATE DEVICE MANAGER
+            init_device_manager(local.user_manager.value, local.task_manager.value, state).then(result => {
                assess({
-                  msg: 'devices contract initiated'
+                  msg: 'device manager initiated'
                }, result, dispatch)
+
+               // INITIATE USER MANAGER
+               init_user_manager(local.task_manager.value, state).then(result => {
+                  assess({
+                     msg: 'user manager initiated'
+                  }, result, dispatch)
+               })
             })
          })
       })
@@ -72,34 +81,34 @@ function Initialize() {
          <Form header={ 'initialize contracts' }>
             <Number
                placeholder={ 'Token Price' }
-               value={ local.price.value }
+               value={ local.token_price.value }
                range={[ 1000, 100000 ]}
                update={ set_local }
-               id={ 'price' }
+               id={ 'token_price' }
             />
             <Address
-               placeholder={ 'Tasks Contract' }
-               value={ local.tasks.value }
+               placeholder={ 'Task Manager' }
+               value={ local.task_manager.value }
                update={ set_local }
-               id={ 'tasks' }
+               id={ 'task_manager' }
             />
             <Address
-               placeholder={ 'Devices Contract' }
-               value={ local.devices.value }
+               placeholder={ 'Device Manager' }
+               value={ local.device_manager.value }
                update={ set_local }
-               id={ 'devices' }
+               id={ 'device_manager' }
             />
             <Address
-               placeholder={ 'Users Contract' }
-               value={ local.users.value }
+               placeholder={ 'User Manager' }
+               value={ local.user_manager.value }
                update={ set_local }
-               id={ 'users' }
+               id={ 'user_manager' }
             />
             <Address
-               placeholder={ 'Token Contract' }
-               value={ local.token.value }
+               placeholder={ 'Token Manager' }
+               value={ local.token_manager.value }
                update={ set_local }
-               id={ 'token' }
+               id={ 'token_manager' }
             />
          </Form>
          <div style={{ textAlign: 'right' }}>
@@ -107,11 +116,11 @@ function Initialize() {
                header={ 'Initialize All' }
                func={ run }
                require={[
-                  local.price.status,
-                  local.tasks.status,
-                  local.devices.status,
-                  local.users.status,
-                  local.token.status
+                  local.token_price.status,
+                  local.task_manager.status,
+                  local.device_manager.status,
+                  local.user_manager.status,
+                  local.token_manager.status
                ]}
             />
          </div>

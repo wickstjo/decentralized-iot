@@ -3,7 +3,7 @@ import IPFS from 'ipfs-http-client';
 import { gateways } from '../resources/settings.json';
 import references from '../resources/latest.json';
 
-// INITIALIZE SC & WEB3
+// PARSE SC & WEB3
 function init() {
 
    // ESTABLISH WEB3 CONNECTION
@@ -12,16 +12,16 @@ function init() {
    // RESOLVE WITH REFERENCES
    return {
       web3: web3,
-      contracts: contracts([
-         'devices',
-         'token',
-         'tasks',
-         'users'
-      ], web3),
-      interfaces: interfaces([
+      managers: managers([
+         'user',
          'device',
          'task',
-         'user'
+         'token'
+      ], web3),
+      interfaces: interfaces([
+         'user',
+         'device',
+         'task'
       ]),
       ipfs: IPFS({
          host: gateways.ipfs.host,
@@ -31,7 +31,7 @@ function init() {
 }
 
 // CONSTRUCT SMART CONTRACT REFERENCE
-function contracts(names, web3) {
+function managers(names, web3) {
     
    // RESPONSE PLACEHOLDER
    const response = {};
@@ -39,8 +39,8 @@ function contracts(names, web3) {
    // LOOP THROUGH & COMBINE EACH ABI & ADDRESS
    names.forEach(name => {
       response[name] = new web3.eth.Contract(
-         references[name].abi,
-         references[name].address
+         references[name + 'manager'].abi,
+         references[name + 'manager'].address
       )
    })
 

@@ -8,14 +8,14 @@ function check(state) {
 }
 
 // INITIALIZE HELPER CONTRACTS
-function init(devices, users, token, state) {
+function init(device_manager, user_manager, token_manager, state) {
     return transaction({
-        query: state.contracts.tasks.methods.init(
-            devices,
-            users,
-            token
+        query: state.managers.task.methods.init(
+            device_manager,
+            user_manager,
+            token_manager
         ),
-        contract: state.contracts.tasks._address
+        contract: state.managers.task._address
     }, state)
 }
 

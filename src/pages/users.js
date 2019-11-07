@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../context';
 
-import { all, event } from '../contracts/user';
+import { fetch_all } from '../contracts/user';
 import { assess } from '../funcs/blockchain';
 
 import Links from '../components/links';
@@ -17,7 +17,8 @@ function Users() {
 
    // FETCH ALL USERS
    useEffect(() => {
-      all(state).then(result => {
+      console.log(state)
+      fetch_all(state).then(result => {
          assess({
             next: (users) => {
 
@@ -26,21 +27,6 @@ function Users() {
             }
          }, result, dispatch)
       })
-
-      // USER ADDED EVENT
-      const added = event({
-         name: 'Update',
-         action: (values) => {
-
-            // SET LOCAL
-            set_local(values.users)
-         }
-      }, state);
-
-      // UNSUBSCRIBE
-      return () => {
-         added.unsubscribe();
-      }
    }, [])
    
    return (

@@ -1,10 +1,10 @@
 import { transaction, call } from '../funcs/blockchain';
 
 // INITIALIZE TOKEN CONTRACT
-function init(price, tasks, state) {
+function init(token_price, task_manager, state) {
    return transaction({
-      query: state.contracts.token.methods.init(price, tasks),
-      contract: state.contracts.token._address,
+      query: state.managers.token.methods.init(token_price, task_manager),
+      contract: state.managers.token._address,
    }, state)
 }
 
