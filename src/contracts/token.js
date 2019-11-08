@@ -1,4 +1,4 @@
-import { transaction, call } from '../funcs/blockchain';
+import { transaction } from '../funcs/blockchain';
 
 // CONTRACT REFERENCES
 function refs(state) {

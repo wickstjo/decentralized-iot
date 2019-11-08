@@ -21,6 +21,8 @@ function Ipfs() {
 
          set_url(url);
       })
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
  
    switch(url) {

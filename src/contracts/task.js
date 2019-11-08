@@ -23,88 +23,6 @@ function fetch_open(state) {
     return refs(state).manager.fetch_open().call();
 }
 
-// ADD TASK
-function add({ name, reputation, reward, key }, state) {
-    const { manager, address } = refs(state);
-
-    return transaction({
-        query: manager.add(name, reputation, key),
-        contract: address,
-        payable: reward
-    }, state)
-}
-
-// FETCH TASK DETAILS
-function task_details(task, state) {
-
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: task,
-        contract: 'task'
-    }, state);
-
-    return 'foo';
-    
-    /* return call({
-        query: contract.methods.details(),
-        modify: (response) => {
-            return {
-                name: response[0],
-                reputation: response[1],
-                reward: response[2],
-                encryption: response[3],
-                locked: response[4]
-            }
-        }
-    }) */
-}
-
-// ACCEPT TASK
-function accept(task, device, reward, state) {
-
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: task,
-        contract: 'task'
-    }, state);
-
-    return transaction({
-        query: contract.methods.accept(device),
-        contract: task,
-        payable: reward / 2
-    }, state)
-}
-
-// SUBMIT DATA TO TASK CONTRACT
-function submit(task, hash, state) {
-
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: task,
-        contract: 'task'
-    }, state);
-
-    return transaction({
-        query: contract.methods.submit(hash),
-        contract: task
-    }, state)
-}
-
-// RELEASE TASK CONTRACT
-function release(task, state) {
-
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: task,
-        contract: 'task'
-    }, state);
-
-    return transaction({
-        query: contract.methods.release(),
-        contract: task
-    }, state)
-}
-
 // FILTER COMPLETED TASKS
 function filter(tasks) {
     const container = [];
@@ -119,13 +37,40 @@ function filter(tasks) {
     return container;
 }
 
+// ADD TASK
+function add({ name, reputation, reward, encryption }, state) {
+    const { manager, address } = refs(state);
+
+    return transaction({
+        query: manager.add(name, reputation, encryption),
+        contract: address,
+        payable: reward
+    }, state)
+}
+
+// FETCH TASK DETAILS
+async function task_details(task, state) {
+
+    // GENERATE REFERENCE
+    const contract = assemble({
+        address: task,
+        contract: 'task'
+    }, state);
+
+    return {
+        name: await contract.methods.name().call(),
+        owner: await contract.methods.buyer().call(),
+        reputation: await contract.methods.reputation().call(),
+        reward: await contract.methods.reward().call(),
+        encryption: await contract.methods.encryption().call(),
+        locked: await contract.methods.locked().call() ? 'Yes' : 'No'
+    }
+}
+
 export {
     init,
     fetch_open,
-    task_details,
+    filter,
     add,
-    accept,
-    submit,
-    release,
-    filter
+    task_details
 }

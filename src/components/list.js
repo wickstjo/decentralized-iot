@@ -11,6 +11,7 @@ function List({ data, header }) {
    // ON LOAD, FISH OUT KEYS
    useEffect(() => {
       set_keys(Object.keys(data))
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    return (

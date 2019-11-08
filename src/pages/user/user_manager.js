@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../../context';
 
 import { fetch_all } from '../../contracts/user';
-import { assess } from '../../funcs/blockchain';
 
 import Links from '../../components/links';
 import UserForm from '../../components/forms/user';
@@ -10,7 +9,7 @@ import UserForm from '../../components/forms/user';
 function Manager() {
 
    // GLOBAL STATE
-   const { state, dispatch } = useContext(Context);
+   const { state } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useState([])
@@ -20,6 +19,8 @@ function Manager() {
       fetch_all(state).then(result => {
          set_local(result)
       })
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
    
    return (
@@ -28,7 +29,7 @@ function Manager() {
             <Links
                header={ 'registered users' }
                error={ 'No registered users' }
-               url={ 'http://localhost:3000/users/' }
+               section={ 'users' }
                data={ local }
             />
          </div>

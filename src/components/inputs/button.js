@@ -9,11 +9,14 @@ function Button({ header, func, require }) {
    // ON INITIAL LOAD, VALIDATE
    useEffect(() => {
       validate()
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    // WHEN THE require CHANGE, REVALIDATE
    useEffect(() => {
       validate();
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [require])
 
    // VALIDATE require

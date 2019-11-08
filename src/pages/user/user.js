@@ -20,6 +20,8 @@ function User({ match }) {
       user_details(match.params.address, state).then(result => {
          set_local(result)
       })
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    return (

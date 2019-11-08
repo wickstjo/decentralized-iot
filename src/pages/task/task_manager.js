@@ -17,6 +17,8 @@ function Tasks() {
       fetch_open(state).then(result => {
          set_local(filter(result))
       })
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
    
    return (
@@ -26,7 +28,7 @@ function Tasks() {
                header={ 'open tasks' }
                error={ 'No tasks found.' }
                data={ local }
-               url={ 'http://localhost:3000/tasks/' }
+               section={ 'tasks' }
             />
          </div>
          <div>

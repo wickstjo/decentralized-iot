@@ -1,19 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { shorten } from '../funcs/misc';
 import Box from './box';
 
-function Links({ header, error, data, url }) { return (
+function Links({ header, error, data, section }) { return (
    <Box header={ header }>
       <Items
          data={ data }
          error={ error }
-         url={ url }
+         section={ section }
       />
    </Box>
 )}
 
-function Items({ data, error, url }) {
+function Items({ data, error, section }) {
    switch(data.length) {
 
       // NO ITEMS
@@ -26,7 +27,7 @@ function Items({ data, error, url }) {
          <div>
             { data.map((item, index) =>
                <div className={ 'row' } key={ index }>
-                  <a href={ url + item } target={ '_blank' } rel={ 'noopener noreferrer' }>{ shorten(item) }</a>
+                  <Link to={ section + '/' +  item }>{ shorten(item) }</Link>
                </div>
             )}
          </div>

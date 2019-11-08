@@ -1,25 +1,23 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../../context';
 
 import { task_details } from '../../contracts/task';
-import { assess } from '../../funcs/blockchain';
 
 import List from '../../components/list';
-import AcceptForm from '../../components/forms/accept';
 import TaskActions from '../../components/actions/task';
-import Error from '../../components/error';
 
 function Task({ match }) {
 
    // GLOBAL STATE
-   const { state, dispatch } = useContext(Context);
+   const { state } = useContext(Context);
 
    // LOCAL STATE
    const [local, set_local] = useState({
       name: '',
+      owner: '',
       reputation: '',
       reward: '',
-      key: '',
+      encryption: '',
       locked: ''
    })
 
@@ -28,6 +26,8 @@ function Task({ match }) {
       task_details(match.params.address, state).then(result => {
          set_local(result)
       })
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    return (
@@ -36,6 +36,7 @@ function Task({ match }) {
             header={ 'task details' }
             data={ local }
          />
+         <TaskActions location={ match.params.address } />
       </div>
    )
 }

@@ -17,6 +17,8 @@ function Device() {
       collection(state).then(result => {
          set_local(result)
       })
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    return (
@@ -26,7 +28,7 @@ function Device() {
                header={ 'your device collection' }
                error={ 'No devices found' }
                data={ local }
-               url={ 'http://localhost:3000/devices/' }
+               section={ 'devices' }
             />
          </div>
          <div>

@@ -20,6 +20,8 @@ function Device({ match }) {
       device_overview(match.params.hash, state).then(result => {
          set_local(result)
       })
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    return (

@@ -8,6 +8,7 @@ function Number({ value, placeholder, range, update, id }) {
    // VALIDATE ON INITIAL LOAD
    useEffect(() => {
       validate(value)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [])
 
    // VALIDATE USER INPUT
