@@ -1,76 +1,60 @@
 import { transaction, call } from '../funcs/blockchain';
 
-// INITIALIZE TOKEN CONTRACT
+// CONTRACT REFERENCES
+function refs(state) {
+   return {
+      manager: state.managers.token.methods,
+      address: state.managers.token._address
+   }
+}
+
+// INITIALIZE
 function init(token_price, task_manager, state) {
+   const { manager, address } = refs(state);
+
    return transaction({
-      query: state.managers.token.methods.init(token_price, task_manager),
-      contract: state.managers.token._address,
+      query: manager.init(token_price, task_manager),
+      contract: address
    }, state)
 }
 
-// CHECK LICENCE STATUS
-function price(state) {
-   return call({
-      query: state.contracts.token.methods.price()
-   })
+// TOKEN/USER BALANCE OVERVIEW
+async function overview(state) {
+   const { manager } = refs(state);
+
+   return {
+      price: await manager.price().call(),
+      balance: await manager.balance(state.keys.public).call()
+   }
 }
 
-// CHECK BALANCE
-function balance(user, state) {
-   return call({
-      query: state.contracts.token.methods.balance(user)
-   })
+// BUY TOKEN
+async function buy(amount, state) {
+   const { manager, address } = refs(state);
+
+   // FETCH THE TOKEN PRICE
+   const price = await manager.price().call()
+
+   return transaction({
+      query: manager.add(amount),
+      contract: address,
+      payable: amount * price
+   }, state)
 }
 
-// BUY LICENCE
-function buy(amount, state) {
-   return price(state).then(result => {
-      switch(result.success) {
-
-         // ON SUCCESS
-         case true: {
-            return transaction({
-                  query: state.contracts.token.methods.add(amount),
-                  contract: state.contracts.token._address,
-                  payable: amount * result.data
-            }, state)
-         }
-
-         // ON ERROR
-         default: { return {
-            reason: result.reason
-         }}
-      }
-   })
-}
-
-// REMOVE LICENCE
+// TRANSFER TOKENS
 function transfer(amount, recipient, state) {
+   const { manager, address } = refs(state);
+
    return transaction({
-      query: state.contracts.token.methods.transfer(amount, recipient),
-      contract: state.contracts.token._address,
+      query: manager.transfer(amount, recipient),
+      contract: address
    }, state)
-}
-
-// DEVICE ADDED EVENT
-function event({ name, action }, state) {
-
-   // STATUS CHANGED EVENT
-   const event = state.contracts.token.events[name]();
-
-   // SUBSCRIBE
-   event.on('data', event => {
-      action(event.returnValues)
-   })
-
-   return event;
 }
 
 export {
    init,
-   price,
-   balance,
+   overview,
    buy,
-   transfer,
-   event
+   transfer
 }

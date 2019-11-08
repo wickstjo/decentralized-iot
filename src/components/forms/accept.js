@@ -26,7 +26,7 @@ function Accept({ task }) {
    function Accept() {
 
       // FETCH TASK REWARD
-      details(task, state).then(result => {
+      /* details(task, state).then(result => {
          assess({
             next: (data) => {
                console.log(data)
@@ -39,7 +39,7 @@ function Accept({ task }) {
                })
             }
          }, result, dispatch)
-      })
+      }) */
    }
 
    return (

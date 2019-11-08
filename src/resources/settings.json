@@ -1,8 +1,8 @@
 {
    "gateways": {
       "blockchain": {
-         "host": "193.167.32.156",
-         "port": 8888
+         "host": "127.0.0.1",
+         "port": 8545
       },
       "ipfs": {
          "host": "193.167.32.156",
@@ -10,7 +10,7 @@
       }
    },
    "keys": {
-      "public": "0xee0d5cc0f173aca025748a9abc597e664ecbfe22",
-      "private": "0x944f82266d5927341d84210cbb6e51fc5eb681f6aaf30eaf6098c5c896a333ab"
+      "public": "0x2a838879d094e06CEaE844B2496f3F56C6130a4e",
+      "private": "0x8e42677c18a63cc94272fe23bea7325502d359502ecb37c6ef493afaf19dd2ff"
    }
 }

@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
-import { Context } from '../context';
+import { Context } from '../../context';
 
-import { fetch_all } from '../contracts/user';
-import { assess } from '../funcs/blockchain';
+import { fetch_all } from '../../contracts/user';
+import { assess } from '../../funcs/blockchain';
 
-import Links from '../components/links';
-import UserForm from '../components/forms/user';
+import Links from '../../components/links';
+import UserForm from '../../components/forms/user';
 
-function Users() {
+function Manager() {
 
    // GLOBAL STATE
    const { state, dispatch } = useContext(Context);
@@ -17,15 +17,8 @@ function Users() {
 
    // FETCH ALL USERS
    useEffect(() => {
-      console.log(state)
       fetch_all(state).then(result => {
-         assess({
-            next: (users) => {
-
-               // SET STATE
-               set_local(users)
-            }
-         }, result, dispatch)
+         set_local(result)
       })
    }, [])
    
@@ -46,4 +39,4 @@ function Users() {
    )
 }
 
-export default Users;
+export default Manager;

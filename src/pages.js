@@ -7,19 +7,19 @@ import './interface/css/innerbody.scss';
 import './interface/css/input.scss';
 
 // USERS
-import Users from './pages/users';
-import User from './pages/user';
+import UserManager from './pages/user/user_manager';
+import User from './pages/user/user';
 
 // DEVICES
-import Devices from './pages/devices';
-import Device from './pages/device';
+import DeviceManager from './pages/device/device_manager';
+import Device from './pages/device/device';
 
 // TASKS
-import Tasks from './pages/tasks';
-import Task from './pages/task';
+import TaskManager from './pages/task/task_manager';
+import Task from './pages/task/task';
 
 // OTHER
-import Token from './pages/tokens';
+import Token from './pages/token';
 import Initialize from './pages/initialize';
 import Error from './pages/error';
 
@@ -34,12 +34,12 @@ function Pages() {
             <div id={ 'innerbody' }>
                 <Switch>
                     <Route exact path="/" component={() => <Redirect to={ '/users' } /> } />
-                    <Route exact path="/users" component={ Users } />
+                    <Route exact path="/users" component={ UserManager } />
                     <Route path="/users/:address" component={ User } />
                     <Route path="/tokens" component={ Token } />
-                    <Route exact path="/devices" component={ Devices } />
+                    <Route exact path="/devices" component={ DeviceManager } />
                     <Route path="/devices/:hash" component={ Device } />
-                    <Route exact path="/tasks" component={ Tasks } />
+                    <Route exact path="/tasks" component={ TaskManager } />
                     <Route path="/tasks/:address" component={ Task } />
                     <Route path="/initialize" component={ Initialize } />
                     <Route component={ Error } />

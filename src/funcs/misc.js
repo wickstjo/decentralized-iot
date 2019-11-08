@@ -1,13 +1,13 @@
 function shorten(string) {
 
-   // MAX CHARACTER LIMIT
    const max_length = 35;
+   const cutoff = 15;
    
-   // CHECK IF THE STRING IS LONGER THAN 22 CHARACTERS
+   // IF MAX LENGTH IS EXCEEDED
    if (string.length > max_length) {
 
       // ALLOW THE FIRST 20 CHARACTERS AND TAG ON THE TRIPLEDOT
-      string = string.substring(0, max_length) + '...';
+      string = string.substring(0, cutoff) + '...' + string.substring(string.length - cutoff, string.length);
    }
 
    return string;

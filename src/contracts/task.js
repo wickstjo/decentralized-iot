@@ -1,54 +1,51 @@
-import { transaction, call, assemble } from '../funcs/blockchain';
+import { transaction, assemble } from '../funcs/blockchain';
 
-// CHECK INITIALIZED STATUS
-function check(state) {
-    return call({
-        query: state.contracts.tasks.methods.initialized()
-    })
+// CONTRACT REFERENCES
+function refs(state) {
+    return {
+        manager: state.managers.task.methods,
+        address: state.managers.task._address
+    }
 }
 
-// INITIALIZE HELPER CONTRACTS
-function init(device_manager, user_manager, token_manager, state) {
+// INITIALIZE
+function init(user_manager, device_manager, token_manager, state) {
+    const { manager, address } = refs(state);
+
     return transaction({
-        query: state.managers.task.methods.init(
-            device_manager,
-            user_manager,
-            token_manager
-        ),
-        contract: state.managers.task._address
+        query: manager.init(user_manager, device_manager, token_manager),
+        contract: address
     }, state)
 }
 
 // FETCH ALL OPEN TASKS
-function fetch(state) {
-    return call({
-        query: state.contracts.tasks.methods.fetch()
-    })
+function fetch_open(state) {
+    return refs(state).manager.fetch_open().call();
 }
 
-// LIST A TASK
-function add({ name, reputation, reward, encryption }, state) {
+// ADD TASK
+function add({ name, reputation, reward, key }, state) {
+    const { manager, address } = refs(state);
+
     return transaction({
-        query: state.contracts.tasks.methods.add(
-            name,
-            reputation,
-            encryption
-        ),
-        contract: state.contracts.tasks._address,
+        query: manager.add(name, reputation, key),
+        contract: address,
         payable: reward
     }, state)
 }
 
 // FETCH TASK DETAILS
-function details(task, state) {
+function task_details(task, state) {
 
     // GENERATE REFERENCE
     const contract = assemble({
         address: task,
         contract: 'task'
     }, state);
+
+    return 'foo';
     
-    return call({
+    /* return call({
         query: contract.methods.details(),
         modify: (response) => {
             return {
@@ -59,7 +56,7 @@ function details(task, state) {
                 locked: response[4]
             }
         }
-    })
+    }) */
 }
 
 // ACCEPT TASK
@@ -108,40 +105,6 @@ function release(task, state) {
     }, state)
 }
 
-// DEVICE ADDED EVENT
-function event({ task, name, action }, state) {
-
-    // PLACEHOLDER
-    let contract = null;
-
-    // FETCH CORRECT CONTRACT
-    switch (task) {
-
-        // NO DEVICE WAS SPECIFIED
-        case undefined:
-            contract = state.contracts.tasks;
-        break;
-
-        // OTHERWISE
-        default:
-            contract = assemble({
-                address: task,
-                contract: 'task'
-            }, state);
-        break;
-    }
-
-    // STATUS CHANGED EVENT
-    const event = contract.events[name]();
-
-    // SUBSCRIBE
-    event.on('data', event => {
-        action(event.returnValues)
-    })
-
-    return event;
-}
-
 // FILTER COMPLETED TASKS
 function filter(tasks) {
     const container = [];
@@ -157,14 +120,12 @@ function filter(tasks) {
 }
 
 export {
-    check,
     init,
-    fetch,
+    fetch_open,
+    task_details,
     add,
-    details,
     accept,
     submit,
     release,
-    event,
     filter
 }

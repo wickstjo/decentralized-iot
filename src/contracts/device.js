@@ -1,72 +1,60 @@
 import { transaction, call, assemble } from '../funcs/blockchain';
 
+// CONTRACT REFERENCES
+function refs(state) {
+    return {
+        manager: state.managers.device.methods,
+        address: state.managers.device._address
+    }
+}
+
 // INITIALIZE
 function init(user_manager, task_manager, state) {
-    return transaction({
-       query: state.managers.device.methods.init(user_manager, task_manager),
-       contract: state.managers.device._address,
-    }, state)
- }
+    const { manager, address } = refs(state);
 
-// FETCH DEVICE CONTRACT
-function fetch(hash, state) {
-    return call({
-        query: state.contracts.devices.methods.fetch(hash)
-    })
+    return transaction({
+       query: manager.init(user_manager, task_manager),
+       contract: address
+    }, state)
+}
+
+// FETCH USER DEVICE COLLECTION
+function collection(state) {
+    return refs(state).manager.fetch_collection(state.keys.public).call()
+}
+
+// FETCH DEVICE DETAILS
+async function device_overview(hash, state) {
+
+    // FETCH THE DEVICES CONTRACT
+    const device = await refs(state).manager.fetch_device(hash).call()
+    
+    // CONSTRUCT CONTRACT
+    const contract = assemble({
+        address: device,
+        contract: 'device'
+    }, state);
+
+    return {
+        name: await contract.methods.name().call(),
+        owner: await contract.methods.owner().call(),
+        contract: device,
+        active: await contract.methods.active().call() ? 'Yes' : 'No'
+    }
 }
 
 // ADD DEVICE
 function add(hash, name, state) {
+    const { manager, address } = refs(state);
+
     return transaction({
-        query: state.contracts.devices.methods.add(hash, name),
-        contract: state.contracts.devices._address,
+        query: manager.add(hash, name),
+        contract: address
     }, state)
 }
 
-// FETCH DEVICE CONTRACT
-function collection(user, state) {
-    return call({
-        query: state.contracts.devices.methods.collection(user)
-    })
-}
-
-// FETCH DEVICE DETAILS
-function details(device, state) {
-    
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: device,
-        contract: 'device'
-    }, state);
-
-    return call({
-        query: contract.methods.details(),
-        modify: (response) => {
-            return {
-                "name": response[0],
-                "owner": response[1],
-                "status": response[2]
-            }
-        }
-    })
-}
-
-// FETCH DEVICE CONTRACT
-function status(device, state) {
-    
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: device,
-        contract: 'device'
-    }, state);
-
-    return call({
-        query: contract.methods.status()
-    })
-}
-
-// TOGGLE STATUS
-function toggle(device, state) {
+// TOGGLE DEVICE STATUS
+function toggle_status(device, state) {
 
     // GENERATE REFERENCE
     const contract = assemble({
@@ -80,78 +68,10 @@ function toggle(device, state) {
     }, state)
 }
 
-// FETCH ASSIGNED TASK
-function task(device, state) {
-
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: device,
-        contract: 'device'
-    }, state);
-    
-    return call({
-        query: contract.methods.task()
-    })
-}
-
-// ASSIGN TASK
-function assign(device, task, state) {
-
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: device,
-        contract: 'device'
-    }, state);
-
-    return transaction({
-        query: contract.methods.assign(task),
-        contract: device
-    }, state)
-}
-
-// DEVICE ADDED EVENT
-function event({ device, name, action }, state) {
-
-    // PLACEHOLDER
-    let contract = null;
-
-    // FETCH CORRECT CONTRACT
-    switch (device) {
-
-        // NO DEVICE WAS SPECIFIED
-        case undefined:
-            contract = state.contracts.devices;
-        break;
-
-        // OTHERWISE
-        default:
-            contract = assemble({
-                address: device,
-                contract: 'device'
-            }, state);
-        break;
-    }
-
-    // STATUS CHANGED EVENT
-    const event = contract.events[name]();
-
-    // SUBSCRIBE
-    event.on('data', event => {
-        action(event.returnValues)
-    })
-
-    return event;
-}
-
 export {
     init,
-    fetch,
-    add,
     collection,
-    details,
-    status,
-    toggle,
-    task,
-    assign,
-    event
+    device_overview,
+    add,
+    toggle_status
 }

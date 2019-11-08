@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import IPFS from 'ipfs-http-client';
 import { gateways } from '../resources/settings.json';
 import references from '../resources/latest.json';
 
@@ -22,11 +21,7 @@ function init() {
          'user',
          'device',
          'task'
-      ]),
-      ipfs: IPFS({
-         host: gateways.ipfs.host,
-         port: gateways.ipfs.port,
-     })
+      ])
    }
 }
 
@@ -184,11 +179,17 @@ function assess({ msg, next }, result, dispatch) {
    }
 }
 
+// CHECK IF STRING IS AN ADDRESS
+function is_address(string, state) {
+   return state.web3.utils.isAddress(string);
+}
+
 export {
    init,
    transaction,
    call,
    assemble,
    assess,
-   prune
+   prune,
+   is_address
 }

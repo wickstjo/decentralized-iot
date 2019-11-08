@@ -25,11 +25,11 @@ function Task() {
          value: '',
          status: null
       },
-      reward: {
+      key: {
          value: '',
          status: null
       },
-      encryption: {
+      reward: {
          value: '',
          status: null
       }
@@ -41,7 +41,7 @@ function Task() {
          name: local.name.value,
          reputation: local.reputation.value,
          reward: local.reward.value,
-         encryption: local.encryption.value
+         key: local.key.value
       }, state).then(result => {
          assess({
             msg: 'task posted successfully'
@@ -68,10 +68,10 @@ function Task() {
             />
             <Text
                placeholder={ 'Public Encryption Key' }
-               value={ local.encryption.value }
+               value={ local.key.value }
                range={[ 5, 20 ]}
                update={ set_local }
-               id={ 'encryption' }
+               id={ 'key' }
             />
             <Number
                placeholder={ 'Reward in Wei' }
@@ -88,7 +88,7 @@ function Task() {
                require={[
                   local.name.status,
                   local.reputation.status,
-                  local.encryption.status,
+                  local.key.status,
                   local.reward.status
                ]}
             />
