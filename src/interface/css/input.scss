@@ -6,7 +6,7 @@ input {
    color: white;
    outline: none;
    text-shadow: 1px 1px #292929;
-   margin-bottom: 2px;
+   margin-bottom: 1px;
    transition: background 0.2s;
 }
 
@@ -17,19 +17,19 @@ input::placeholder {
 
 .bad-input, .good-input {
    background: rgb(177, 103, 103);
-   border-bottom: 2px solid rgb(165, 81, 81);
+   border-bottom: 1px solid rgb(165, 81, 81);
 }
 
 .good-input {
    background: rgb(120, 156, 106);
-   border-bottom: 2px solid rgb(110, 139, 98);
+   border-bottom: 1px solid rgb(110, 139, 98);
 }
 
 .button-container {
    display: inline-block;
    background: #F1F1F1;
    border: 1px solid rgb(190, 190, 190);
-   padding: 2px;
+   padding: 1px;
    margin-left: 5px;
    margin-bottom: 5px;
    text-shadow: 1px 1px #292929af;
@@ -37,7 +37,6 @@ input::placeholder {
 
 .bad-button, .good-button {
    background: rgb(177, 103, 103);
-   border-bottom: 2px solid rgb(153, 81, 81);
    padding: 5px 8px;
    display: inline-block;
    cursor: pointer;
@@ -49,5 +48,4 @@ input::placeholder {
 
 .good-button {
    background: rgb(102, 153, 82);
-   border-bottom: 2px solid rgb(81, 134, 68);
 }

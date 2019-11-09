@@ -43,6 +43,21 @@ async function device_overview(hash, state) {
     }
 }
 
+// FETCH DEVICE ASSIGNMENT BACKLOG
+async function device_assignments(hash, state) {
+
+    // FETCH THE DEVICES CONTRACT
+    const device = await refs(state).manager.fetch_device(hash).call()
+    
+    // CONSTRUCT CONTRACT
+    const contract = assemble({
+        address: device,
+        contract: 'device'
+    }, state);
+
+    return contract.methods.fetch_assignments().call()
+}
+
 // ADD DEVICE
 function add(hash, name, state) {
     const { manager, address } = refs(state);
@@ -72,6 +87,7 @@ export {
     init,
     collection,
     device_overview,
+    device_assignments,
     add,
     toggle_status
 }

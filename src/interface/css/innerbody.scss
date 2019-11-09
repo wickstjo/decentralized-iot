@@ -21,14 +21,14 @@
    .box {
       background: rgb(255, 255, 255);
       border: 1px solid rgb(190, 190, 190);
-      padding: 2px;
+      padding: 1px;
       padding-bottom: 0px;
       margin-bottom: 5px;
 
       #header, #form-header, .row {
          background: rgba(32, 78, 109, 0.863);
          padding: 7px 9px;
-         margin-bottom: 2px;
+         margin-bottom: 1px;
          color: white;
          text-shadow: 1px 1px #292929;
       }
@@ -50,12 +50,12 @@
       }
 
       #form-header {
-         margin-bottom: 2px;
+         margin-bottom: 1px;
       }
 
       .row {
          background: rgba(26, 119, 126, 0.397);
-         border-bottom: 2px solid rgba(26, 119, 126, 0.205);
+         border-bottom: 1px solid rgba(26, 119, 126, 0.205);
          color: rgb(34, 34, 34);
          text-shadow: 1px 1px rgb(215, 220, 223);
       }
