@@ -1,44 +1,44 @@
-import React, { useContext } from 'react';
-import { Context } from '../context';
+import React from 'react';
 
 import { shorten } from '../funcs/misc';
+import { fetch_result } from '../contracts/user';
+
 import Box from './box';
 
-function Inspector({ data, header, error }) {
+function Inspector({ header, error, data, state, user }) { return (
+   <Box header={ header }>
+      <Items
+         data={ data }
+         error={ error }
+         state={ state }
+         user={ user }
+      />
+   </Box>
+)}
 
-   // GLOBAL STATE
-   const { dispatch } = useContext(Context);
+function show(task, user, state) {
+   fetch_result(task, user, state).then(result => {
+      console.log(result)
+   })
+}
 
-   // OPEN PROMPT
-   function open(item) {
-      dispatch({
-         type: 'show-prompt',
-         payload: {
-            type: 'ipfs',
-            param: item
-         }
-      })
-   }
+function Items({ data, error, state, user }) {
+   switch(data.length) {
 
-   // DETERMINE RENDER
-   switch (data.length) {
-
-      // NO RESPONSES
+      // NO ITEMS
       case 0: { return (
-         <Box header={ header }>
-            <div className={ 'row' }>{ error }</div>
-         </Box>
+         <div className={ 'row' }>{ error }</div>
       )}
 
-      // LIST ALL
+      // OTHERWISE
       default: { return (
-         <Box header={ header }>
+         <div>
             { data.map((item, index) =>
-               <div className={ 'row' } key={ index }>
-                  <div onClick={() => { open(item) }}>{ shorten(item.ipfs) }</div>
+               <div className={ 'row' } key={ index } onClick={() => { show(item, user, state) }}>
+                  { shorten(item) }
                </div>
             )}
-         </Box>
+         </div>
       )}
    }
 }

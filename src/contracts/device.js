@@ -20,14 +20,14 @@ function init(user_manager, task_manager, state) {
 
 // FETCH USER DEVICE COLLECTION
 function collection(state) {
-    return refs(state).manager.fetch_collection(state.keys.public).call()
+    return refs(state).manager.fetch_collection(state.keys.public).call();
 }
 
 // FETCH DEVICE DETAILS
 async function device_overview(hash, state) {
 
     // FETCH THE DEVICES CONTRACT
-    const device = await refs(state).manager.fetch_device(hash).call()
+    const device = await refs(state).manager.fetch_device(hash).call();
     
     // CONSTRUCT CONTRACT
     const contract = assemble({
@@ -47,7 +47,7 @@ async function device_overview(hash, state) {
 async function device_assignments(hash, state) {
 
     // FETCH THE DEVICES CONTRACT
-    const device = await refs(state).manager.fetch_device(hash).call()
+    const device = await refs(state).manager.fetch_device(hash).call();
     
     // CONSTRUCT CONTRACT
     const contract = assemble({
@@ -55,7 +55,7 @@ async function device_assignments(hash, state) {
         contract: 'device'
     }, state);
 
-    return contract.methods.fetch_assignments().call()
+    return contract.methods.fetch_assignments().call();
 }
 
 // ADD DEVICE
@@ -69,7 +69,10 @@ function add(hash, name, state) {
 }
 
 // TOGGLE DEVICE STATUS
-function toggle_status(device, state) {
+async function toggle_status(hash, state) {
+
+    // FETCH THE DEVICES CONTRACT
+    const device = await refs(state).manager.fetch_device(hash).call();
 
     // GENERATE REFERENCE
     const contract = assemble({

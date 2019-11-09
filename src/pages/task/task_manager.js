@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Context } from '../../context';
 
-import { fetch_open, filter } from '../../contracts/task';
+import { fetch_open } from '../../contracts/task';
+import { filter } from '../../funcs/misc';
 
 import Links from '../../components/links';
 import TaskForm from '../../components/forms/task';

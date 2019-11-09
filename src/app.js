@@ -5,7 +5,6 @@ import { Provider } from "./context";
 import Init from './init';
 import Menu from './components/menu';
 import Pages from './pages';
-import Prompt from './components/prompt';
 import Messages from './components/messages';
 
 function App() { return (
@@ -16,7 +15,6 @@ function App() { return (
             <Menu />
             <Pages />
          </div>
-         <Prompt />
          <Messages />
       </Provider>
    </BrowserRouter>

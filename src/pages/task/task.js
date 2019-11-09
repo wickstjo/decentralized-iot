@@ -36,7 +36,9 @@ function Task({ match }) {
             header={ 'task details' }
             data={ local }
          />
-         <TaskActions location={ match.params.address } />
+         <TaskActions
+            location={ match.params.address }
+         />
       </div>
    )
 }

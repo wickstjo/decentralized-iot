@@ -2,14 +2,18 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../../context';
 
 import { device_overview, device_assignments } from '../../contracts/device';
+import { filter } from '../../funcs/misc';
 
 import List from '../../components/list';
 import Links from '../../components/links';
+import DeviceActions from '../../components/actions/device';
 
 function Device({ match }) {
 
-   // GLOBAL & LOCAL STATE
+   // GLOBAL STATE
    const { state } = useContext(Context);
+
+   // LOCAL STATE
    const [local, set_local] = useState({
       details: {
          name: '',
@@ -20,7 +24,7 @@ function Device({ match }) {
       assignments: []
    });
 
-   // ON LOAD, FETCH DEVICE OVERVIEW & ASSIGNMENTS
+   // ON LOAD, FETCH DEVICE OVERVIEW & ASSIGNMENT BACKLOG
    useEffect(() => {
       device_overview(match.params.hash, state).then(details => {
          device_assignments(match.params.hash, state).then(assignments => {
@@ -28,7 +32,7 @@ function Device({ match }) {
             // SET BOTH
             set_local({
                details: details,
-               assignments: assignments
+               assignments: filter(assignments)
             })
          })
       })
@@ -42,11 +46,14 @@ function Device({ match }) {
             header={ 'device details' }
             data={ local.details }
          />
+         <DeviceActions
+            location={ match.params.hash }
+         />
          <Links
             header={ 'assignment backlog' }
             error={ 'No tasks found' }
             data={ local.assignments }
-            section={ 'tasks' }
+            section={ '../tasks' }
          />
       </div>
    )

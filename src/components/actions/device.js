@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Context } from '../../context';
 
-import { toggle } from '../../contracts/device';
+import { toggle_status } from '../../contracts/device';
 import { assess } from '../../funcs/blockchain';
 
 import Button from '../inputs/button';
@@ -13,7 +13,7 @@ function Device({ location }) {
 
    // ADD DEVICE
    function Toggle() {
-      toggle(location, state).then(result => {
+      toggle_status(location, state).then(result => {
          assess({
             msg: 'status toggled successfully'
          }, result, dispatch)

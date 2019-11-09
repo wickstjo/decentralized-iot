@@ -44,8 +44,23 @@ function sleep (time) {
    return new Promise((resolve) => setTimeout(resolve, time));
 }
 
+// FILTER OUT DESTROYED CONTRACTS
+function filter(tasks) {
+   const container = [];
+
+   // CREATE PROMISES
+   tasks.forEach(task => {
+       if (task !== '0x0000000000000000000000000000000000000000') {
+           container.push(task);
+       }
+   })
+
+   return container;
+}
+
 export {
    shorten,
    check_validation,
-   sleep
+   sleep,
+   filter
 }

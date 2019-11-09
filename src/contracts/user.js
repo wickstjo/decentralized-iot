@@ -24,7 +24,7 @@ function fetch_all(state) {
 }
 
 // FETCH USER ADDRESS
-async function user_details(user, state) {
+async function user_overview(user, state) {
     const { manager } = refs(state);
 
     // USER CONTRACT LOCATION
@@ -37,8 +37,33 @@ async function user_details(user, state) {
     }, state);
 
     return {
-        name: await contract.methods.name().call(),
-        reputation: await contract.methods.reputation().call()
+        details: {
+            name: await contract.methods.name().call(),
+            reputation: await contract.methods.reputation().call()
+        },
+        completed: await contract.methods.fetch_completed().call()
+    }
+}
+
+// FETCH TASK RESULT
+async function fetch_result(task, user, state) {
+    const { manager } = refs(state);
+
+    // USER CONTRACT LOCATION
+    const location = await manager.fetch_user(user).call();
+
+    // CONSTRUCT USER CONTRACT
+    const contract = assemble({
+        address: location,
+        contract: 'user'
+    }, state);
+
+    // FETCH THE TASKS DATA STRUCT
+    const result = await contract.methods.fetch_result(task).call();
+
+    return {
+        ipfs: result.ipfs,
+        key: result.key
     }
 }
 
@@ -55,6 +80,7 @@ function add(name, state) {
 export {
     init,
     fetch_all,
-    user_details,
+    user_overview,
+    fetch_result,
     add
 }

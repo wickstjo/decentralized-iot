@@ -23,20 +23,6 @@ function fetch_open(state) {
     return refs(state).manager.fetch_open().call();
 }
 
-// FILTER COMPLETED TASKS
-function filter(tasks) {
-    const container = [];
-
-    // CREATE PROMISES
-    tasks.forEach(task => {
-        if (task !== '0x0000000000000000000000000000000000000000') {
-            container.push(task);
-        }
-    })
-
-    return container;
-}
-
 // ADD TASK
 function add({ name, reputation, reward, encryption }, state) {
     const { manager, address } = refs(state);
@@ -67,10 +53,53 @@ async function task_details(task, state) {
     }
 }
 
+// RELEASE TASK
+function release(task, state) {
+    const { manager, address } = refs(state);
+
+    return transaction({
+        query: manager.release(task),
+        contract: address
+    }, state)
+}
+
+// ACCEPT TASK
+async function accept(task, device, state) {
+    const { manager, address } = refs(state);
+
+    // GENERATE REFERENCE
+    const contract = assemble({
+        address: task,
+        contract: 'task'
+    }, state);
+
+    // FETCH THE TASK REWARD
+    const reward = await contract.methods.reward().call();
+
+    // ACCEPT THE TASK
+    return transaction({
+        query: manager.accept(task, device),
+        contract: address,
+        payable: reward / 2
+    }, state)
+}
+
+// SUBMIT TASK RESULT
+function submit(task, ipfs, encryption, state) {
+    const { manager, address } = refs(state);
+
+    return transaction({
+        query: manager.submit(task, ipfs, encryption),
+        contract: address
+    }, state)
+}
+
 export {
     init,
     fetch_open,
-    filter,
     add,
-    task_details
+    task_details,
+    release,
+    accept,
+    submit
 }
