@@ -20,7 +20,7 @@ function init(task_manager, state) {
 
 // FETCH ALL USERS
 function fetch_all(state) {
-    return refs(state).manager.fetch_all().call()
+    return refs(state).manager.fetch_everyone().call()
 }
 
 // FETCH USER ADDRESS
@@ -68,11 +68,11 @@ async function fetch_result(task, user, state) {
 }
 
 // ADD USER
-function add(name, state) {
+function add_user(name, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.add(name),
+        query: manager.add_user(name),
         contract: address
     }, state)
 }
@@ -82,5 +82,5 @@ export {
     fetch_all,
     user_overview,
     fetch_result,
-    add
+    add_user
 }

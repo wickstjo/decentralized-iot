@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Context } from '../../context';
 
-import { release, accept, submit } from '../../contracts/task';
+import { release_task, accept_task, submit_result } from '../../contracts/task';
 import { assess } from '../../funcs/blockchain';
 
 import Button from '../inputs/button';
@@ -12,8 +12,8 @@ function Task({ location }) {
    const { state, dispatch } = useContext(Context);
 
    // RELEASE TASK
-   function Release() {
-      release(location, state).then(result => {
+   function release() {
+      release_task(location, state).then(result => {
          assess({
             msg: 'task released successfully'
          }, result, dispatch)
@@ -21,12 +21,12 @@ function Task({ location }) {
    }
 
    // ACCEPT TASK
-   function Accept() {
+   function accept() {
 
       // DEVICE HASH
       const device = 'cdbde0df13a59633a2a55ee9342d9b31650ae27c0a3c0d80bab4b1561f4df16e';
 
-      accept(location, device, state).then(result => {
+      accept_task(location, device, state).then(result => {
          assess({
             msg: 'task accepted successfully'
          }, result, dispatch)
@@ -34,13 +34,13 @@ function Task({ location }) {
    }
 
    // SUBMIT TASK RESULT
-   function Submit() {
+   function submit() {
 
       // TEMP DATA
       const ipfs = 'qm-hash';
       const encryption = 'public-key';
 
-      submit(location, ipfs, encryption, state).then(result => {
+      submit_result(location, ipfs, encryption, state).then(result => {
          assess({
             msg: 'result submitted successfully'
          }, result, dispatch)
@@ -51,15 +51,15 @@ function Task({ location }) {
       <div style={{ textAlign: 'right' }}>
          <Button
             header={ 'submit result' }
-            func={ Submit }
+            func={ submit }
          />
          <Button
             header={ 'accept task' }
-            func={ Accept }
+            func={ accept }
          />
          <Button
             header={ 'release task' }
-            func={ Release }
+            func={ release }
          />
       </div>
    )

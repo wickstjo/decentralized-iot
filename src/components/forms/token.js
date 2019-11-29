@@ -2,7 +2,7 @@ import React, { useContext, useReducer, Fragment } from 'react';
 import { Context } from '../../context';
 import reducer from '../../states/input';
 
-import { buy, transfer } from '../../contracts/token';
+import { buy_token, transfer_token } from '../../contracts/token';
 import { assess } from '../../funcs/blockchain';
 
 import Form from '../form';
@@ -28,8 +28,8 @@ function Token() {
    })
 
    // CHECK CURRENT TOKEN STATUS
-   function Buy() {
-      buy(local.amount.value, state).then(result => {
+   function buy() {
+      buy_token(local.amount.value, state).then(result => {
          assess({
             msg: 'purchase successful'
          }, result, dispatch)
@@ -37,8 +37,8 @@ function Token() {
    }
 
    // CHECK CURRENT TOKEN STATUS
-   function Transfer() {
-      transfer(local.amount.value, local.recipient.value, state).then(result => {
+   function transfer() {
+      transfer_token(local.amount.value, local.recipient.value, state).then(result => {
          assess({
             msg: 'transfer successful'
          }, result, dispatch)
@@ -65,12 +65,12 @@ function Token() {
          <div style={{ textAlign: 'right' }}>
             <Button
                header={ 'Buy' }
-               func={ Buy }
+               func={ buy }
                require={[ local.amount.status ]}
             />
             <Button
                header={ 'Transfer' }
-               func={ Transfer }
+               func={ transfer }
                require={[
                   local.amount.status,
                   local.recipient.status

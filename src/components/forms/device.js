@@ -2,7 +2,7 @@ import React, { useContext, useReducer, Fragment } from 'react';
 import { Context } from '../../context';
 import reducer from '../../states/input';
 
-import { add } from '../../contracts/device';
+import { add_device } from '../../contracts/device';
 import { assess } from '../../funcs/blockchain';
 
 import Form from '../form';
@@ -27,8 +27,8 @@ function Device() {
    })
 
    // ADD DEVICE
-   function Add() {
-      add(local.hash.value, local.name.value, state).then(result => {
+   function add() {
+      add_device(local.hash.value, local.name.value, state).then(result => {
          assess({
             msg: 'device added successful'
          }, result, dispatch)
@@ -56,7 +56,7 @@ function Device() {
          <div style={{ textAlign: 'right' }}>
             <Button
                header={ 'Add' }
-               func={ Add }
+               func={ add }
                require={[
                   local.name.status,
                   local.hash.status

@@ -23,31 +23,31 @@ async function overview(state) {
    const { manager } = refs(state);
 
    return {
-      price: await manager.price().call(),
-      balance: await manager.balance(state.keys.public).call()
+      price: await manager.token_price().call(),
+      balance: await manager.user_balance(state.keys.public).call()
    }
 }
 
 // BUY TOKEN
-async function buy(amount, state) {
+async function buy_token(amount, state) {
    const { manager, address } = refs(state);
 
    // FETCH THE TOKEN PRICE
-   const price = await manager.price().call()
+   const price = await manager.token_price().call()
 
    return transaction({
-      query: manager.add(amount),
+      query: manager.buy_token(amount),
       contract: address,
       payable: amount * price
    }, state)
 }
 
 // TRANSFER TOKENS
-function transfer(amount, recipient, state) {
+function transfer_token(amount, recipient, state) {
    const { manager, address } = refs(state);
 
    return transaction({
-      query: manager.transfer(amount, recipient),
+      query: manager.transfer_token(amount, recipient),
       contract: address
    }, state)
 }
@@ -55,6 +55,6 @@ function transfer(amount, recipient, state) {
 export {
    init,
    overview,
-   buy,
-   transfer
+   buy_token,
+   transfer_token
 }

@@ -2,7 +2,7 @@ import React, { useContext, useReducer, Fragment } from 'react';
 import { Context } from '../../context';
 import reducer from '../../states/input';
 
-import { add } from '../../contracts/task';
+import { add_task } from '../../contracts/task';
 import { assess } from '../../funcs/blockchain';
 
 import Form from '../form';
@@ -36,8 +36,8 @@ function Task() {
    })
 
    // ADD TASK
-   function Add() {
-      add({
+   function add() {
+      add_task({
          name: local.name.value,
          reputation: local.reputation.value,
          reward: local.reward.value,
@@ -84,7 +84,7 @@ function Task() {
          <div style={{ textAlign: 'right' }}>
             <Button
                header={ 'Create' }
-               func={ Add }
+               func={ add }
                require={[
                   local.name.status,
                   local.reputation.status,

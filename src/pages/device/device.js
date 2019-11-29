@@ -1,12 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../../context';
 
-import { device_overview, device_assignments } from '../../contracts/device';
+import { device_overview, fetch_backlog } from '../../contracts/device';
 import { filter } from '../../funcs/misc';
 
 import List from '../../components/list';
 import Links from '../../components/links';
-import DeviceActions from '../../components/actions/device';
 
 function Device({ match }) {
 
@@ -18,8 +17,7 @@ function Device({ match }) {
       details: {
          name: '',
          owner: '',
-         contract: '',
-         active: false
+         contract: ''
       },
       assignments: []
    });
@@ -27,7 +25,7 @@ function Device({ match }) {
    // ON LOAD, FETCH DEVICE OVERVIEW & ASSIGNMENT BACKLOG
    useEffect(() => {
       device_overview(match.params.hash, state).then(details => {
-         device_assignments(match.params.hash, state).then(assignments => {
+         fetch_backlog(match.params.hash, state).then(assignments => {
 
             // SET BOTH
             set_local({
@@ -45,9 +43,6 @@ function Device({ match }) {
          <List
             header={ 'device details' }
             data={ local.details }
-         />
-         <DeviceActions
-            location={ match.params.hash }
          />
          <Links
             header={ 'assignment backlog' }

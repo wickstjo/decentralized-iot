@@ -24,11 +24,11 @@ function fetch_open(state) {
 }
 
 // ADD TASK
-function add({ name, reputation, reward, encryption }, state) {
+function add_task({ name, reputation, reward, encryption }, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.add(name, reputation, encryption),
+        query: manager.add_task(name, reputation, encryption),
         contract: address,
         payable: reward
     }, state)
@@ -45,26 +45,26 @@ async function task_details(task, state) {
 
     return {
         name: await contract.methods.name().call(),
-        owner: await contract.methods.buyer().call(),
-        reputation: await contract.methods.reputation().call(),
+        owner: await contract.methods.creator().call(),
+        reputation: await contract.methods.min_reputation().call(),
         reward: await contract.methods.reward().call(),
-        encryption: await contract.methods.encryption().call(),
+        encryption: await contract.methods.public_user_key().call(),
         locked: await contract.methods.locked().call() ? 'Yes' : 'No'
     }
 }
 
 // RELEASE TASK
-function release(task, state) {
+function release_task(task, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.release(task),
+        query: manager.release_task(task),
         contract: address
     }, state)
 }
 
 // ACCEPT TASK
-async function accept(task, device, state) {
+async function accept_task(task, device, state) {
     const { manager, address } = refs(state);
 
     // GENERATE REFERENCE
@@ -78,18 +78,18 @@ async function accept(task, device, state) {
 
     // ACCEPT THE TASK
     return transaction({
-        query: manager.accept(task, device),
+        query: manager.accept_task(task, device),
         contract: address,
         payable: reward / 2
     }, state)
 }
 
 // SUBMIT TASK RESULT
-function submit(task, ipfs, encryption, state) {
+function submit_result(task, ipfs, encryption, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.submit(task, ipfs, encryption),
+        query: manager.submit_result(task, ipfs, encryption),
         contract: address
     }, state)
 }
@@ -97,9 +97,9 @@ function submit(task, ipfs, encryption, state) {
 export {
     init,
     fetch_open,
-    add,
+    add_task,
     task_details,
-    release,
-    accept,
-    submit
+    release_task,
+    accept_task,
+    submit_result
 }

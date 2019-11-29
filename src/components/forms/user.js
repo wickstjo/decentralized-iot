@@ -2,7 +2,7 @@ import React, { useContext, useReducer, Fragment } from 'react';
 import { Context } from '../../context';
 import reducer from '../../states/input';
 
-import { add } from '../../contracts/user';
+import { add_user } from '../../contracts/user';
 import { assess } from '../../funcs/blockchain';
 
 import Form from '../form';
@@ -23,8 +23,8 @@ function User() {
    })
 
    // ADD USER
-   function Add() {
-      add(local.name.value, state).then(result => {
+   function add() {
+      add_user(local.name.value, state).then(result => {
          assess({
             msg: 'user added'
          }, result, dispatch)
@@ -45,7 +45,7 @@ function User() {
          <div style={{ textAlign: 'right' }}>
             <Button
                header={ 'Add User' }
-               func={ Add }
+               func={ add }
                require={[ local.name.status ]}
             />
          </div>

@@ -38,13 +38,12 @@ async function device_overview(hash, state) {
     return {
         name: await contract.methods.name().call(),
         owner: await contract.methods.owner().call(),
-        contract: device,
-        active: await contract.methods.active().call() ? 'Yes' : 'No'
+        contract: device
     }
 }
 
 // FETCH DEVICE ASSIGNMENT BACKLOG
-async function device_assignments(hash, state) {
+async function fetch_backlog(hash, state) {
 
     // FETCH THE DEVICES CONTRACT
     const device = await refs(state).manager.fetch_device(hash).call();
@@ -55,34 +54,16 @@ async function device_assignments(hash, state) {
         contract: 'device'
     }, state);
 
-    return contract.methods.fetch_assignments().call();
+    return contract.methods.fetch_backlog().call();
 }
 
 // ADD DEVICE
-function add(hash, name, state) {
+function add_device(hash, name, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.add(hash, name),
+        query: manager.add_device(hash, name),
         contract: address
-    }, state)
-}
-
-// TOGGLE DEVICE STATUS
-async function toggle_status(hash, state) {
-
-    // FETCH THE DEVICES CONTRACT
-    const device = await refs(state).manager.fetch_device(hash).call();
-
-    // GENERATE REFERENCE
-    const contract = assemble({
-        address: device,
-        contract: 'device'
-    }, state);
-
-    return transaction({
-        query: contract.methods.toggle(),
-        contract: device,
     }, state)
 }
 
@@ -90,7 +71,6 @@ export {
     init,
     collection,
     device_overview,
-    device_assignments,
-    add,
-    toggle_status
+    fetch_backlog,
+    add_device
 }
