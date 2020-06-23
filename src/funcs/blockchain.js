@@ -33,6 +33,7 @@ function managers(names, web3) {
 
    // LOOP THROUGH & COMBINE EACH ABI & ADDRESS
    names.forEach(name => {
+      console.log(name)
       response[name] = new web3.eth.Contract(
          references[name + 'manager'].abi,
          references[name + 'manager'].address
