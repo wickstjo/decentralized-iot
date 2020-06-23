@@ -24,7 +24,7 @@ function User() {
 
    // ADD USER
    function add() {
-      add_user(local.name.value, state).then(result => {
+      add_user(state).then(result => {
          assess({
             msg: 'user added'
          }, result, dispatch)

@@ -23,8 +23,8 @@ async function overview(state) {
    const { manager } = refs(state);
 
    return {
-      price: await manager.token_price().call(),
-      balance: await manager.user_balance(state.keys.public).call()
+      price: await manager.price().call(),
+      balance: await manager.balance(state.keys.public).call()
    }
 }
 
@@ -33,10 +33,10 @@ async function buy_token(amount, state) {
    const { manager, address } = refs(state);
 
    // FETCH THE TOKEN PRICE
-   const price = await manager.token_price().call()
+   const price = await manager.price().call()
 
    return transaction({
-      query: manager.buy_token(amount),
+      query: manager.purchase(amount),
       contract: address,
       payable: amount * price
    }, state)

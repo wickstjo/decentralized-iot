@@ -68,11 +68,11 @@ async function fetch_result(task, user, state) {
 }
 
 // ADD USER
-function add_user(name, state) {
+function add_user(state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.add_user(name),
+        query: manager.add(),
         contract: address
     }, state)
 }

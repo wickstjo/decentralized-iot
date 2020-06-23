@@ -62,7 +62,7 @@ function add_device(hash, name, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.add_device(hash, name),
+        query: manager.add(hash, name),
         contract: address
     }, state)
 }

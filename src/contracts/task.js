@@ -13,7 +13,7 @@ function init(user_manager, device_manager, token_manager, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.init(user_manager, device_manager, token_manager),
+        query: manager.init(2, user_manager, device_manager, token_manager),
         contract: address
     }, state)
 }
@@ -28,9 +28,8 @@ function add_task({ name, reputation, reward, encryption }, state) {
     const { manager, address } = refs(state);
 
     return transaction({
-        query: manager.add_task(name, reputation, encryption),
-        contract: address,
-        payable: reward
+        query: manager.add(reputation, 2, encryption, 200),
+        contract: address
     }, state)
 }
 
